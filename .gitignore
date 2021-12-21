@@ -1,0 +1,8 @@
+**/build
+**/node_modules
+
+.idea/
+*.iml
+.gradle/
+
+local.properties

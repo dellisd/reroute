@@ -1,0 +1,16 @@
+package io.github.dellisd.reroute.di
+
+import io.github.dellisd.reroute.data.DataSource
+import io.github.dellisd.reroute.data.SqlJsDataSource
+import io.github.dellisd.reroute.db.DatabaseHelper
+import io.github.dellisd.reroute.ui.Application
+import me.tatarka.inject.annotations.Component
+import me.tatarka.inject.annotations.Provides
+
+@Component
+abstract class AppComponent {
+    @Provides
+    protected fun dataSource(helper: DatabaseHelper): DataSource = SqlJsDataSource(helper)
+
+    abstract val application: Application
+}

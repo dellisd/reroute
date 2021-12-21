@@ -1,0 +1,14 @@
+CREATE TABLE stops (
+    id TEXT NOT NULL PRIMARY KEY,
+    code TEXT NOT NULL,
+    name TEXT NOT NULL,
+    desc TEXT,
+    lat REAL NOT NULL,
+    lon REAL NOT NULL,
+    zone_id INTEGER,
+    url TEXT,
+    location_type INTEGER NOT NULL
+);
+
+getById:
+SELECT * FROM stops WHERE id = ?;
