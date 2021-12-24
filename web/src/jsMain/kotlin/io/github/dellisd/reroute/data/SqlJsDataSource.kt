@@ -20,18 +20,22 @@ class SqlJsDataSource(private val withDatabase: DatabaseHelper) : DataSource {
         }
     }
 
-    override suspend fun searchStops(query: String): List<Stop> = withDatabase { database ->
-        database.stopSearchQueries.search(query).executeAsList().map {
-            Stop(
-                it.id,
-                it.code,
-                it.name,
-                it.desc,
-                LngLat(it.lon, it.lat),
-                it.zone_id?.toInt(),
-                it.url,
-                it.location_type.toInt()
-            )
+    override suspend fun searchStops(query: String): List<Stop> {
+        if (query.isEmpty()) return emptyList()
+
+        return withDatabase { database ->
+            database.stopSearchQueries.search(query).executeAsList().map {
+                Stop(
+                    it.id,
+                    it.code,
+                    it.name,
+                    it.desc,
+                    LngLat(it.lon, it.lat),
+                    it.zone_id?.toInt(),
+                    it.url,
+                    it.location_type.toInt()
+                )
+            }
         }
     }
 }

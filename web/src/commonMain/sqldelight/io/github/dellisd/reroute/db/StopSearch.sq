@@ -1,4 +1,5 @@
 -- TODO: Figure out fts5
+-- https://github.com/cashapp/sqldelight/pull/2746
 CREATE VIRTUAL TABLE stop_search USING fts3 (
     id TEXT NOT NULL,
     code TEXT NOT NULL,
