@@ -1,0 +1,29 @@
+name: Deploy App
+
+on:
+  push:
+    branches:
+      - "master"
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set up Secrets
+        env:
+          MAPBOX_KEY: ${{ secrets.MAPBOX_KEY }}
+        run: echo "mapbox.key=$MAPBOX_KEY" >> local.properties
+
+      - name: Build dist
+        run: ./gradlew :web:jsBrowserWebpack
+
+      - name: Deploy 🚉
+        if: success()
+        uses: JamesIves/github-pages-deploy-action@3.7.1
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          BRANCH: gh-pages
+          FOLDER: web/build/distributions
+          SINGLE_COMMIT: true
