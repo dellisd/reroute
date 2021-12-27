@@ -11,6 +11,9 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
       - name: Set up Secrets
         env:
           MAPBOX_KEY: ${{ secrets.MAPBOX_KEY }}
