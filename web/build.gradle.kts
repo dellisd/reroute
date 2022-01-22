@@ -3,6 +3,7 @@ import java.util.Properties
 
 plugins {
     kotlin("multiplatform")
+    kotlin("plugin.serialization") version "1.6.10"
     id("org.jetbrains.compose") version "1.0.1-rc2"
     id("com.squareup.sqldelight") version "1.5.3"
     id("com.google.devtools.ksp") version "1.6.10-1.0.2"
@@ -20,7 +21,7 @@ repositories {
 
 dependencies {
     // TODO: Replace with kspJs once IR is fully supported
-    ksp("me.tatarka.inject:kotlin-inject-compiler-ksp:0.4.0")
+    ksp("me.tatarka.inject:kotlin-inject-compiler-ksp:0.4.1")
 }
 
 kotlin {
@@ -42,7 +43,11 @@ kotlin {
                 implementation(compose.web.core)
                 implementation(compose.runtime)
                 implementation("com.squareup.sqldelight:sqljs-driver:1.5.3")
-                implementation("me.tatarka.inject:kotlin-inject-runtime:0.4.0")
+                implementation("me.tatarka.inject:kotlin-inject-runtime:0.4.1")
+                implementation("io.ktor:ktor-client-core:1.6.7")
+                implementation("io.ktor:ktor-client-js:1.6.7")
+                implementation("io.ktor:ktor-client-serialization:1.6.7")
+                implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.2")
 
                 implementation(devNpm("copy-webpack-plugin", "9.1.0"))
 

@@ -36,6 +36,6 @@ class SqlJsDataSource(private val withDatabase: DatabaseHelper) : DataSource {
                     it.location_type.toInt()
                 )
             }
-        }
+        }.take(5)
     }
 }

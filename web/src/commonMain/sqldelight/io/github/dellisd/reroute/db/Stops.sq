@@ -12,3 +12,9 @@ CREATE TABLE stops (
 
 getById:
 SELECT * FROM stops WHERE id = ?;
+
+getAll:
+SELECT * FROM stops;
+
+insert:
+INSERT INTO stops VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);

@@ -3,7 +3,8 @@
 CREATE VIRTUAL TABLE stop_search USING fts3 (
     id TEXT NOT NULL,
     code TEXT NOT NULL,
-    name TEXT NOT NULL
+    name TEXT NOT NULL,
+    tokenize=unicode61
 );
 
 CREATE TRIGGER update_stop_search AFTER INSERT ON stops
@@ -11,10 +12,6 @@ BEGIN
 INSERT INTO stop_search(id, code, name)
 VALUES(new.id, new.code, new.name);
 END;
-
-INSERT INTO stops VALUES ('A', '1000', 'Stop A', NULL, 45, -75, NULL, NULL, 0);
-INSERT INTO stops VALUES ('B', '2000', 'Stop B', NULL, 33, -56, NULL, NULL, 0);
-INSERT INTO stops VALUES ('C', '3000', 'Stop C', NULL, 12, -6, NULL, NULL, 0);
 
 search:
 SELECT *
@@ -24,3 +21,6 @@ WHERE id IN (
     FROM stop_search
     WHERE stop_search MATCH :query || '*'
 );
+
+getById:
+SELECT * FROM stop_search WHERE id = ?;

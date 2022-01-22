@@ -13,6 +13,8 @@ fun main() {
     require("mapbox-gl/dist/mapbox-gl.css")
     val component = AppComponent::class.create()
 
+    component.rerouteApplication.init()
+
     renderComposable(rootElementId = "root") {
         Style(AppStylesheet)
 
