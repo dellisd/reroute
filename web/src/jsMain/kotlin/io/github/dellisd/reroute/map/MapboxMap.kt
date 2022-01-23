@@ -145,6 +145,25 @@ class MapboxState(
         })
     }
 
+    suspend fun flyTo(
+        center: LngLat = this.center,
+        zoom: Double = this.zoom,
+        bearing: Double = this.bearing,
+        pitch: Double = this.pitch,
+        padding: PaddingOptions = this.padding,
+        options: (AnimationOptions.() -> Unit)? = null
+    ) = doMoveAnimation {
+        map?.flyTo(jsObject {
+            this.center = center.toArray()
+            this.zoom = zoom
+            this.bearing = bearing
+            this.pitch = pitch
+            this.padding = padding
+
+            options?.invoke(this)
+        })
+    }
+
     // TODO: fitScreenCoordinates, jumpTo, easeTo, flyTo
 
     /**
@@ -179,7 +198,7 @@ fun MapboxMap(
     style: String,
     state: MapboxState = rememberMapboxState(),
     containerAttrs: AttrsBuilder<HTMLDivElement>.() -> Unit = {},
-    sources: @Composable MapboxSourceScope.() -> Unit
+    sources: @Composable MapScope.() -> Unit
 ) {
     var map: mapbox.Map? by remember { mutableStateOf(null) }
     val scope = rememberCoroutineScope()

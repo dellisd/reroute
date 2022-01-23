@@ -233,9 +233,9 @@ external open class Map(options: MapboxOptions = definedExternally) : Evented {
     open fun setFilter(layer: String, filter: Boolean? = definedExternally): Map /* this */
     open fun setLayerZoomRange(layerId: String, minzoom: Number, maxzoom: Number): Map /* this */
     open fun getFilter(layer: String): Array<Any>
-    open fun setPaintProperty(layer: String, name: String, value: Any, klass: String = definedExternally): Map /* this */
+    open fun setPaintProperty(layer: String, name: String, value: dynamic, klass: String = definedExternally): Map /* this */
     open fun getPaintProperty(layer: String, name: String): Any
-    open fun setLayoutProperty(layer: String, name: String, value: Any): Map /* this */
+    open fun setLayoutProperty(layer: String, name: String, value: dynamic): Map /* this */
     open fun getLayoutProperty(layer: String, name: String): Any
     open fun setLight(options: Light, lightOptions: Any = definedExternally): Map /* this */
     open fun getLight(): Light

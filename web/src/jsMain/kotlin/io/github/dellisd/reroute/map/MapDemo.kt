@@ -33,6 +33,9 @@ fun MapDemo() {
     var showLayer by remember { mutableStateOf(true) }
     var showSource by remember { mutableStateOf(true) }
 
+    var layerFillColor by remember { mutableStateOf("#FF0000") }
+    var layerUseColor by remember { mutableStateOf(true) }
+
     val scope = rememberCoroutineScope()
     val mapState = rememberMapboxState()
 
@@ -60,7 +63,7 @@ fun MapDemo() {
         Button(attrs = {
             onClick {
                 scope.launch {
-                    mapState.easeTo(center = LngLat(-75.70506, 45.40732), zoom = 12.0) {
+                    mapState.flyTo(center = LngLat(-75.70506, 45.40732), zoom = 12.0) {
                         duration = 2000
                     }
                     console.log("Pan ended")
@@ -68,7 +71,7 @@ fun MapDemo() {
                 }
             }
         }) {
-            Text("Ease To")
+            Text("Fly To")
         }
 
         Button(attrs = {
@@ -117,6 +120,20 @@ fun MapDemo() {
         }) {
             Text("Toggle Source")
         }
+        Button(attrs = {
+            onClick {
+                layerFillColor = (if (layerFillColor == "#FF0000") "#0000FF" else "#FF0000")
+            }
+        }) {
+            Text("Toggle Fill Color")
+        }
+        Button(attrs = {
+            onClick {
+                layerUseColor = !layerUseColor
+            }
+        }) {
+            Text("Toggle Use Fill Color")
+        }
 
         MapboxMap(
             accessToken = RerouteConfig.MAPBOX_ACCESS_KEY,
@@ -130,9 +147,13 @@ fun MapDemo() {
             }
         ) {
             if (showSource) {
-                geoJsonSource("test", dataSet) {
+                GeoJsonSource("test", data = dataSet) {
                     if (showLayer) {
-                        fillLayer("test-layer")
+                        FillLayer("test-layer") {
+                            if (layerUseColor) {
+                                fillColor(layerFillColor)
+                            }
+                        }
                     }
                 }
             }
