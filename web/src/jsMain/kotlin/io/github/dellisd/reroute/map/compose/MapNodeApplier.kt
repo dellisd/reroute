@@ -2,6 +2,8 @@ package io.github.dellisd.reroute.map.compose
 
 import androidx.compose.runtime.AbstractApplier
 import mapbox.FillLayer
+import mapbox.FillLayout
+import mapbox.FillPaint
 import mapbox.GeoJSONSource
 
 internal class MapNodeApplier(private val mapRef: mapbox.Map) : AbstractApplier<MapNode>(RootNode()) {
@@ -19,7 +21,28 @@ internal class MapNodeApplier(private val mapRef: mapbox.Map) : AbstractApplier<
     }
 
     override fun insertBottomUp(index: Int, instance: MapNode) {
-        // Ignored
+        when (val node = current) {
+            is SourceNode -> {
+                if (instance !is LayerNode) throw IllegalStateException("Node must be a LayerNode")
+
+                if (mapRef.getLayer(instance.id) == null) {
+                    val (paintProps, layoutProps) = instance.styleProps
+
+                    mapRef.addLayer(instance.layer.unsafeCast<FillLayer>().apply {
+                        paint = paintProps.unsafeCast<FillPaint>()
+                        layout = layoutProps.unsafeCast<FillLayout>()
+                    })
+                    node.layers.add(index, instance)
+                } else {
+                    console.warn("Layer ${instance.id} already exists")
+                }
+            }
+            is LayerNode -> {
+                if (instance !is ExpressionNode) throw IllegalStateException("Node must be an ExpressionNode")
+                node.props.add(index, instance)
+            }
+            else -> {}
+        }
     }
 
     override fun insertTopDown(index: Int, instance: MapNode) {
@@ -34,37 +57,11 @@ internal class MapNodeApplier(private val mapRef: mapbox.Map) : AbstractApplier<
                     console.warn("Source ${instance.id} already exists")
                 }
             }
-            is SourceNode -> {
-                if (instance !is LayerNode) throw IllegalStateException("Node must be a LayerNode")
-
-                if (mapRef.getLayer(instance.id) == null) {
-                    mapRef.addLayer(instance.layer.unsafeCast<FillLayer>())
-                    node.layers.add(index, instance)
-                } else {
-                    console.warn("Layer ${instance.id} already exists")
-                }
-            }
-            is LayerNode -> {
-                if (instance !is ExpressionNode) throw IllegalStateException("Node must be an ExpressionNode")
-
-                if (mapRef.getLayer(node.id) == null) {
-                    console.warn("Layer ${node.id} does not exist, cannot update style")
-                } else {
-                    node.props.add(index, instance)
-                    if (instance.type == ExpressionType.PAINT) {
-                        mapRef.setPaintProperty(node.id, instance.name, instance.expression)
-                    } else {
-                        mapRef.setLayoutProperty(node.id, instance.name, instance.expression)
-                    }
-                }
-            }
             else -> {}
         }
     }
 
-    override fun move(from: Int, to: Int, count: Int) {
-        console.log("move")
-    }
+    override fun move(from: Int, to: Int, count: Int) {}
 
     override fun remove(index: Int, count: Int) {
         when (val node = current) {

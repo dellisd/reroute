@@ -26,7 +26,9 @@ abstract class LayerScope(protected val layerId: String, private val mapRef: map
             update = {
                 set(value) {
                     this.expression = value
-                    mapRef.setPaintProperty(layerId, this.name, value)
+                    if (mapRef.getLayer(layerId) != null) {
+                        mapRef.setPaintProperty(layerId, this.name, value)
+                    }
                 }
             }
         )
@@ -41,7 +43,9 @@ abstract class LayerScope(protected val layerId: String, private val mapRef: map
             update = {
                 set(value) {
                     this.expression = value
-                    mapRef.setLayoutProperty(layerId, this.name, value)
+                    if (mapRef.getLayer(layerId) != null) {
+                        mapRef.setLayoutProperty(layerId, this.name, value)
+                    }
                 }
             }
         )
