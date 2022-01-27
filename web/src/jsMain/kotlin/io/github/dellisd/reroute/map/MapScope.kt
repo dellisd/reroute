@@ -14,6 +14,7 @@ import kotlinx.coroutines.launch
 import mapbox.GeoJSONSource
 import mapbox.GeoJSONSourceRaw
 
+@Suppress("FunctionName")
 class MapScope(private val mapRef: mapbox.Map) {
     /**
      * TODO: Add other GeoJSONSource parameters

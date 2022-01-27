@@ -1,15 +1,16 @@
 package io.github.dellisd.reroute.map
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import geojson.GeoJsonObject
 import io.github.dellisd.reroute.RerouteConfig
 import io.github.dellisd.reroute.data.LngLat
 import kotlinx.coroutines.launch
+import org.jetbrains.compose.web.css.Color
 import org.jetbrains.compose.web.css.height
 import org.jetbrains.compose.web.css.px
 import org.jetbrains.compose.web.css.width
@@ -153,6 +154,10 @@ fun MapDemo() {
                             if (layerUseColor) {
                                 fillColor(layerFillColor)
                             }
+                        }
+                        LineLayer("test-line-layer") {
+                            lineColor(Color.lemonchiffon)
+                            lineWidth(2.0)
                         }
                     }
                 }
