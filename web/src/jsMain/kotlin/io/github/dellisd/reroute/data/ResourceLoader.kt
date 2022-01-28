@@ -35,7 +35,7 @@ class ResourceLoader(private val withDatabase: DatabaseHelper) {
     private data class Data(val stops: List<Stop>)
 
     suspend fun loadStopsToDatabase() {
-        val data = client.get<Data>("data.json")
+        val data = client.get<Data>("${window.location.origin}/reroute/data.json")
         withDatabase { database ->
             database.stopsQueries.transaction {
                 data.stops.forEach {
