@@ -7,6 +7,7 @@ import io.ktor.client.engine.js.Js
 import io.ktor.client.features.json.JsonFeature
 import io.ktor.client.features.json.serializer.KotlinxSerializer
 import io.ktor.client.request.get
+import kotlinx.browser.window
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import me.tatarka.inject.annotations.Inject
@@ -34,7 +35,7 @@ class ResourceLoader(private val withDatabase: DatabaseHelper) {
     private data class Data(val stops: List<Stop>)
 
     suspend fun loadStopsToDatabase() {
-        val data = client.get<Data>("http://localhost:8080/data.json")
+        val data = client.get<Data>("${window.location.origin}/data.json")
         withDatabase { database ->
             database.stopsQueries.transaction {
                 data.stops.forEach {
