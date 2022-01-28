@@ -1,11 +1,9 @@
 @file:Suppress("FunctionName")
 
-package io.github.dellisd.reroute.map
+package io.github.dellisd.reroute.map.compose
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.ComposeNode
-import io.github.dellisd.reroute.map.compose.LayerNode
-import io.github.dellisd.reroute.map.compose.MapNodeApplier
 import io.github.dellisd.reroute.utils.jsObject
 
 class SourceScope(private val sourceId: String, private val mapRef: mapbox.Map) {

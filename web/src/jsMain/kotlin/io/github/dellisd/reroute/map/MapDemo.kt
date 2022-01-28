@@ -9,14 +9,16 @@ import androidx.compose.runtime.setValue
 import geojson.GeoJsonObject
 import io.github.dellisd.reroute.RerouteConfig
 import io.github.dellisd.reroute.data.LngLat
+import io.github.dellisd.reroute.map.compose.MapboxMap
+import io.github.dellisd.reroute.map.compose.rememberMapboxState
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.web.css.Color
 import org.jetbrains.compose.web.css.height
-import org.jetbrains.compose.web.css.px
+import org.jetbrains.compose.web.css.vh
+import org.jetbrains.compose.web.css.vw
 import org.jetbrains.compose.web.css.width
 import org.jetbrains.compose.web.dom.Button
 import org.jetbrains.compose.web.dom.Div
-import org.jetbrains.compose.web.dom.Pre
 import org.jetbrains.compose.web.dom.Text
 
 const val dataSetA =
@@ -142,8 +144,8 @@ fun MapDemo() {
             state = mapState,
             containerAttrs = {
                 style {
-                    height(720.px)
-                    width(1280.px)
+                    height(100.vh)
+                    width(100.vw)
                 }
             }
         ) {
@@ -161,16 +163,6 @@ fun MapDemo() {
                         }
                     }
                 }
-            }
-        }
-
-        Div {
-            Div { Text("Current Style: $currentStyle") }
-            Div { Text("Showing Layer: $showLayer") }
-            Div { Text("Showing Source (and Layer): $showSource") }
-            Div {
-                Text("Rendering:")
-                Pre { Text(if (dataSetLetter == "A") dataSetA else dataSetB) }
             }
         }
     }

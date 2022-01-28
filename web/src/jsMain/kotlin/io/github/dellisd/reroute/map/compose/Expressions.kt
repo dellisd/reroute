@@ -1,4 +1,4 @@
-package io.github.dellisd.reroute.map
+package io.github.dellisd.reroute.map.compose
 
 typealias Expression = Array<dynamic>
 

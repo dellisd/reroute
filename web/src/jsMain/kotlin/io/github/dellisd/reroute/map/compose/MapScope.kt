@@ -1,4 +1,4 @@
-package io.github.dellisd.reroute.map
+package io.github.dellisd.reroute.map.compose
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.ComposeNode
@@ -6,8 +6,6 @@ import androidx.compose.runtime.Composition
 import androidx.compose.runtime.DefaultMonotonicFrameClock
 import androidx.compose.runtime.Recomposer
 import geojson.GeoJsonObject
-import io.github.dellisd.reroute.map.compose.MapNodeApplier
-import io.github.dellisd.reroute.map.compose.SourceNode
 import io.github.dellisd.reroute.utils.jsObject
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch

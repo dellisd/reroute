@@ -1,10 +1,7 @@
-package io.github.dellisd.reroute.map
+package io.github.dellisd.reroute.map.compose
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.ComposeNode
-import io.github.dellisd.reroute.map.compose.ExpressionNode
-import io.github.dellisd.reroute.map.compose.ExpressionType
-import io.github.dellisd.reroute.map.compose.MapNodeApplier
 import org.jetbrains.compose.web.css.CSSColorValue
 
 enum class Anchor(val value: String) {
