@@ -1,6 +1,9 @@
 package io.github.dellisd.reroute.data
 
+import com.squareup.sqldelight.runtime.coroutines.asFlow
+import com.squareup.sqldelight.runtime.coroutines.mapToList
 import io.github.dellisd.reroute.db.DatabaseHelper
+import kotlinx.coroutines.flow.Flow
 import me.tatarka.inject.annotations.Inject
 
 @Inject
@@ -37,5 +40,23 @@ class SqlJsDataSource(private val withDatabase: DatabaseHelper) : DataSource {
                 )
             }
         }.take(5)
+    }
+
+    override suspend fun getStops(): Flow<List<Stop>> = withDatabase { database ->
+        database.stopsQueries
+            .getAll { id, code, name, desc, lat, lon, zone_id, url, location_type ->
+                Stop(
+                    id,
+                    code,
+                    name,
+                    desc,
+                    LngLat(lon, lat),
+                    zone_id?.toInt(),
+                    url,
+                    location_type.toInt()
+                )
+            }
+            .asFlow()
+            .mapToList()
     }
 }

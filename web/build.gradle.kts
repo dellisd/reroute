@@ -43,6 +43,8 @@ kotlin {
                 implementation(compose.web.core)
                 implementation(compose.runtime)
                 implementation("com.squareup.sqldelight:sqljs-driver:1.5.3")
+                implementation("com.squareup.sqldelight:coroutines-extensions:1.5.3")
+                implementation("io.github.dellisd.spatialk:geojson:0.1.1")
                 implementation("me.tatarka.inject:kotlin-inject-runtime:0.4.1")
                 implementation("io.ktor:ktor-client-core:1.6.7")
                 implementation("io.ktor:ktor-client-js:1.6.7")

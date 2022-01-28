@@ -51,8 +51,6 @@ class ResourceLoader(private val withDatabase: DatabaseHelper) {
                     )
                 }
             }
-
-            console.log(database.stopSearchQueries.getById("AA010").executeAsOne())
         }
     }
 }

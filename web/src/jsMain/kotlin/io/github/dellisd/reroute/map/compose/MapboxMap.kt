@@ -31,10 +31,10 @@ private fun LngLatBounds.toArray(): Array<Double> =
     arrayOf(southwest.longitude, southwest.latitude, northeast.longitude, northeast.latitude)
 
 class MapboxState(
-    private val initialCenter: LngLat = LngLat(0.0, 0.0),
-    private val initialZoom: Double = 0.0,
-    private val initialBearing: Double = 0.0,
-    private val initialPitch: Double = 0.0
+    internal val initialCenter: LngLat = LngLat(0.0, 0.0),
+    internal val initialZoom: Double = 0.0,
+    internal val initialBearing: Double = 0.0,
+    internal val initialPitch: Double = 0.0
 ) {
     internal var map: mapbox.Map? = null
         set(value) {
@@ -197,6 +197,7 @@ fun MapboxMap(
     accessToken: String,
     style: String,
     state: MapboxState = rememberMapboxState(),
+    hash: Boolean = false,
     containerAttrs: AttrsBuilder<HTMLDivElement>.() -> Unit = {},
     sources: @Composable MapScope.() -> Unit
 ) {
@@ -211,6 +212,12 @@ fun MapboxMap(
                 this.accessToken = accessToken
                 container = it
                 this.style = style
+                this.hash = hash
+
+                this.center = state.initialCenter.toArray()
+                this.zoom = state.initialZoom
+                this.bearing = state.initialBearing
+                this.pitch = state.initialPitch
             })
             console.dir(map!!)
             map?.resize()

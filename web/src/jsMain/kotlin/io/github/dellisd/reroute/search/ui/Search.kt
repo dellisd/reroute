@@ -48,7 +48,11 @@ fun Search(viewModel: SearchViewModel) {
             scope.launch { viewModel.search(query) }
         })
         results.forEach {
-            SearchResult(it)
+            SearchResult(it, onClick = {
+                scope.launch {
+                    viewModel.selectStop(it)
+                }
+            })
         }
     }
 }

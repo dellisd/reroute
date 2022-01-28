@@ -47,4 +47,10 @@ class SourceScope(private val sourceId: String, private val mapRef: mapbox.Map) 
         val styleScope = SymbolLayerScope(id, mapRef)
         Layer(id, "symbol", styleScope, style)
     }
+
+    @Composable
+    fun CircleLayer(id: String, style: @Composable CircleLayerScope.() -> Unit = {}) {
+        val styleScope = CircleLayerScope(id, mapRef)
+        Layer(id, "circle", styleScope, style)
+    }
 }

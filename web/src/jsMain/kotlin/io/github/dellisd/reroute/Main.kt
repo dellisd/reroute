@@ -18,7 +18,7 @@ fun main() {
     renderComposable(rootElementId = "root") {
         Style(AppStylesheet)
 
+        component.mapDemo()
         component.application()
-        MapDemo()
     }
 }
