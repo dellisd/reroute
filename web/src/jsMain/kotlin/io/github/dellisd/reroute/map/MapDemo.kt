@@ -57,7 +57,7 @@ fun MapDemo(viewModel: MapViewModel) {
             }
         ) {
             data?.let { safeData ->
-                GeoJsonSource("stops", data = JSON.parse(safeData)) {
+                GeoJsonSource("stops", data = safeData) {
                     CircleLayer("stop-circles") {
                         circleColor(hsl(4.1, 89.6, 58.4))
                         circleRadius(5)
