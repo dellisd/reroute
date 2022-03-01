@@ -59,4 +59,22 @@ class SqlJsDataSource(private val withDatabase: DatabaseHelper) : DataSource {
             .asFlow()
             .mapToList()
     }
+
+    override suspend fun getStopByCode(code: String): Flow<List<Stop>> = withDatabase { database ->
+        database.stopsQueries
+            .getByCode(code) { id, code, name, desc, lat, lon, zone_id, url, location_type ->
+                Stop(
+                    id,
+                    code,
+                    name,
+                    desc,
+                    LngLat(lon, lat),
+                    zone_id?.toInt(),
+                    url,
+                    location_type.toInt()
+                )
+            }
+            .asFlow()
+            .mapToList()
+    }
 }

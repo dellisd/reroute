@@ -13,6 +13,9 @@ CREATE TABLE stops (
 getById:
 SELECT * FROM stops WHERE id = ?;
 
+getByCode:
+SELECT * FROM stops WHERE code = ?;
+
 getAll:
 SELECT * FROM stops;
 

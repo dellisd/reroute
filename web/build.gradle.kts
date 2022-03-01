@@ -4,9 +4,9 @@ import java.util.Properties
 plugins {
     kotlin("multiplatform")
     kotlin("plugin.serialization") version "1.6.10"
-    id("org.jetbrains.compose") version "1.0.1-rc2"
+    id("org.jetbrains.compose") version "1.1.0"
     id("com.squareup.sqldelight") version "1.5.3"
-    id("com.google.devtools.ksp") version "1.6.10-1.0.2"
+    id("com.google.devtools.ksp") version "1.6.10-1.0.4"
     id("com.codingfeline.buildkonfig") version "0.11.0"
 }
 
@@ -50,11 +50,11 @@ kotlin {
                 implementation("io.ktor:ktor-client-js:1.6.7")
                 implementation("io.ktor:ktor-client-serialization:1.6.7")
                 implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.2")
+                implementation("app.softwork:routing-compose:0.1.8")
 
                 implementation(devNpm("copy-webpack-plugin", "9.1.0"))
 
-                implementation(npm("mapbox-gl", "2.6.1"))
-                //implementation(npm("@types/mapbox-gl", "2.6.0", generateExternals = true))
+                implementation(npm("mapbox-gl", "2.7.0"))
             }
         }
 

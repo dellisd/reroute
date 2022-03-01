@@ -5,7 +5,11 @@ package io.github.dellisd.reroute.search.ui
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
+import app.softwork.routingcompose.Router
 import io.github.dellisd.reroute.search.SearchViewModel
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.web.attributes.InputType
@@ -85,12 +89,14 @@ object SearchStyleSheet : StyleSheet() {
  * TODO: Think about how to best expose input events to parent composable. A flow?
  */
 @Composable
-fun SearchBar(onQueryUpdate: (String) -> Unit) {
+fun SearchBar(onQueryUpdate: (String) -> Unit, onFocused: (focused: Boolean) -> Unit = {}) {
     Input(type = InputType.Search, attrs = {
         classes(SearchStyleSheet.searchInput)
         onInput {
             onQueryUpdate(it.value)
         }
+        onFocusIn { onFocused(true) }
+        onFocusOut { onFocused(false) }
     })
 }
 
@@ -98,24 +104,31 @@ fun SearchBar(onQueryUpdate: (String) -> Unit) {
 fun Search(viewModel: SearchViewModel) {
     val scope = rememberCoroutineScope()
     val results by viewModel.results.collectAsState()
+    val router = Router.current
+    var isFocused by remember { mutableStateOf(false) }
 
     Style(SearchStyleSheet)
 
     Div(attrs = {
         classes(SearchStyleSheet.searchContainer)
     }) {
-        SearchBar(onQueryUpdate = { query ->
-            scope.launch { viewModel.search(query) }
-        })
-        Div(attrs = {
-            classes(SearchStyleSheet.resultsContainer)
-        }) {
-            results.forEach {
-                SearchResult(it, onClick = {
-                    scope.launch {
-                        viewModel.selectStop(it)
-                    }
-                })
+        SearchBar(
+            onQueryUpdate = { q ->
+                scope.launch { viewModel.search(q) }
+            },
+            onFocused = { isFocused = it }
+        )
+        if (isFocused) {
+            Div(attrs = {
+                classes(SearchStyleSheet.resultsContainer)
+            }) {
+                results.forEach {
+                    SearchResult(it, onClick = {
+                        scope.launch {
+                            router.navigate("/stops/${it.code}")
+                        }
+                    })
+                }
             }
         }
     }

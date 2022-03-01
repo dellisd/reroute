@@ -4,27 +4,19 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
-import geojson.GeoJsonObject
 import io.github.dellisd.reroute.RerouteConfig
 import io.github.dellisd.reroute.data.LngLat
 import io.github.dellisd.reroute.map.compose.MapboxMap
 import io.github.dellisd.reroute.map.compose.rememberMapboxState
 import io.github.dellisd.reroute.map.ui.MapViewModel
-import kotlinx.coroutines.launch
 import me.tatarka.inject.annotations.Inject
-import org.jetbrains.compose.web.css.Color
 import org.jetbrains.compose.web.css.height
 import org.jetbrains.compose.web.css.hsl
 import org.jetbrains.compose.web.css.vh
 import org.jetbrains.compose.web.css.vw
 import org.jetbrains.compose.web.css.width
-import org.jetbrains.compose.web.dom.Button
 import org.jetbrains.compose.web.dom.Div
-import org.jetbrains.compose.web.dom.Text
 
 typealias MapDemo = @Composable () -> Unit
 
@@ -48,7 +40,7 @@ fun MapDemo(viewModel: MapViewModel) {
             accessToken = RerouteConfig.MAPBOX_ACCESS_KEY,
             style = "mapbox://styles/mapbox/navigation-day-v1",
             state = mapState,
-            hash = true,
+            // hash = true,
             containerAttrs = {
                 style {
                     height(100.vh)

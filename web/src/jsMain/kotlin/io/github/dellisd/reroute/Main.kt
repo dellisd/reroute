@@ -1,8 +1,8 @@
 package io.github.dellisd.reroute
 
+import app.softwork.routingcompose.HashRouter
 import io.github.dellisd.reroute.di.AppComponent
 import io.github.dellisd.reroute.di.create
-import io.github.dellisd.reroute.map.MapDemo
 import io.github.dellisd.reroute.ui.AppStylesheet
 import org.jetbrains.compose.web.css.Style
 import org.jetbrains.compose.web.renderComposable
@@ -18,7 +18,15 @@ fun main() {
     renderComposable(rootElementId = "root") {
         Style(AppStylesheet)
 
-        component.mapDemo()
-        component.application()
+        HashRouter(initRoute = "/") {
+            component.mapDemo()
+            component.application()
+
+            route("/stops") {
+                string { code ->
+                    component.stops(code)
+                }
+            }
+        }
     }
 }

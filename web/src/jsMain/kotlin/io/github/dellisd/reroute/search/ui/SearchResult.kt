@@ -11,7 +11,7 @@ import org.jetbrains.compose.web.dom.Text
 fun SearchResult(stop: Stop, onClick: (Stop) -> Unit) {
     Div({
         classes(SearchStyleSheet.searchResult)
-        onClick { onClick(stop) }
+        onMouseDown { onClick(stop) }
     }) {
         Div({ style { fontSize(20.px) } }) { Text(stop.name) }
         Div({ style { fontSize(16.px) } }) { Text(stop.code) }

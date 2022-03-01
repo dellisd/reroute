@@ -20,7 +20,7 @@ import mapbox.AnimationOptions
 import mapbox.CameraOptions
 import mapbox.FitBoundsOptions
 import mapbox.PaddingOptions
-import org.jetbrains.compose.web.attributes.AttrsBuilder
+import org.jetbrains.compose.web.attributes.AttrsScope
 import org.jetbrains.compose.web.dom.Div
 import org.w3c.dom.HTMLDivElement
 import kotlin.coroutines.resume
@@ -198,7 +198,7 @@ fun MapboxMap(
     style: String,
     state: MapboxState = rememberMapboxState(),
     hash: Boolean = false,
-    containerAttrs: AttrsBuilder<HTMLDivElement>.() -> Unit = {},
+    containerAttrs: AttrsScope<HTMLDivElement>.() -> Unit = {},
     sources: @Composable MapScope.() -> Unit
 ) {
     var map: mapbox.Map? by remember { mutableStateOf(null) }
