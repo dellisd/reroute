@@ -5,6 +5,8 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
+import app.softwork.routingcompose.Router
+import geojson.Feature
 import io.github.dellisd.reroute.RerouteConfig
 import io.github.dellisd.reroute.data.LngLat
 import io.github.dellisd.reroute.map.compose.MapboxMap
@@ -28,6 +30,7 @@ fun MapDemo(viewModel: MapViewModel) {
 
     val data by viewModel.stopData.collectAsState(null)
     val targetStop by viewModel.targetStop.collectAsState(null)
+    val router = Router.current
 
     LaunchedEffect(targetStop) {
         targetStop?.let {
@@ -45,6 +48,21 @@ fun MapDemo(viewModel: MapViewModel) {
                 style {
                     height(100.vh)
                     width(100.vw)
+                }
+            },
+            events = {
+                onClick(layers = listOf("stop-circles")) {
+                    val features = it.asDynamic().features.unsafeCast<Array<Feature>>()
+                    val target = features.firstOrNull()
+                    val code: String = target?.properties.asDynamic()?.code as String
+
+                    router.navigate("/stops/${code}")
+                }
+                onMouseEnter(layers = listOf("stop-circles")) {
+                    it.target.getCanvas().style.cursor = "pointer"
+                }
+                onMouseLeave(layers = listOf("stop-circles")) {
+                    it.target.getCanvas().style.cursor = ""
                 }
             }
         ) {

@@ -199,6 +199,7 @@ fun MapboxMap(
     state: MapboxState = rememberMapboxState(),
     hash: Boolean = false,
     containerAttrs: AttrsScope<HTMLDivElement>.() -> Unit = {},
+    events: EventsScope.() -> Unit = {},
     sources: @Composable MapScope.() -> Unit
 ) {
     var map: mapbox.Map? by remember { mutableStateOf(null) }
@@ -234,8 +235,10 @@ fun MapboxMap(
                     }
                     console.log("on style loaded")
                     applySources(map!!, sources)
+                    EventsScope(map!!).events()
                 }
             }
+
 
             onDispose { }
         }

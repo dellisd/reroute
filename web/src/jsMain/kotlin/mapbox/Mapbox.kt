@@ -3,13 +3,24 @@
 @file:Suppress("INTERFACE_WITH_SUPERCLASS", "OVERRIDING_FINAL_MEMBER", "RETURN_TYPE_MISMATCH_ON_OVERRIDE", "CONFLICTING_OVERLOADS")
 package mapbox
 
-import kotlin.js.*
-import org.khronos.webgl.*
-import org.w3c.dom.*
-import org.w3c.dom.events.*
 import geojson.Feature
 import geojson.FeatureCollection
 import geojson.Point
+import org.khronos.webgl.ArrayBufferView
+import org.khronos.webgl.WebGLContextEvent
+import org.khronos.webgl.WebGLRenderingContext
+import org.w3c.dom.HTMLCanvasElement
+import org.w3c.dom.HTMLElement
+import org.w3c.dom.HTMLImageElement
+import org.w3c.dom.HTMLVideoElement
+import org.w3c.dom.ImageBitmap
+import org.w3c.dom.ImageData
+import org.w3c.dom.Node
+import org.w3c.dom.TouchEvent
+import org.w3c.dom.events.MouseEvent
+import org.w3c.dom.events.WheelEvent
+import kotlin.js.Json
+import kotlin.js.Promise
 
 external var accessToken: String
 
@@ -355,6 +366,7 @@ external open class Map(options: MapboxOptions = definedExternally) : Evented {
     open fun isEasing(): Boolean
     open fun stop(): Map /* this */
     open fun <T : String> on(type: T, layer: String, listener: (ev: Any) -> Unit): Map /* this */
+    open fun on(type: String, layers: Array<String>, listener: (ev: Any) -> Unit): Map
     open fun <T : String> on(type: T, listener: (ev: Any) -> Unit): Map /* this */
     open fun on(type: String, listener: (ev: Any) -> Unit): Map /* this */
     open fun <T : String> once(type: T, layer: String, listener: (ev: Any) -> Unit): Map /* this */

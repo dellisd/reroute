@@ -1,6 +1,7 @@
 package io.github.dellisd.reroute
 
 import app.softwork.routingcompose.HashRouter
+import app.softwork.routingcompose.Router
 import io.github.dellisd.reroute.di.AppComponent
 import io.github.dellisd.reroute.di.create
 import io.github.dellisd.reroute.ui.AppStylesheet
