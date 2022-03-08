@@ -14,3 +14,5 @@ To build and serve the app, run:
 ```shell
 ./gradlew :web:jsBrowserRun --continuous
 ```
+
+Open the app in your browser at [`http://localhost:8080/reroute/`](http://localhost:8080/reroute/).
