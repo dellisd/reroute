@@ -28,7 +28,7 @@ fun MapDemo(viewModel: MapViewModel) {
     val scope = rememberCoroutineScope()
     val mapState = rememberMapboxState(center = LngLat(-75.7181, 45.3922), zoom = 11.0)
 
-    val data by viewModel.stopData.collectAsState(null)
+    val data by viewModel.stopData(scope).collectAsState(null)
     val targetStop by viewModel.targetStop.collectAsState(null)
     val router = Router.current
 
