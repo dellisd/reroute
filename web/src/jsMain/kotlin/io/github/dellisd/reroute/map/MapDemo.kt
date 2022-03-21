@@ -4,7 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.remember
 import app.softwork.routingcompose.Router
 import geojson.Feature
 import io.github.dellisd.reroute.RerouteConfig
@@ -12,6 +12,7 @@ import io.github.dellisd.reroute.data.LngLat
 import io.github.dellisd.reroute.map.compose.MapboxMap
 import io.github.dellisd.reroute.map.compose.rememberMapboxState
 import io.github.dellisd.reroute.map.ui.MapViewModel
+import kotlinx.coroutines.flow.onEach
 import me.tatarka.inject.annotations.Inject
 import org.jetbrains.compose.web.css.height
 import org.jetbrains.compose.web.css.hsl
@@ -25,10 +26,11 @@ typealias MapDemo = @Composable () -> Unit
 @Composable
 @Inject
 fun MapDemo(viewModel: MapViewModel) {
-    val scope = rememberCoroutineScope()
     val mapState = rememberMapboxState(center = LngLat(-75.7181, 45.3922), zoom = 11.0)
 
-    val data by viewModel.stopData(scope).collectAsState(null)
+    val data by remember { viewModel.stopData }
+        .onEach { /* This is required to force collection?? */ }
+        .collectAsState(null)
     val targetStop by viewModel.targetStop.collectAsState(null)
     val router = Router.current
 

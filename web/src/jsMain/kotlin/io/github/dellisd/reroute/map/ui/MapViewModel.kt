@@ -7,12 +7,9 @@ import io.github.dellisd.reroute.data.DataSource
 import io.github.dellisd.reroute.di.AppScope
 import io.github.dellisd.reroute.map.MapInteractionsManager
 import io.github.dellisd.reroute.utils.jsObject
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.stateIn
 import me.tatarka.inject.annotations.Inject
 import kotlin.js.Json
 
@@ -21,8 +18,7 @@ import kotlin.js.Json
 class MapViewModel(private val dataSource: DataSource, private val interactionsManager: MapInteractionsManager) {
     val targetStop = interactionsManager.targetStop
 
-    // TODO: Figure out if passing a scope into the VM like this is a good idea
-    fun stopData(scope: CoroutineScope) = flow {
+    val stopData = flow {
         emitAll(dataSource.getStops().map { list ->
             val features = list.map { stop ->
                 jsObject<Feature> {
@@ -44,5 +40,5 @@ class MapViewModel(private val dataSource: DataSource, private val interactionsM
                 this.features = features.toTypedArray()
             }
         })
-    }.stateIn(scope, SharingStarted.Eagerly, null)
+    }
 }
