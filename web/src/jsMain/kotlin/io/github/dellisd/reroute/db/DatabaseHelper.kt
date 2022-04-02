@@ -1,7 +1,7 @@
 package io.github.dellisd.reroute.db
 
-import com.squareup.sqldelight.db.SqlDriver
-import com.squareup.sqldelight.drivers.sqljs.initSqlDriver
+import app.cash.sqldelight.db.SqlDriver
+import app.cash.sqldelight.driver.sqljs.initSqlDriver
 import io.github.dellisd.reroute.di.AppScope
 import kotlinx.coroutines.await
 import me.tatarka.inject.annotations.Inject

@@ -5,7 +5,7 @@ plugins {
     kotlin("multiplatform")
     kotlin("plugin.serialization") version "1.6.10"
     id("org.jetbrains.compose") version "1.1.0"
-    id("com.squareup.sqldelight") version "1.5.3"
+    id("app.cash.sqldelight") version "2.0.0-alpha01"
     id("com.google.devtools.ksp") version "1.6.10-1.0.4"
     id("com.codingfeline.buildkonfig") version "0.11.0"
 }
@@ -42,8 +42,8 @@ kotlin {
             dependencies {
                 implementation(compose.web.core)
                 implementation(compose.runtime)
-                implementation("com.squareup.sqldelight:sqljs-driver:1.5.3")
-                implementation("com.squareup.sqldelight:coroutines-extensions:1.5.3")
+                implementation("app.cash.sqldelight:sqljs-driver:2.0.0-alpha01")
+                implementation("app.cash.sqldelight:coroutines-extensions:2.0.0-alpha01")
                 implementation("io.github.dellisd.spatialk:geojson:0.1.1")
                 implementation("me.tatarka.inject:kotlin-inject-runtime:0.4.1")
                 implementation("io.ktor:ktor-client-core:1.6.7")
@@ -55,6 +55,7 @@ kotlin {
                 implementation(devNpm("copy-webpack-plugin", "9.1.0"))
 
                 implementation(npm("mapbox-gl", "2.7.0"))
+                implementation(npm("sql.js", "1.6.2"))
             }
         }
 
