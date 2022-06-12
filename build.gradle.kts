@@ -1,10 +1,6 @@
 plugins {
-    kotlin("multiplatform") version "1.6.10" apply false
+    alias(libs.plugins.kotlin.multiplatform) apply false
 }
 
-group = "io.github.dellisd"
+group = "ca.derekellis.reroute"
 version = "1.0-SNAPSHOT"
-
-repositories {
-    mavenCentral()
-}
