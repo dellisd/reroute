@@ -1,8 +1,9 @@
 package ca.derekellis.reroute.map.compose
 
-typealias Expression = Array<dynamic>
+// TODO: Replace this with Array<dynamic> if possible
+typealias Expression = Array<out Any>
 
-fun expression(vararg parts: dynamic): Expression = parts
+fun expression(vararg parts: Any): Expression = parts
 
 fun at(index: Int, array: dynamic): Expression = arrayOf("at", index, array)
 

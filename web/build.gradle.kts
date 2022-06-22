@@ -1,4 +1,5 @@
 import com.codingfeline.buildkonfig.compiler.FieldSpec.Type.STRING
+import org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsRootExtension
 import java.util.Properties
 
 plugins {
@@ -102,5 +103,12 @@ buildkonfig {
         } else {
             throw GradleException("mapbox.key not found in local.properties")
         }
+    }
+}
+
+// TODO: Remove this once Kotlin/JS upgrades the webpack-cli version
+afterEvaluate {
+    rootProject.extensions.configure<NodeJsRootExtension> {
+        versions.webpackCli.version = "4.10.0"
     }
 }
