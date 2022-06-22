@@ -1,5 +1,5 @@
 [versions]
-kotlin = "1.6.21"
+kotlin = "1.7.0"
 sqldelight = "2.0.0-SNAPSHOT"
 ktor = "2.0.2"
 inject = "0.4.1"
@@ -29,7 +29,7 @@ spatialk-geojson = "io.github.dellisd.spatialk:geojson:0.2.0"
 [plugins]
 kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
-compose = { id = "org.jetbrains.compose", version = "1.2.0-alpha01-dev709" }
+compose = { id = "org.jetbrains.compose", version = "0.0.0-on_kotlin_1.7.0-rc-dev705" }
 sqldelight = { id = "app.cash.sqldelight", version.ref = "sqldelight" }
-ksp = { id = "com.google.devtools.ksp", version = "1.6.21-1.0.6" }
+ksp = { id = "com.google.devtools.ksp", version = "1.7.0-1.0.6" }
 buildkonfig = { id = "com.codingfeline.buildkonfig", version = "0.12.0" }
