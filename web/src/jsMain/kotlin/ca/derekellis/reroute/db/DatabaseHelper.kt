@@ -1,5 +1,6 @@
 package ca.derekellis.reroute.db
 
+import app.cash.sqldelight.async.coroutines.awaitCreate
 import app.cash.sqldelight.db.SqlDriver
 import app.cash.sqldelight.driver.sqljs.initSqlDriver
 import ca.derekellis.reroute.di.AppScope
@@ -13,7 +14,7 @@ class DatabaseHelper {
 
     suspend fun initDatabase() {
         if (database == null) {
-            database = initSqlDriver(RerouteDatabase.Schema).await().createDatabase()
+            database = initSqlDriver().await().also { RerouteDatabase.Schema.awaitCreate(it) }.createDatabase()
         }
     }
 
