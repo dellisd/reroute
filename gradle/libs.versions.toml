@@ -1,0 +1,35 @@
+[versions]
+kotlin = "1.7.0"
+sqldelight = "2.0.0-SNAPSHOT"
+ktor = "2.0.2"
+inject = "0.4.1"
+
+copyWebpackPlugin = "9.1.0"
+mapboxGl = "2.7.0"
+sqljs = "1.6.2"
+
+[libraries]
+kotlinx-serialization-json = "org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.3"
+
+ktor-client-core = { module = "io.ktor:ktor-client-core", version.ref = "ktor" }
+ktor-client-js = { module = "io.ktor:ktor-client-js", version.ref = "ktor" }
+ktor-client-contentNegotiation = { module = "io.ktor:ktor-client-content-negotiation", version.ref = "ktor" }
+ktor-client-serialization-json = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktor" }
+
+sqldelight-driver-sqljs = { module = "app.cash.sqldelight:sqljs-driver", version.ref = "sqldelight" }
+sqldelight-runtime = { module = "app.cash.sqldelight:runtime", version.ref = "sqldelight" }
+sqldelight-coroutines = { module = "app.cash.sqldelight:coroutines-extensions", version.ref = "sqldelight" }
+
+inject-compiler = { module = "me.tatarka.inject:kotlin-inject-compiler-ksp", version.ref = "inject" }
+inject-runtime = { module = "me.tatarka.inject:kotlin-inject-runtime", version.ref = "inject" }
+
+compose-routing = "app.softwork:routing-compose:0.2.3"
+spatialk-geojson = "io.github.dellisd.spatialk:geojson:0.2.0"
+
+[plugins]
+kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
+kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+compose = { id = "org.jetbrains.compose", version = "0.0.0-on_kotlin_1.7.0-rc-dev705" }
+sqldelight = { id = "app.cash.sqldelight", version.ref = "sqldelight" }
+ksp = { id = "com.google.devtools.ksp", version = "1.7.0-1.0.6" }
+buildkonfig = { id = "com.codingfeline.buildkonfig", version = "0.12.0" }

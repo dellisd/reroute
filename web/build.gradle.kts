@@ -1,27 +1,24 @@
 import com.codingfeline.buildkonfig.compiler.FieldSpec.Type.STRING
+import org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsRootExtension
 import java.util.Properties
 
 plugins {
-    kotlin("multiplatform")
-    kotlin("plugin.serialization") version "1.6.10"
-    id("org.jetbrains.compose") version "1.1.0"
-    id("app.cash.sqldelight") version "2.0.0-alpha01"
-    id("com.google.devtools.ksp") version "1.6.10-1.0.4"
-    id("com.codingfeline.buildkonfig") version "0.11.0"
+    alias(libs.plugins.kotlin.multiplatform)
+    alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.compose)
+    alias(libs.plugins.sqldelight)
+    alias(libs.plugins.ksp)
+    alias(libs.plugins.buildkonfig)
 }
 
-group = "io.github.dellisd"
+group = "ca.derekellis.reroute"
 version = "1.0-SNAPSHOT"
 
 repositories {
-    mavenCentral()
-    maven("https://maven.pkg.jetbrains.space/public/p/compose/dev")
     google()
-}
-
-dependencies {
-    // TODO: Replace with kspJs once IR is fully supported
-    ksp("me.tatarka.inject:kotlin-inject-compiler-ksp:0.4.1")
+    mavenCentral()
+    maven(url = "https://maven.pkg.jetbrains.space/public/p/compose/dev")
+    maven(url = "https://oss.sonatype.org/content/repositories/snapshots")
 }
 
 kotlin {
@@ -37,30 +34,35 @@ kotlin {
     sourceSets {
         val jsMain by getting {
             // Add generated KSP code to source set for IDEA autocompletion
-            kotlin.srcDir("$buildDir/generated/ksp/jsMain/kotlin")
+            kotlin.srcDir("$buildDir/generated/ksp/js/jsMain/kotlin")
 
             dependencies {
                 implementation(compose.web.core)
                 implementation(compose.runtime)
-                implementation("app.cash.sqldelight:sqljs-driver:2.0.0-alpha01")
-                implementation("app.cash.sqldelight:coroutines-extensions:2.0.0-alpha01")
-                implementation("io.github.dellisd.spatialk:geojson:0.1.1")
-                implementation("me.tatarka.inject:kotlin-inject-runtime:0.4.1")
-                implementation("io.ktor:ktor-client-core:1.6.7")
-                implementation("io.ktor:ktor-client-js:1.6.7")
-                implementation("io.ktor:ktor-client-serialization:1.6.7")
-                implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.2")
-                implementation("app.softwork:routing-compose:0.1.8")
+
+                implementation(libs.sqldelight.driver.sqljs)
+                implementation(libs.sqldelight.coroutines)
+
+                implementation(libs.spatialk.geojson)
+                implementation(libs.inject.runtime)
+                implementation(libs.kotlinx.serialization.json)
+                implementation(libs.compose.routing)
+
+                implementation(libs.ktor.client.core)
+                implementation(libs.ktor.client.js)
+                implementation(libs.ktor.client.contentNegotiation)
+                implementation(libs.ktor.client.serialization.json)
 
                 implementation(devNpm("copy-webpack-plugin", "9.1.0"))
 
-                implementation(npm("mapbox-gl", "2.7.0"))
-                implementation(npm("sql.js", "1.6.2"))
+                implementation(npm("mapbox-gl", libs.versions.mapboxGl.get()))
+                implementation(npm("sql.js", libs.versions.sqljs.get()))
             }
         }
 
         val commonMain by getting {
             dependencies {
+                implementation(libs.sqldelight.runtime)
                 implementation(kotlin("stdlib-common"))
             }
         }
@@ -73,14 +75,19 @@ kotlin {
     }
 }
 
+dependencies {
+    add("kspJs", libs.inject.compiler)
+}
+
 sqldelight {
     database("RerouteDatabase") {
-        packageName = "io.github.dellisd.reroute.db"
+        packageName = "ca.derekellis.reroute.db"
+        generateAsync = true
     }
 }
 
 buildkonfig {
-    packageName = "io.github.dellisd.reroute"
+    packageName = "ca.derekellis.reroute"
     exposeObjectWithName = "RerouteConfig"
 
     val props =
@@ -96,5 +103,12 @@ buildkonfig {
         } else {
             throw GradleException("mapbox.key not found in local.properties")
         }
+    }
+}
+
+// TODO: Remove this once Kotlin/JS upgrades the webpack-cli version
+afterEvaluate {
+    rootProject.extensions.configure<NodeJsRootExtension> {
+        versions.webpackCli.version = "4.10.0"
     }
 }
