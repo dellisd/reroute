@@ -56,7 +56,8 @@ kotlin {
                 implementation(devNpm("copy-webpack-plugin", "9.1.0"))
 
                 implementation(npm("mapbox-gl", libs.versions.mapboxGl.get()))
-                implementation(npm("sql.js", libs.versions.sqljs.get()))
+                implementation(npm("@jlongster/sql.js", libs.versions.sqljs.get()))
+                implementation(npm("absurd-sql", libs.versions.absurdSql.get()))
             }
         }
 

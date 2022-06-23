@@ -1,9 +1,9 @@
 package ca.derekellis.reroute.di
 
+import ca.derekellis.reroute.RerouteApplication
 import ca.derekellis.reroute.data.DataSource
 import ca.derekellis.reroute.data.SqlJsDataSource
 import ca.derekellis.reroute.db.DatabaseHelper
-import ca.derekellis.reroute.RerouteApplication
 import ca.derekellis.reroute.map.MapDemo
 import ca.derekellis.reroute.stops.ui.Stops
 import ca.derekellis.reroute.ui.Application
@@ -14,6 +14,7 @@ import me.tatarka.inject.annotations.Provides
 @Component
 abstract class AppComponent {
     @Provides
+    @AppScope
     protected fun dataSource(helper: DatabaseHelper): DataSource = SqlJsDataSource(helper)
 
     abstract val application: Application

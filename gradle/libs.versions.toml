@@ -6,7 +6,9 @@ inject = "0.4.1"
 
 copyWebpackPlugin = "9.1.0"
 mapboxGl = "2.7.0"
-sqljs = "1.6.2"
+sqljs = "1.6.7"
+absurdSql = "0.0.53"
+
 
 [libraries]
 kotlinx-serialization-json = "org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.3"

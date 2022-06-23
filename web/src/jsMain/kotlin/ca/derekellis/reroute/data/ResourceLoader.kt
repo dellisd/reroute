@@ -38,7 +38,7 @@ class ResourceLoader(private val withDatabase: DatabaseHelper) {
     suspend fun loadStopsToDatabase() {
         val data = client.get("${window.location.origin}/reroute/data.json").body<Data>()
         withDatabase { database ->
-            //database.stopsQueries.transaction {
+            database.stopsQueries.transaction {
                 data.stops.forEach {
                     database.stopsQueries.insert(
                         it.id,
@@ -52,7 +52,7 @@ class ResourceLoader(private val withDatabase: DatabaseHelper) {
                         it.locationType
                     )
                 }
-            //}
+            }
         }
     }
 }
