@@ -1,17 +1,13 @@
 package ca.derekellis.reroute.data
 
-import app.cash.sqldelight.Query
 import app.cash.sqldelight.async.coroutines.awaitAsList
 import app.cash.sqldelight.async.coroutines.awaitAsOneOrNull
 import app.cash.sqldelight.coroutines.asFlow
+import app.cash.sqldelight.coroutines.mapToList
 import ca.derekellis.reroute.db.DatabaseHelper
 import ca.derekellis.reroute.di.AppScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.withContext
 import me.tatarka.inject.annotations.Inject
-import kotlin.coroutines.CoroutineContext
 
 @Inject
 @AppScope
@@ -84,16 +80,5 @@ class SqlJsDataSource(private val withDatabase: DatabaseHelper) : DataSource {
             }
             .asFlow()
             .mapToList()
-    }
-
-    /**
-     * TODO: Remove this once the next snapshot is built
-     */
-    private fun <T : Any> Flow<Query<T>>.mapToList(
-        context: CoroutineContext = Dispatchers.Default
-    ): Flow<List<T>> = map {
-        withContext(context) {
-            it.awaitAsList()
-        }
     }
 }

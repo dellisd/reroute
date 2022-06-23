@@ -20,7 +20,6 @@ class DatabaseHelper {
 
     private val createLock = Mutex()
 
-    // TODO: Do migrations if necessary
     suspend fun initDatabase() = createLock.withLock {
         migrateIfNeeded()
     }
