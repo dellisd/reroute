@@ -1,0 +1,14 @@
+import kotlinx.datetime.LocalDateTime;
+
+CREATE TABLE Metadata (
+    updated TEXT AS LocalDateTime NOT NULL
+);
+
+insert:
+INSERT INTO Metadata VALUES ?;
+
+get:
+SELECT * FROM Metadata;
+
+update:
+UPDATE Metadata SET updated = ?;

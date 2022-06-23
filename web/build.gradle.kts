@@ -46,6 +46,7 @@ kotlin {
                 implementation(libs.spatialk.geojson)
                 implementation(libs.inject.runtime)
                 implementation(libs.kotlinx.serialization.json)
+                implementation(libs.kotlinx.datetime)
                 implementation(libs.compose.routing)
 
                 implementation(libs.ktor.client.core)

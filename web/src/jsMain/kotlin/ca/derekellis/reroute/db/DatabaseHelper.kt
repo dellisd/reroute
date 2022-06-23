@@ -15,8 +15,12 @@ import org.w3c.dom.Worker
 @AppScope
 class DatabaseHelper {
     //language=JavaScript
-    private val driver = JsWorkerSqlDriver(js("""new Worker(new URL("./worker.js", import.meta.url))""").unsafeCast<Worker>())
-    private val database: RerouteDatabase = RerouteDatabase(driver)
+    private val driver =
+        JsWorkerSqlDriver(js("""new Worker(new URL("./worker.js", import.meta.url))""").unsafeCast<Worker>())
+    private val database: RerouteDatabase = RerouteDatabase(
+        driver,
+        MetadataAdapter = Metadata.Adapter(LocalDateTimeAdapter)
+    )
 
     private val createLock = Mutex()
 
