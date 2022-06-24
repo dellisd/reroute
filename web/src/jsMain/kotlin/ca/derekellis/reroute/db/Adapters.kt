@@ -1,10 +1,10 @@
 package ca.derekellis.reroute.db
 
 import app.cash.sqldelight.ColumnAdapter
-import kotlinx.datetime.LocalDateTime
+import com.soywiz.klock.DateTime
 
-object LocalDateTimeAdapter : ColumnAdapter<LocalDateTime, String> {
-    override fun decode(databaseValue: String): LocalDateTime = LocalDateTime.parse(databaseValue)
+object DateTimeAdapter : ColumnAdapter<DateTime, String> {
+    override fun decode(databaseValue: String): DateTime = DateTime.parse(databaseValue).utc
 
-    override fun encode(value: LocalDateTime): String = value.toString()
+    override fun encode(value: DateTime): String = value.toString()
 }

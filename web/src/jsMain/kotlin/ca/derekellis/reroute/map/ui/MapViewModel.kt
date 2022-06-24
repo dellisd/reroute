@@ -2,11 +2,12 @@ package ca.derekellis.reroute.map.ui
 
 import ca.derekellis.reroute.data.DataSource
 import ca.derekellis.reroute.di.AppScope
+import ca.derekellis.reroute.map.MapInteractionsManager
+import ca.derekellis.reroute.utils.jsObject
 import geojson.Feature
 import geojson.FeatureCollection
 import geojson.Point
-import ca.derekellis.reroute.map.MapInteractionsManager
-import ca.derekellis.reroute.utils.jsObject
+import geojson.Position
 import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
@@ -25,7 +26,7 @@ class MapViewModel(private val dataSource: DataSource, private val interactionsM
                     type = "Feature"
                     geometry = jsObject<Point> {
                         type = "Point"
-                        coordinates = arrayOf(stop.location.longitude, stop.location.latitude)
+                        coordinates = stop.position.coordinates.toTypedArray().unsafeCast<Position>()
                         properties = jsObject<dynamic> {
                             this.name = stop.name
                             this.code = stop.code

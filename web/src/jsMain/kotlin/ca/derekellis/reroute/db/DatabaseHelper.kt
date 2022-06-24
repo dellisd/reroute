@@ -1,5 +1,6 @@
 package ca.derekellis.reroute.db
 
+import app.cash.sqldelight.adapter.primitive.IntColumnAdapter
 import app.cash.sqldelight.async.coroutines.await
 import app.cash.sqldelight.async.coroutines.awaitCreate
 import app.cash.sqldelight.async.coroutines.awaitMigrate
@@ -19,7 +20,8 @@ class DatabaseHelper {
         JsWorkerSqlDriver(js("""new Worker(new URL("./worker.js", import.meta.url))""").unsafeCast<Worker>())
     private val database: RerouteDatabase = RerouteDatabase(
         driver,
-        MetadataAdapter = Metadata.Adapter(LocalDateTimeAdapter)
+        MetadataAdapter = Metadata.Adapter(DateTimeAdapter),
+        RouteAdapter = Route.Adapter(IntColumnAdapter, IntColumnAdapter)
     )
 
     private val createLock = Mutex()

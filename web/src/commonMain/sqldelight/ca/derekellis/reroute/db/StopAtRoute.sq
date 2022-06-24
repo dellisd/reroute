@@ -1,0 +1,9 @@
+CREATE TABLE StopAtRoute (
+    stopId TEXT NOT NULL,
+    routeId TEXT NOT NULL,
+    FOREIGN KEY (stopId) REFERENCES Stop(id),
+    FOREIGN KEY (routeId) REFERENCES Route(id)
+);
+
+insert:
+INSERT INTO StopAtRoute VALUES ?;
