@@ -10,6 +10,6 @@ FROM openjdk:17-slim-buster
 COPY --from=builder /home/gradle/src/server/build/libs /usr/src/app
 WORKDIR /usr/src/app
 EXPOSE 8888
-CMD ["java", "-jar", "server-all.jar"]
+CMD ["java", "-jar", "server.jar"]
 
 LABEL org.opencontainers.image.source=https://github.com/dellisd/reroute

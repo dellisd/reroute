@@ -60,4 +60,4 @@ jobs:
           script: |
             docker pull ghcr.io/dellisd/reroute-server:dev
             docker pull ghcr.io/dellisd/reroute-client:dev
-            docker stack deploy -c ${{ secrets.DOCKER_DEPLOY_PATH }}/docker-compose.yml api --with-registry-auth
+            docker stack deploy -c ${{ secrets.DOCKER_DEPLOY_PATH }}/docker-compose.yml reroute --with-registry-auth
