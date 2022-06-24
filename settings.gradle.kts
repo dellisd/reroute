@@ -8,3 +8,5 @@ pluginManagement {
 
 rootProject.name = "reroute"
 include("web")
+include("server")
+include("shared")

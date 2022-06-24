@@ -37,22 +37,24 @@ kotlin {
             kotlin.srcDir("$buildDir/generated/ksp/js/jsMain/kotlin")
 
             dependencies {
+                implementation(project(":shared"))
                 implementation(compose.web.core)
                 implementation(compose.runtime)
 
                 implementation(libs.sqldelight.driver.sqljs)
                 implementation(libs.sqldelight.coroutines)
+                implementation(libs.sqldelight.primitiveAdapters)
 
                 implementation(libs.spatialk.geojson)
                 implementation(libs.inject.runtime)
                 implementation(libs.kotlinx.serialization.json)
-                implementation(libs.kotlinx.datetime)
+                implementation(libs.klock) // TODO: Replace with kotlinx-datetime when formatting is supported
                 implementation(libs.compose.routing)
 
                 implementation(libs.ktor.client.core)
                 implementation(libs.ktor.client.js)
                 implementation(libs.ktor.client.contentNegotiation)
-                implementation(libs.ktor.client.serialization.json)
+                implementation(libs.ktor.serialization.json)
 
                 implementation(devNpm("copy-webpack-plugin", "9.1.0"))
 

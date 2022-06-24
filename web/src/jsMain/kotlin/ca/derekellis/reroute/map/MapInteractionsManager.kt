@@ -1,7 +1,7 @@
 package ca.derekellis.reroute.map
 
-import ca.derekellis.reroute.data.Stop
 import ca.derekellis.reroute.di.AppScope
+import ca.derekellis.reroute.models.Stop
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import me.tatarka.inject.annotations.Inject

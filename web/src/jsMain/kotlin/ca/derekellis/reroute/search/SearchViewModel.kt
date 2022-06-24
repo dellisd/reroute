@@ -1,9 +1,9 @@
 package ca.derekellis.reroute.search
 
 import ca.derekellis.reroute.data.DataSource
-import ca.derekellis.reroute.data.Stop
 import ca.derekellis.reroute.di.AppScope
 import ca.derekellis.reroute.map.MapInteractionsManager
+import ca.derekellis.reroute.models.Stop
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import me.tatarka.inject.annotations.Inject

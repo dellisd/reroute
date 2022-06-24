@@ -1,6 +1,7 @@
 package ca.derekellis.reroute.data
 
 import kotlinx.coroutines.flow.Flow
+import ca.derekellis.reroute.models.Stop
 
 interface DataSource {
     suspend fun getStop(id: String): Stop?

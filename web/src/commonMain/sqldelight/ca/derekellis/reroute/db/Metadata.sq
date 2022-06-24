@@ -1,7 +1,7 @@
-import kotlinx.datetime.LocalDateTime;
+import com.soywiz.klock.DateTime;
 
 CREATE TABLE Metadata (
-    updated TEXT AS LocalDateTime NOT NULL
+    updated TEXT AS DateTime NOT NULL
 );
 
 insert:

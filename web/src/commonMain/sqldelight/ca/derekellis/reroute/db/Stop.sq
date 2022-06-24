@@ -1,0 +1,24 @@
+CREATE TABLE Stop (
+    id TEXT NOT NULL PRIMARY KEY,
+    code TEXT,
+    name TEXT NOT NULL,
+    lat REAL NOT NULL,
+    lon REAL NOT NULL
+);
+
+getById:
+SELECT * FROM Stop WHERE id = ?;
+
+getByCode:
+SELECT * FROM Stop WHERE code = ?;
+
+getAll:
+SELECT * FROM Stop;
+
+insert:
+INSERT INTO Stop VALUES ?;
+
+getRoutesAtStop:
+SELECT * FROM StopAtRoute
+    JOIN Route ON StopAtRoute.routeId = Route.id
+WHERE stopId = ?;

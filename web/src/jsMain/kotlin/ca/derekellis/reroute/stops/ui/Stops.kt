@@ -5,7 +5,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import app.softwork.routingcompose.Router
-import ca.derekellis.reroute.data.Stop
+import ca.derekellis.reroute.models.Stop
 import ca.derekellis.reroute.stops.StopsViewModel
 import me.tatarka.inject.annotations.Inject
 import org.jetbrains.compose.web.css.Position
@@ -66,8 +66,8 @@ fun InfoPanel(stop: Stop?) {
             Div {
                 Text(stop.name)
             }
-            Div {
-                Text(stop.code)
+            stop.code?.let { code ->
+                Div { Text(code) }
             }
             Div {
                 Text(stop.id)

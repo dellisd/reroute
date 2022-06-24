@@ -36,7 +36,8 @@ fun MapDemo(viewModel: MapViewModel) {
 
     LaunchedEffect(targetStop) {
         targetStop?.let {
-            mapState.flyTo(center = it.location, zoom = 16.0)
+            val position = it.position
+            mapState.flyTo(center = LngLat(position.longitude, position.latitude), zoom = 16.0)
         }
     }
 

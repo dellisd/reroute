@@ -1,9 +1,9 @@
 package ca.derekellis.reroute.stops
 
 import ca.derekellis.reroute.data.DataSource
-import ca.derekellis.reroute.data.Stop
 import ca.derekellis.reroute.di.AppScope
 import ca.derekellis.reroute.map.MapInteractionsManager
+import ca.derekellis.reroute.models.Stop
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.flow
