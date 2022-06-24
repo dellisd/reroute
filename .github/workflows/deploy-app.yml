@@ -58,5 +58,6 @@ jobs:
           username: ${{ secrets.REMOTE_USER }}
           key: ${{ secrets.DOCKER_SSH_PRIVATE_KEY }}
           script: |
-            docker pull ghcr.io/dellisd/reroute-server:dev ghcr.io/dellisd/reroute-client:dev
+            docker pull ghcr.io/dellisd/reroute-server:dev
+            docker pull ghcr.io/dellisd/reroute-client:dev
             docker stack deploy -c ${{ secrets.DOCKER_DEPLOY_PATH }}/docker-compose.yml api --with-registry-auth
