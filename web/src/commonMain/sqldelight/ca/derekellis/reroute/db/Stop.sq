@@ -18,7 +18,13 @@ SELECT * FROM Stop;
 insert:
 INSERT INTO Stop VALUES ?;
 
-getRoutesAtStop:
-SELECT * FROM StopAtRoute
+getRoutesByStopId:
+SELECT Route.* FROM StopAtRoute
     JOIN Route ON StopAtRoute.routeId = Route.id
 WHERE stopId = ?;
+
+getRoutesByStopCode:
+SELECT Route.* FROM StopAtRoute
+    JOIN Route ON StopAtRoute.routeId = Route.id
+WHERE stopId IN (SELECT id FROM Stop WHERE code = ?)
+ORDER BY Route.id, Route.weight;

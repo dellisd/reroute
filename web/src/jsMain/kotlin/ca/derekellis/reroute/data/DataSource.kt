@@ -1,7 +1,8 @@
 package ca.derekellis.reroute.data
 
-import kotlinx.coroutines.flow.Flow
+import ca.derekellis.reroute.models.Route
 import ca.derekellis.reroute.models.Stop
+import kotlinx.coroutines.flow.Flow
 
 interface DataSource {
     suspend fun getStop(id: String): Stop?
@@ -11,4 +12,6 @@ interface DataSource {
     suspend fun searchStops(query: String): List<Stop>
 
     suspend fun getStops(): Flow<List<Stop>>
+
+    suspend fun getRoutesAtStop(code: String): Flow<List<Route>>
 }

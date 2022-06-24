@@ -6,6 +6,7 @@ import app.cash.sqldelight.coroutines.asFlow
 import app.cash.sqldelight.coroutines.mapToList
 import ca.derekellis.reroute.db.DatabaseHelper
 import ca.derekellis.reroute.di.AppScope
+import ca.derekellis.reroute.models.Route
 import ca.derekellis.reroute.models.Stop
 import io.github.dellisd.spatialk.geojson.Position
 import kotlinx.coroutines.flow.Flow
@@ -40,9 +41,20 @@ class SqlJsDataSource(private val withDatabase: DatabaseHelper) : DataSource {
             .mapToList()
     }
 
+    override suspend fun getRoutesAtStop(code: String): Flow<List<Route>> = withDatabase { database ->
+        database.stopQueries
+            .getRoutesByStopCode(code, RouteMapper)
+            .asFlow()
+            .mapToList()
+    }
+
     companion object {
         private val StopMapper = { id: String, code: String?, name: String, lat: Double, lon: Double ->
             Stop(id, code, name, Position(lon, lat))
+        }
+
+        private val RouteMapper = { id: String, gtfsId: String, name: String, headsign: String, directionId: Int, weight: Int ->
+            Route(id, gtfsId, name, headsign, directionId, weight)
         }
     }
 }
