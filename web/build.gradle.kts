@@ -97,9 +97,12 @@ buildkonfig {
     val props =
         project.rootProject.file("local.properties")
             .takeIf { it.exists() }
-            ?.let {
-                Properties().apply { load(it.inputStream()) }
-            } ?: throw GradleException("local.properties not found")
+            ?.let { Properties().apply { load(it.inputStream()) } }
+
+    if (props == null) {
+        logger.warn("No local.properties file")
+        return@buildkonfig
+    }
 
     defaultConfigs {
         if (props.containsKey("mapbox.key")) {
