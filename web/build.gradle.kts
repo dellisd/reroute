@@ -90,25 +90,24 @@ sqldelight {
     }
 }
 
-buildkonfig {
-    packageName = "ca.derekellis.reroute"
-    exposeObjectWithName = "RerouteConfig"
+val props =
+    project.rootProject.file("local.properties")
+        .takeIf { it.exists() }
+        ?.let { Properties().apply { load(it.inputStream()) } }
 
-    val props =
-        project.rootProject.file("local.properties")
-            .takeIf { it.exists() }
-            ?.let { Properties().apply { load(it.inputStream()) } }
+if (props == null) {
+    logger.warn("No local.properties file")
+} else {
+    buildkonfig {
+        packageName = "ca.derekellis.reroute"
+        exposeObjectWithName = "RerouteConfig"
 
-    if (props == null) {
-        logger.warn("No local.properties file")
-        return@buildkonfig
-    }
-
-    defaultConfigs {
-        if (props.containsKey("mapbox.key")) {
-            buildConfigField(STRING, "MAPBOX_ACCESS_KEY", props.getProperty("mapbox.key"))
-        } else {
-            throw GradleException("mapbox.key not found in local.properties")
+        defaultConfigs {
+            if (props.containsKey("mapbox.key")) {
+                buildConfigField(STRING, "MAPBOX_ACCESS_KEY", props.getProperty("mapbox.key"))
+            } else {
+                throw GradleException("mapbox.key not found in local.properties")
+            }
         }
     }
 }
