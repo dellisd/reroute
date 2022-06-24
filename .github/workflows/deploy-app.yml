@@ -6,27 +6,57 @@ on:
       - "master"
 
 jobs:
-  deploy:
+  build-server:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
 
-      - name: Grant execute permission for gradlew
-        run: chmod +x gradlew
+      - name: Authenticate package registry
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login https://ghcr.io -u ${GITHUB_ACTOR} --password-stdin
+      - name: Get tag
+        run: echo "BUILD_TAG=$(git describe --tags)" >> $GITHUB_ENV
+
+      - name: Build and tag image
+        run: docker build -f server/Dockerfile -t ghcr.io/dellisd/reroute-server:${BUILD_TAG} -t ghcr.io/dellisd/reroute-server:dev .
+      - name: Push image
+        if: success()
+        run: docker push --all-tags ghcr.io/dellisd/reroute-server
+
+  build-client:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
 
       - name: Set up Secrets
         env:
           MAPBOX_KEY: ${{ secrets.MAPBOX_KEY }}
         run: echo "mapbox.key=$MAPBOX_KEY" >> local.properties
 
-      - name: Build dist
-        run: ./gradlew :web:jsBrowserWebpack
+      - name: Authenticate package registry
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login https://ghcr.io -u ${GITHUB_ACTOR} --password-stdin
+      - name: Get tag
+        run: echo "BUILD_TAG=$(git describe --tags)" >> $GITHUB_ENV
 
-      - name: Deploy 🚉
+      - name: Build and tag image
+        run: docker build -f web/Dockerfile -t ghcr.io/dellisd/reroute-client:${BUILD_TAG} -t ghcr.io/dellisd/reroute-client:dev .
+      - name: Push image
         if: success()
-        uses: JamesIves/github-pages-deploy-action@3.7.1
+        run: docker push --all-tags ghcr.io/dellisd/reroute-client
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: [build-server, build-client]
+    steps:
+      - name: Deploy 🚉
+        uses: appleboy/ssh-action@master
         with:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          BRANCH: gh-pages
-          FOLDER: web/build/distributions
-          SINGLE_COMMIT: true
+          host: ${{ secrets.REMOTE_HOST }}
+          username: ${{ secrets.REMOTE_USER }}
+          key: ${{ secrets.DOCKER_SSH_PRIVATE_KEY }}
+          script: |
+            docker pull ghcr.io/dellisd/reroute-server:dev ghcr.io/dellisd/reroute-client:dev
+            docker stack deploy -c ${{ secrets.DOCKER_DEPLOY_PATH }}/docker-compose.yml api --with-registry-auth
