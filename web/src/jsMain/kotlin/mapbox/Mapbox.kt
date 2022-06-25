@@ -181,6 +181,8 @@ external open class Map(options: MapboxOptions = definedExternally) : Evented {
     open fun setStyle(style: String, options: `T$6` = definedExternally): Map /* this */
     open fun setStyle(style: String): Map /* this */
     open fun getStyle(): Style
+    open fun setProjection(projection: String): Map
+    open fun getProjection(): String
     open fun isStyleLoaded(): Boolean
     open fun addSource(id: String, source: GeoJSONSourceRaw): Map /* this */
     open fun addSource(id: String, source: VideoSourceRaw): Map /* this */
@@ -499,6 +501,9 @@ external interface MapboxOptions {
         get() = definedExternally
         set(value) = definedExternally
     var pitchWithRotate: Boolean?
+        get() = definedExternally
+        set(value) = definedExternally
+    var projection: String?
         get() = definedExternally
         set(value) = definedExternally
     var refreshExpiredTiles: Boolean?

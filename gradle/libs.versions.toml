@@ -6,7 +6,7 @@ ktor = "2.0.2"
 inject = "0.4.1"
 
 copyWebpackPlugin = "9.1.0"
-mapboxGl = "2.7.0"
+mapboxGl = "2.9.1"
 sqljs = "1.6.7"
 absurdSql = "0.0.53"
 

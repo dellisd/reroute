@@ -198,9 +198,10 @@ fun MapboxMap(
     style: String,
     state: MapboxState = rememberMapboxState(),
     hash: Boolean = false,
+    projection: String = "mercator",
     containerAttrs: AttrsScope<HTMLDivElement>.() -> Unit = {},
     events: EventsScope.() -> Unit = {},
-    sources: @Composable MapScope.() -> Unit
+    sources: @Composable MapScope.() -> Unit,
 ) {
     var map: mapbox.Map? by remember { mutableStateOf(null) }
     val scope = rememberCoroutineScope()
@@ -213,6 +214,7 @@ fun MapboxMap(
                 this.accessToken = accessToken
                 container = it
                 this.style = style
+                this.projection = projection
                 this.hash = hash
 
                 this.center = state.initialCenter.toArray()
@@ -247,6 +249,11 @@ fun MapboxMap(
     DisposableEffect(style) {
         map?.setStyle(style)
         onDispose { }
+    }
+
+    DisposableEffect(projection) {
+        map?.setProjection(projection)
+        onDispose {  }
     }
 }
 

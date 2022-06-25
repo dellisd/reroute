@@ -9,6 +9,7 @@ import app.softwork.routingcompose.Router
 import ca.derekellis.reroute.RerouteConfig
 import ca.derekellis.reroute.data.LngLat
 import ca.derekellis.reroute.map.compose.MapboxMap
+import ca.derekellis.reroute.map.compose.interpolate
 import ca.derekellis.reroute.map.compose.rememberMapboxState
 import ca.derekellis.reroute.map.ui.MapViewModel
 import geojson.Feature
@@ -44,7 +45,7 @@ fun MapDemo(viewModel: MapViewModel) {
     Div {
         MapboxMap(
             accessToken = RerouteConfig.MAPBOX_ACCESS_KEY,
-            style = "mapbox://styles/mapbox/navigation-day-v1",
+            style = "mapbox://styles/mapbox/light-v10",
             state = mapState,
             // hash = true,
             containerAttrs = {
@@ -73,7 +74,12 @@ fun MapDemo(viewModel: MapViewModel) {
                 GeoJsonSource("stops", data = safeData) {
                     CircleLayer("stop-circles") {
                         circleColor(hsl(4.1, 89.6, 58.4))
-                        circleRadius(5)
+                        circleRadius(interpolate(
+                            arrayOf("exponential", 2),
+                            arrayOf("zoom"),
+                            12 to 2,
+                            15.5 to 6
+                        ))
                     }
                 }
             }
