@@ -84,9 +84,9 @@ class DataHandler(private val config: ServerConfig) {
             "${it.gtfsId.value}-${trip.directionId}"
         }.toList()
 
-        val processedRoutes = grouped.flatMapIndexed { i, (key, value) ->
+        val processedRoutes = grouped.flatMap { (key, value) ->
             val route = routes.getById(value.first().gtfsId)!!
-            value.map { sequence ->
+            value.mapIndexed { i, sequence ->
                 val trip = trips.getValue(sequence.trips.keys.first())
                 val id = "$key#$i"
                 // TODO: Develop a better way to extract headsign values
@@ -96,7 +96,7 @@ class DataHandler(private val config: ServerConfig) {
                     route.shortName!!,
                     trip.headsign!!,
                     trip.directionId!!,
-                    trips.size,
+                    sequence.trips.size,
                     trip.shape!!.lineString()
                 ) to sequence.sequence.mapIndexed { index, stopId -> RouteAtStop(stopId.value, id, index) }
             }
