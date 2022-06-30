@@ -4,6 +4,7 @@ import app.cash.sqldelight.async.coroutines.awaitAsOneOrNull
 import ca.derekellis.reroute.db.DatabaseHelper
 import ca.derekellis.reroute.db.Metadata
 import ca.derekellis.reroute.db.StopAtRoute
+import ca.derekellis.reroute.db.StopInTimetable
 import ca.derekellis.reroute.di.AppScope
 import ca.derekellis.reroute.models.Route
 import ca.derekellis.reroute.models.Stop
@@ -24,9 +25,12 @@ class ResourceLoader(private val withDatabase: DatabaseHelper, private val clien
         val data = client.getDataBundle()
         withDatabase { database ->
             database.transaction {
+                database.metadataQueries.clear()
+
                 data.stops.forEach { database.stopQueries.insert(it.toDb()) }
                 data.routes.forEach { database.routeQueries.insert(it.toDb()) }
-                data.routesAtStops.forEach { database.stopAtRouteQueries.insert(StopAtRoute(it.stopId, it.routeId)) }
+                data.routesAtStops.forEach { database.stopAtRouteQueries.insert(StopAtRoute(it.stopId, it.routeId, it.index)) }
+                data.timetable.forEach { database.stopInTimetableQueries.insert(StopInTimetable(it.stopId, it.routeId, it.index)) }
 
                 val newMetadata = Metadata(DateTime.now())
                 database.metadataQueries.insert(newMetadata)
@@ -39,6 +43,6 @@ class ResourceLoader(private val withDatabase: DatabaseHelper, private val clien
     }
 
     private fun Route.toDb(): DbRoute {
-        return DbRoute(id, gtfsId, name, headsign, directionId, weight)
+        return DbRoute(id, gtfsId, name, headsign, directionId, weight, shape)
     }
 }

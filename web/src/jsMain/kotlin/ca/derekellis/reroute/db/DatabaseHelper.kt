@@ -21,7 +21,9 @@ class DatabaseHelper {
     private val database: RerouteDatabase = RerouteDatabase(
         driver,
         MetadataAdapter = Metadata.Adapter(DateTimeAdapter),
-        RouteAdapter = Route.Adapter(IntColumnAdapter, IntColumnAdapter)
+        RouteAdapter = Route.Adapter(IntColumnAdapter, IntColumnAdapter, LineStringAdapter),
+        StopAtRouteAdapter = StopAtRoute.Adapter(IntColumnAdapter),
+        StopInTimetableAdapter = StopInTimetable.Adapter(IntColumnAdapter)
     )
 
     private val createLock = Mutex()

@@ -6,3 +6,10 @@ SELECT * FROM Metadata;
 
 update:
 UPDATE Metadata SET updated = ?;
+
+clear {
+    DELETE FROM StopInTimetable;
+    DELETE FROM StopAtRoute;
+    DELETE FROM Stop;
+    DELETE FROM Route;
+}

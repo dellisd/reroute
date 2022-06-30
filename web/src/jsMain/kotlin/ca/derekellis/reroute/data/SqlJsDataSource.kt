@@ -8,6 +8,7 @@ import ca.derekellis.reroute.db.DatabaseHelper
 import ca.derekellis.reroute.di.AppScope
 import ca.derekellis.reroute.models.Route
 import ca.derekellis.reroute.models.Stop
+import io.github.dellisd.spatialk.geojson.LineString
 import io.github.dellisd.spatialk.geojson.Position
 import kotlinx.coroutines.flow.Flow
 import me.tatarka.inject.annotations.Inject
@@ -53,8 +54,8 @@ class SqlJsDataSource(private val withDatabase: DatabaseHelper) : DataSource {
             Stop(id, code, name, Position(lon, lat))
         }
 
-        private val RouteMapper = { id: String, gtfsId: String, name: String, headsign: String, directionId: Int, weight: Int ->
-            Route(id, gtfsId, name, headsign, directionId, weight)
+        private val RouteMapper = { id: String, gtfsId: String, name: String, headsign: String, directionId: Int, weight: Int, shape: LineString ->
+            Route(id, gtfsId, name, headsign, directionId, weight, shape)
         }
     }
 }
