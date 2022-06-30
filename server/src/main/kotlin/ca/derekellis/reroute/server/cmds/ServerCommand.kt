@@ -20,6 +20,7 @@ import org.slf4j.LoggerFactory
 import java.nio.file.Path
 import kotlin.io.path.Path
 import kotlin.io.path.copyTo
+import kotlin.io.path.exists
 import kotlin.io.path.readText
 
 class ServerCommand : CliktCommand() {
@@ -29,7 +30,8 @@ class ServerCommand : CliktCommand() {
 
     override fun run() {
         val filePath = configPath ?: Path("config.yml")
-        val config = Yaml.default.decodeFromString<ServerConfig>(filePath.readText())
+        val config =
+            if (filePath.exists()) Yaml.default.decodeFromString(filePath.readText()) else ServerConfig()
 
         val component = RerouteComponent::class.create(config)
         copyDataFile(component.dataHandler)
