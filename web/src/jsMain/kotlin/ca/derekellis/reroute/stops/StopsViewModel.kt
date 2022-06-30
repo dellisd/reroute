@@ -22,7 +22,7 @@ class StopsViewModel(private val dataSource: DataSource, private val mapInteract
             .map { list ->
                 list.groupBy { "${it.name}-${it.directionId}" }
                     .values
-                    .sortedBy { it.first().name }
+                    .sortedBy { it.first().name.filter(Char::isDigit).toInt() }
             }
 
         val combined = combine(

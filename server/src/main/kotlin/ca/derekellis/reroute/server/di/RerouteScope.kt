@@ -7,4 +7,4 @@ import kotlin.annotation.AnnotationTarget.PROPERTY_GETTER
 
 @Scope
 @Target(CLASS, FUNCTION, PROPERTY_GETTER)
-annotation class ServerScope
+annotation class RerouteScope

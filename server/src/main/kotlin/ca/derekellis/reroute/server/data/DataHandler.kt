@@ -1,12 +1,18 @@
 package ca.derekellis.reroute.server.data
 
-import app.cash.sqldelight.db.SqlCursor
+import ca.derekellis.kgtfs.domain.model.Calendar
+import ca.derekellis.kgtfs.domain.model.StopId
 import ca.derekellis.kgtfs.dsl.Gtfs
+import ca.derekellis.kgtfs.ext.TripSequence
+import ca.derekellis.kgtfs.ext.lineString
+import ca.derekellis.kgtfs.ext.uniqueTripSequences
 import ca.derekellis.reroute.models.Route
 import ca.derekellis.reroute.models.RouteAtStop
 import ca.derekellis.reroute.models.Stop
+import ca.derekellis.reroute.models.StopInTimetable
 import ca.derekellis.reroute.models.TransitDataBundle
-import ca.derekellis.reroute.server.di.ServerScope
+import ca.derekellis.reroute.server.ServerConfig
+import ca.derekellis.reroute.server.di.RerouteScope
 import io.github.dellisd.spatialk.geojson.Position
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
@@ -14,6 +20,10 @@ import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.encodeToStream
 import me.tatarka.inject.annotations.Inject
+import org.jgrapht.alg.cycle.CycleDetector
+import org.jgrapht.graph.DefaultDirectedGraph
+import org.jgrapht.graph.DefaultEdge
+import org.jgrapht.traverse.TopologicalOrderIterator
 import org.slf4j.LoggerFactory
 import java.nio.file.Files
 import java.nio.file.Path
@@ -25,17 +35,20 @@ import kotlin.io.path.outputStream
  * TODO: Parameterize the GTFS data source
  */
 @Inject
-@ServerScope
-class DataHandler {
+@RerouteScope
+class DataHandler(private val config: ServerConfig) {
     private val logger = LoggerFactory.getLogger(javaClass)
     private val cacheDir: Path = Files.createTempDirectory("reroute")
-    private val gtfs = Gtfs(
-        source = "https://www.octranspo.com/files/google_transit.zip",
-        dbPath = (cacheDir / "gtfs.db").toString()
-    )
+    private val gtfs by lazy {
+        requireNotNull(config.source)
+        Gtfs(
+            source = config.source,
+            dbPath = (cacheDir / "gtfs.db").toString()
+        )
+    }
     private val cachePrepLock = Mutex()
 
-    private val dataFile = cacheDir / "data.json"
+    val dataFile = cacheDir / "data.json"
 
     init {
         logger.debug("Writing data files to $cacheDir")
@@ -59,77 +72,95 @@ class DataHandler {
     }
 
     private suspend fun prepData(): TransitDataBundle = gtfs {
-        val calendars = calendar.allOnDate()
-        val args = createArguments(calendars.size)
+        val stops = stops.getAll().associateBy { it.id }
+        val trips = trips.getAll().associateBy { it.id }
+        val calendars = calendar.allOnDate().map(Calendar::serviceId).toSet()
+        // Get unique sequences
+        val sequences = uniqueTripSequences(calendars)
 
-        val stops = stops.getAll()
+        // Group sequences by route and direction
+        val grouped = sequences.groupBy {
+            val trip = trips.getValue(it.trips.keys.first())
+            "${it.gtfsId.value}-${trip.directionId}"
+        }.toList()
+
+        val processedRoutes = grouped.flatMapIndexed { i, (key, value) ->
+            val route = routes.getById(value.first().gtfsId)!!
+            value.map { sequence ->
+                val trip = trips.getValue(sequence.trips.keys.first())
+                val id = "$key#$i"
+                // TODO: Develop a better way to extract headsign values
+                Route(
+                    id,
+                    route.id.value,
+                    route.shortName!!,
+                    trip.headsign!!,
+                    trip.directionId!!,
+                    trips.size,
+                    trip.shape!!.lineString()
+                ) to sequence.sequence.mapIndexed { index, stopId -> RouteAtStop(stopId.value, id, index) }
+            }
+        }
+
+        // Build graph of each route+direction and topological ordering
+        val timetable = grouped.flatMap { (_, tripSequences) ->
+            val routeId = tripSequences.first().gtfsId
+            buildSequenceGraph(tripSequences).mapIndexed { i, id -> StopInTimetable(id, routeId.value, i) }
+        }
+
+        val processedStops = stops.values
+            .asSequence()
             .filter { it.latitude != null && it.name != null }
+            .map { stop -> stop.copy(name = stop.name?.titleCase()) }
             .map { stop ->
                 val position = stop.longitude?.let { lng -> stop.latitude?.let { lat -> Position(lng, lat) } }
                 Stop(stop.id.value, stop.code, stop.name!!, position!!)
             }
+            .toList()
 
-        //language=SQLite
-        val routeQueryResults = rawQuery("""
-            SELECT R.route_id as gtfs_id, route_short_name, trip_headsign, direction_id, COUNT(*) as weight
-            FROM Trip
-                     JOIN Route R on Trip.route_id = R.route_id
-            WHERE Trip.service_id IN $args
-            GROUP BY Trip.route_id, trip_headsign, direction_id;
-        """.trimIndent(), mapper = { cursor ->
-            cursor.map {
-                Route(
-                    "",
-                    it.getString(0)!!,
-                    it.getString(1)!!,
-                    it.getString(2)!!,
-                    it.getLong(3)!!.toInt(),
-                    it.getLong(4)!!.toInt()
-                )
-            }
-        }, parameters = calendars.size, binders = {
-            calendars.forEachIndexed { i, calendar -> bindString(i + 1, calendar.serviceId.value) }
-        })
-
-        val routes = routeQueryResults
-            .groupBy { "${it.name}-${it.directionId}" }
-            .mapValues { (key, values) -> values.mapIndexed { i, route -> route.copy(id = "$key#$i") } }
-            .flatMap { (_, values) -> values }
-        val routesIndex = routes.associateBy { "${it.gtfsId}-${it.directionId}-${it.headsign}" }
-
-        //language=SQLite
-        val mappingQueryResults = rawQuery("""
-            SELECT DISTINCT stop_id, route_id, direction_id, trip_headsign
-            FROM StopTime
-                     JOIN Trip T on StopTime.trip_id = T.trip_id
-            WHERE T.service_id IN $args;
-        """.trimIndent(), mapper = { cursor ->
-            cursor.map {
-                val routeKey = "${it.getString(1)}-${it.getLong(2)}-${it.getString(3)}"
-                RouteAtStop(it.getString(0)!!, routesIndex.getValue(routeKey).id)
-            }
-        }, parameters = calendars.size, binders = {
-            calendars.forEachIndexed { i, calendar -> bindString(i + 1, calendar.serviceId.value) }
-        })
-
-        TransitDataBundle(stops, routes, mappingQueryResults)
+        TransitDataBundle(
+            processedStops,
+            processedRoutes.map { (route) -> route },
+            processedRoutes.flatMap { (_, stops) -> stops },
+            timetable
+        )
     }
 
-    private fun <T> SqlCursor.map(mapper: (SqlCursor) -> T): List<T> = buildList {
-        while (next()) {
-            add(mapper(this@map))
+    private fun buildSequenceGraph(sequences: List<TripSequence>): List<String> {
+        val graph = DefaultDirectedGraph<StopId, DefaultEdge>(DefaultEdge::class.java)
+        sequences.forEach {
+            val inserted = mutableSetOf<StopId>()
+            it.sequence.zipWithNext { a, b ->
+                graph.addVertex(a)
+                if (graph.addVertex(b)) {
+                    graph.addEdge(a, b)
+                } else if (b in inserted) {
+                    // Avoid creating cycles
+                    val new = StopId("${b.value}#")
+                    graph.addVertex(new)
+                    graph.addEdge(a, new)
+                }
+
+                inserted.add(a)
+                inserted.add(b)
+            }
         }
-    }
 
-    private fun createArguments(count: Int): String {
-        if (count == 0) return "()"
-
-        return buildString(count + 2) {
-            append("(?")
-            repeat(count - 1) {
-                append(",?")
-            }
-            append(')')
+        val cycleDetector = CycleDetector(graph)
+        if (cycleDetector.detectCycles()) {
+            val sequence = sequences.first()
+            throw IllegalStateException("Cycle detected in route ${sequence.uniqueId}#${sequence.hash}")
         }
+
+        val iterator = TopologicalOrderIterator(graph)
+        return iterator.asSequence().map { it.value.removeSuffix("#") }.toList()
     }
+
+    /**
+     * TODO: Handle edge cases
+     * e.g. "Riverside 1A", or "Hillcrest H.S."
+     */
+    private fun String.titleCase() = lowercase()
+        .split(" ")
+        .joinToString(separator = " ") { word -> word.replaceFirstChar(Char::uppercase) }
 }

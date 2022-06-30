@@ -1,7 +1,7 @@
 package ca.derekellis.reroute.server.routes
 
 import ca.derekellis.reroute.server.data.DataHandler
-import ca.derekellis.reroute.server.di.ServerScope
+import ca.derekellis.reroute.server.di.RerouteScope
 import io.ktor.server.application.call
 import io.ktor.server.response.lastModified
 import io.ktor.server.response.respondFile
@@ -17,10 +17,10 @@ import java.time.ZoneId
 import java.time.ZonedDateTime
 
 @Inject
-@ServerScope
-class DataRoute(private val dataHandler: DataHandler) {
+@RerouteScope
+class DataRoute(private val dataHandler: DataHandler) : RoutingModule {
     context(Routing)
-    fun routes() = route("data") {
+    override fun route() = route("data") {
         get("/") {
             val path = dataHandler.getDataFile()
             val attrs = withContext(Dispatchers.IO) {

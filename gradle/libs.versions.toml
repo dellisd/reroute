@@ -10,8 +10,8 @@ mapboxGl = "2.9.1"
 sqljs = "1.6.7"
 absurdSql = "0.0.53"
 
-
 [libraries]
+kotlinx-serialization-yaml = "com.charleskorn.kaml:kaml:0.45.0"
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinx-serialization" }
 kotlinx-serialization-core = { module = "org.jetbrains.kotlinx:kotlinx-serialization-core", version.ref = "kotlinx-serialization" }
 kotlinx-datetime = "org.jetbrains.kotlinx:kotlinx-datetime:0.3.2"
@@ -41,6 +41,8 @@ spatialk-geojson = "io.github.dellisd.spatialk:geojson:0.2.0"
 kgtfs-gtfs = "ca.derekellis.kgtfs:gtfs:0.1.0-SNAPSHOT"
 logback = "ch.qos.logback:logback-classic:1.2.11"
 klock = "com.soywiz.korlibs.klock:klock:2.2.0"
+clikt = "com.github.ajalt.clikt:clikt:3.5.0"
+jgrapht = "org.jgrapht:jgrapht-core:1.5.1"
 
 [plugins]
 kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }

@@ -25,9 +25,12 @@ dependencies {
     implementation(libs.ktor.server.autoHead)
     implementation(libs.ktor.server.netty)
     implementation(libs.ktor.serialization.json)
+    implementation(libs.kotlinx.serialization.yaml)
     implementation(libs.logback)
     implementation(libs.inject.runtime)
     implementation(libs.kgtfs.gtfs)
+    implementation(libs.clikt)
+    implementation(libs.jgrapht)
     implementation(project(":shared"))
 
     ksp(libs.inject.compiler)

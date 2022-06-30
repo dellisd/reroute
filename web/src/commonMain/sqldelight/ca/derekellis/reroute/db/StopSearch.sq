@@ -1,18 +1,3 @@
--- TODO: Figure out fts5
--- https://github.com/cashapp/sqldelight/pull/2746
-CREATE VIRTUAL TABLE StopSearch USING fts3 (
-    id TEXT NOT NULL,
-    code TEXT NOT NULL,
-    name TEXT NOT NULL,
-    tokenize=unicode61
-);
-
-CREATE TRIGGER update_stop_search AFTER INSERT ON Stop
-BEGIN
-INSERT INTO StopSearch(id, code, name)
-VALUES(new.id, new.code, new.name);
-END;
-
 search:
 SELECT *
 FROM Stop

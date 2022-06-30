@@ -1,5 +1,6 @@
 package ca.derekellis.reroute.models
 
+import io.github.dellisd.spatialk.geojson.LineString
 import kotlinx.serialization.Serializable
 
 /**
@@ -21,4 +22,5 @@ data class Route(
     val headsign: String,
     val directionId: Int,
     val weight: Int,
+    val shape: LineString,
 )

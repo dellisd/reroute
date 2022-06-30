@@ -1,13 +1,3 @@
-import kotlin.Int;
-
-CREATE TABLE Route (
-    id TEXT NOT NULL PRIMARY KEY,
-    gtfsId TEXT NOT NULL,
-    name TEXT NOT NULL,
-    headsign TEXT NOT NULL,
-    directionId INTEGER AS Int NOT NULL,
-    weight INTEGER AS Int NOT NULL
-);
 
 insert:
 INSERT INTO Route VALUES ?;
