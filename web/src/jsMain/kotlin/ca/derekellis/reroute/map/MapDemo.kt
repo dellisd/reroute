@@ -12,7 +12,9 @@ import ca.derekellis.reroute.map.compose.MapboxMap
 import ca.derekellis.reroute.map.compose.interpolate
 import ca.derekellis.reroute.map.compose.rememberMapboxState
 import ca.derekellis.reroute.map.ui.MapViewModel
+import ca.derekellis.reroute.utils.jsObject
 import geojson.Feature
+import kotlinx.browser.window
 import kotlinx.coroutines.flow.onEach
 import me.tatarka.inject.annotations.Inject
 import org.jetbrains.compose.web.css.height
@@ -38,7 +40,12 @@ fun MapDemo(viewModel: MapViewModel) {
     LaunchedEffect(targetStop) {
         targetStop?.let {
             val position = it.position
-            mapState.flyTo(center = LngLat(position.longitude, position.latitude), zoom = 16.0)
+            mapState.flyTo(center = LngLat(position.longitude, position.latitude), zoom = 16.0,
+                padding = jsObject { right = window.innerWidth - window.innerHeight })
+        }
+
+        if (targetStop == null) {
+            mapState.padding = jsObject { right = 0 }
         }
     }
 
@@ -74,12 +81,14 @@ fun MapDemo(viewModel: MapViewModel) {
                 GeoJsonSource("stops", data = safeData) {
                     CircleLayer("stop-circles") {
                         circleColor(hsl(4.1, 89.6, 58.4))
-                        circleRadius(interpolate(
-                            arrayOf("exponential", 2),
-                            arrayOf("zoom"),
-                            12 to 2,
-                            15.5 to 6
-                        ))
+                        circleRadius(
+                            interpolate(
+                                arrayOf("exponential", 2),
+                                arrayOf("zoom"),
+                                12 to 2,
+                                15.5 to 6
+                            )
+                        )
                     }
                 }
             }

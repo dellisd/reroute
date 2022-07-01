@@ -9,10 +9,10 @@ import me.tatarka.inject.annotations.Inject
 @AppScope
 @Inject
 class MapInteractionsManager {
-    private val _targetStop = MutableSharedFlow<Stop>()
+    private val _targetStop = MutableSharedFlow<Stop?>()
     val targetStop = _targetStop.asSharedFlow()
 
-    suspend fun goTo(stop: Stop) {
+    suspend fun goTo(stop: Stop?) {
         _targetStop.emit(stop)
     }
 }

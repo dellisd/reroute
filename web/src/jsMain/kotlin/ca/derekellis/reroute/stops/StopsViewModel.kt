@@ -35,7 +35,7 @@ class StopsViewModel(private val dataSource: DataSource, private val mapInteract
         emitAll(combined)
     }
 
-    suspend fun goTo(stop: Stop) {
+    suspend fun goTo(stop: Stop?) {
         mapInteractionsManager.goTo(stop)
     }
 }
