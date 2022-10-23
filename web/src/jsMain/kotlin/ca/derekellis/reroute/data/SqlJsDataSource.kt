@@ -10,6 +10,7 @@ import ca.derekellis.reroute.models.Route
 import ca.derekellis.reroute.models.Stop
 import io.github.dellisd.spatialk.geojson.LineString
 import io.github.dellisd.spatialk.geojson.Position
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import me.tatarka.inject.annotations.Inject
 
@@ -32,21 +33,21 @@ class SqlJsDataSource(private val withDatabase: DatabaseHelper) : DataSource {
         database.stopQueries
             .getAll(StopMapper)
             .asFlow()
-            .mapToList()
+            .mapToList(Dispatchers.Main)
     }
 
     override suspend fun getStopByCode(code: String): Flow<List<Stop>> = withDatabase { database ->
         database.stopQueries
             .getByCode(code, StopMapper)
             .asFlow()
-            .mapToList()
+            .mapToList(Dispatchers.Main)
     }
 
     override suspend fun getRoutesAtStop(code: String): Flow<List<Route>> = withDatabase { database ->
         database.stopQueries
             .getRoutesByStopCode(code, RouteMapper)
             .asFlow()
-            .mapToList()
+            .mapToList(Dispatchers.Main)
     }
 
     companion object {

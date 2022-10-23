@@ -1,20 +1,20 @@
 [versions]
-kotlin = "1.7.0"
-kotlinx-serialization = "1.3.3"
-sqldelight = "2.0.0-SNAPSHOT"
-ktor = "2.0.2"
-inject = "0.4.1"
+kotlin = "1.7.10"
+kotlinx-serialization = "1.4.0"
+sqldelight = "2.0.0-alpha04"
+ktor = "2.1.2"
+inject = "0.5.1"
 
 copyWebpackPlugin = "9.1.0"
-mapboxGl = "2.9.1"
+mapboxGl = "2.10.0"
 sqljs = "1.6.7"
 absurdSql = "0.0.53"
 
 [libraries]
-kotlinx-serialization-yaml = "com.charleskorn.kaml:kaml:0.45.0"
+kotlinx-serialization-yaml = "com.charleskorn.kaml:kaml:0.49.0"
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinx-serialization" }
 kotlinx-serialization-core = { module = "org.jetbrains.kotlinx:kotlinx-serialization-core", version.ref = "kotlinx-serialization" }
-kotlinx-datetime = "org.jetbrains.kotlinx:kotlinx-datetime:0.3.2"
+kotlinx-datetime = "org.jetbrains.kotlinx:kotlinx-datetime:0.4.0"
 
 # Ktor Server
 ktor-server-core = { module = "io.ktor:ktor-server-core", version.ref = "ktor" }
@@ -36,7 +36,7 @@ sqldelight-primitiveAdapters = { module = "app.cash.sqldelight:primitive-adapter
 inject-compiler = { module = "me.tatarka.inject:kotlin-inject-compiler-ksp", version.ref = "inject" }
 inject-runtime = { module = "me.tatarka.inject:kotlin-inject-runtime", version.ref = "inject" }
 
-compose-routing = "app.softwork:routing-compose:0.2.3"
+compose-routing = "app.softwork:routing-compose:0.2.9"
 spatialk-geojson = "io.github.dellisd.spatialk:geojson:0.2.0"
 kgtfs-gtfs = "ca.derekellis.kgtfs:gtfs:0.1.0-SNAPSHOT"
 logback = "ch.qos.logback:logback-classic:1.2.11"
@@ -48,8 +48,8 @@ jgrapht = "org.jgrapht:jgrapht-core:1.5.1"
 kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
-compose = { id = "org.jetbrains.compose", version = "0.0.0-on_kotlin_1.7.0-rc-dev705" }
+compose = { id = "org.jetbrains.compose", version = "1.2.0" }
 sqldelight = { id = "app.cash.sqldelight", version.ref = "sqldelight" }
-ksp = { id = "com.google.devtools.ksp", version = "1.7.0-1.0.6" }
+ksp = { id = "com.google.devtools.ksp", version = "1.7.10-1.0.6" }
 buildkonfig = { id = "com.codingfeline.buildkonfig", version = "0.12.0" }
 shadow = { id = "com.github.johnrengelman.shadow", version = "7.1.2" }
