@@ -12,6 +12,8 @@ import ca.derekellis.reroute.map.compose.MapboxMap
 import ca.derekellis.reroute.map.compose.interpolate
 import ca.derekellis.reroute.map.compose.rememberMapboxState
 import ca.derekellis.reroute.map.ui.MapViewModel
+import ca.derekellis.reroute.stops.Stop
+import ca.derekellis.reroute.ui.Navigator
 import ca.derekellis.reroute.utils.jsObject
 import geojson.Feature
 import kotlinx.browser.window
@@ -28,7 +30,7 @@ typealias MapDemo = @Composable () -> Unit
 
 @Composable
 @Inject
-fun MapDemo(viewModel: MapViewModel) {
+fun MapDemo(viewModel: MapViewModel, navigator: Navigator) {
     val mapState = rememberMapboxState(center = LngLat(-75.7181, 45.3922), zoom = 11.0)
 
     val data by remember { viewModel.stopData }
@@ -67,7 +69,7 @@ fun MapDemo(viewModel: MapViewModel) {
                     val target = features.firstOrNull()
                     val code: String = target?.properties.asDynamic()?.code as String
 
-                    router.navigate("/stops/${code}")
+                    navigator.goTo(Stop(code))
                 }
                 onMouseEnter(layers = listOf("stop-circles")) {
                     it.target.getCanvas().style.cursor = "pointer"

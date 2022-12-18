@@ -75,6 +75,7 @@ kotlin {
         val commonMain by getting {
             dependencies {
                 implementation(libs.sqldelight.runtime)
+                implementation(libs.molecule.runtime)
                 implementation(kotlin("stdlib-common"))
             }
         }

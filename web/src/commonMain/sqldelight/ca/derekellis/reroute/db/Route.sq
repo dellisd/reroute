@@ -1,3 +1,3 @@
 
 insert:
-INSERT INTO Route VALUES ?;
+INSERT OR IGNORE INTO Route VALUES ?;

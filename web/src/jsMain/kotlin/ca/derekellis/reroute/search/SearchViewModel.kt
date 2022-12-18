@@ -6,6 +6,7 @@ import ca.derekellis.reroute.map.MapInteractionsManager
 import ca.derekellis.reroute.models.Stop
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.first
 import me.tatarka.inject.annotations.Inject
 
 @AppScope
@@ -16,7 +17,7 @@ class SearchViewModel(private val dataSource: DataSource, private val mapInterac
 
     suspend fun search(query: String) {
         val result = dataSource.searchStops(query)
-        _results.value = result
+        _results.value = result.first()
     }
 
     suspend fun selectStop(stop: Stop) {
