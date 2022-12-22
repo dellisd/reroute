@@ -15,7 +15,9 @@ import org.jetbrains.compose.web.dom.Text
 
 class StopView : View<StopViewModel, StopViewEvent> {
     @Composable
-    override fun Content(model: StopViewModel, emit: (StopViewEvent) -> Unit) {
+    override fun Content(model: StopViewModel?, emit: (StopViewEvent) -> Unit) {
+        model ?: return
+
         Style(StopsStyleSheet)
         InfoPanel(onClose = { emit(Close) }) {
             StopContent(model)

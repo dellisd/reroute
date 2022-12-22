@@ -22,6 +22,7 @@ abstract class AppComponent {
     abstract val mapDemo: MapDemo
 
     abstract val rerouteApplication: RerouteApplication
+
     abstract val appNavigator: AppNavigator
 
     @Provides

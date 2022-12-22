@@ -4,5 +4,5 @@ import androidx.compose.runtime.Composable
 
 interface View<ViewModel, ViewEvent> {
     @Composable
-    fun Content(model: ViewModel, emit: (ViewEvent) -> Unit)
+    fun Content(model: ViewModel?, emit: (ViewEvent) -> Unit)
 }

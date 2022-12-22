@@ -5,6 +5,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import ca.derekellis.reroute.data.DataSource
+import ca.derekellis.reroute.home.Home
 import ca.derekellis.reroute.map.MapInteractionsManager
 import ca.derekellis.reroute.ui.CollectEffect
 import ca.derekellis.reroute.ui.Navigator
@@ -23,7 +24,7 @@ class StopPresenter(
     override fun produceModel(events: Flow<StopViewEvent>): StopViewModel {
         CollectEffect(events) { event ->
             when (event) {
-                Close -> navigator.goTo(TODO())
+                Close -> navigator.goTo(Home)
             }
         }
 
