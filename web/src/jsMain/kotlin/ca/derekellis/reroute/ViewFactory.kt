@@ -4,6 +4,8 @@ import ca.derekellis.reroute.home.Home
 import ca.derekellis.reroute.home.HomeView
 import ca.derekellis.reroute.map.Map
 import ca.derekellis.reroute.map.MapView
+import ca.derekellis.reroute.search.Search
+import ca.derekellis.reroute.search.SearchView
 import ca.derekellis.reroute.stops.Stop
 import ca.derekellis.reroute.stops.StopView
 import ca.derekellis.reroute.ui.Screen
@@ -17,6 +19,7 @@ class ViewFactory {
             is Home -> HomeView()
             is Stop -> StopView()
             is Map -> MapView()
+            is Search -> SearchView()
             else -> throw IllegalArgumentException("Unsupported screen $screen")
         }
     }

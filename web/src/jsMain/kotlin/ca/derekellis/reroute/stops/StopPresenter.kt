@@ -11,6 +11,7 @@ import ca.derekellis.reroute.ui.CollectEffect
 import ca.derekellis.reroute.ui.Navigator
 import ca.derekellis.reroute.ui.Presenter
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.launch
 import me.tatarka.inject.annotations.Inject
 
 @Inject
@@ -24,7 +25,12 @@ class StopPresenter(
     override fun produceModel(events: Flow<StopViewEvent>): StopViewModel {
         CollectEffect(events) { event ->
             when (event) {
-                Close -> navigator.goTo(Home)
+                Close -> {
+                    launch {
+                        mapInteractionsManager.goTo(null)
+                        navigator.goTo(Home)
+                    }
+                }
             }
         }
 

@@ -2,6 +2,7 @@ package ca.derekellis.reroute.search.ui
 
 import androidx.compose.runtime.Composable
 import ca.derekellis.reroute.models.Stop
+import ca.derekellis.reroute.search.SearchStyleSheet
 import org.jetbrains.compose.web.css.fontSize
 import org.jetbrains.compose.web.css.px
 import org.jetbrains.compose.web.dom.Div

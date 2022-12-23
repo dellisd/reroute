@@ -1,17 +1,12 @@
-@file:Suppress("FunctionName")
-
-package ca.derekellis.reroute.search.ui
+package ca.derekellis.reroute.search
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
-import app.softwork.routingcompose.Router
-import ca.derekellis.reroute.search.SearchViewModel
-import kotlinx.coroutines.launch
+import ca.derekellis.reroute.search.ui.SearchResult
+import ca.derekellis.reroute.ui.View
 import org.jetbrains.compose.web.attributes.InputType
 import org.jetbrains.compose.web.css.Color
 import org.jetbrains.compose.web.css.DisplayStyle
@@ -40,6 +35,35 @@ import org.jetbrains.compose.web.css.px
 import org.jetbrains.compose.web.css.width
 import org.jetbrains.compose.web.dom.Div
 import org.jetbrains.compose.web.dom.Input
+
+class SearchView : View<SearchViewModel, SearchViewEvent> {
+    @Composable
+    override fun Content(model: SearchViewModel?, emit: (SearchViewEvent) -> Unit) {
+        model ?: return
+
+        var isFocused by remember { mutableStateOf(false) }
+
+        Style(SearchStyleSheet)
+
+        Div(attrs = {
+            classes(SearchStyleSheet.searchContainer)
+        }) {
+            SearchBar(
+                onQueryUpdate = { q -> emit(SearchViewEvent.UpdateQuery(q)) },
+                onFocused = { isFocused = it }
+            )
+            if (isFocused) {
+                Div(attrs = {
+                    classes(SearchStyleSheet.resultsContainer)
+                }) {
+                    model.results.forEach {
+                        SearchResult(it, onClick = { stop -> emit(SearchViewEvent.SelectStop(stop)) })
+                    }
+                }
+            }
+        }
+    }
+}
 
 object SearchStyleSheet : StyleSheet() {
     val searchContainer by style {
@@ -98,38 +122,4 @@ fun SearchBar(onQueryUpdate: (String) -> Unit, onFocused: (focused: Boolean) -> 
         onFocusIn { onFocused(true) }
         onFocusOut { onFocused(false) }
     })
-}
-
-@Composable
-fun Search(viewModel: SearchViewModel) {
-    val scope = rememberCoroutineScope()
-    val results by viewModel.results.collectAsState()
-    val router = Router.current
-    var isFocused by remember { mutableStateOf(false) }
-
-    Style(SearchStyleSheet)
-
-    Div(attrs = {
-        classes(SearchStyleSheet.searchContainer)
-    }) {
-        SearchBar(
-            onQueryUpdate = { q ->
-                scope.launch { viewModel.search(q) }
-            },
-            onFocused = { isFocused = it }
-        )
-        if (isFocused) {
-            Div(attrs = {
-                classes(SearchStyleSheet.resultsContainer)
-            }) {
-                results.forEach {
-                    SearchResult(it, onClick = {
-                        scope.launch {
-                            router.navigate("/stops/${it.code}")
-                        }
-                    })
-                }
-            }
-        }
-    }
 }
