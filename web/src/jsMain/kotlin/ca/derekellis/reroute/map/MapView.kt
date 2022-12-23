@@ -2,22 +2,17 @@ package ca.derekellis.reroute.map
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
-import app.softwork.routingcompose.Router
 import ca.derekellis.reroute.RerouteConfig
 import ca.derekellis.reroute.data.LngLat
 import ca.derekellis.reroute.map.compose.MapboxMap
+import ca.derekellis.reroute.map.compose.MapboxState
 import ca.derekellis.reroute.map.compose.interpolate
 import ca.derekellis.reroute.map.compose.rememberMapboxState
-import ca.derekellis.reroute.map.ui.MapViewModel
-import ca.derekellis.reroute.stops.Stop
-import ca.derekellis.reroute.ui.Navigator
+import ca.derekellis.reroute.ui.View
 import ca.derekellis.reroute.utils.jsObject
 import geojson.Feature
+import geojson.FeatureCollection
 import kotlinx.browser.window
-import kotlinx.coroutines.flow.onEach
 import me.tatarka.inject.annotations.Inject
 import org.jetbrains.compose.web.css.height
 import org.jetbrains.compose.web.css.hsl
@@ -26,31 +21,32 @@ import org.jetbrains.compose.web.css.vw
 import org.jetbrains.compose.web.css.width
 import org.jetbrains.compose.web.dom.Div
 
-typealias MapDemo = @Composable () -> Unit
+@Inject
+class MapView : View<MapViewModel, MapViewEvent> {
+    @Composable
+    override fun Content(model: MapViewModel?, emit: (MapViewEvent) -> Unit) {
+        model ?: return
+
+        val mapState = rememberMapboxState(center = LngLat(-75.7181, 45.3922), zoom = 11.0)
+
+        LaunchedEffect(model.targetStop) {
+            val target = model.targetStop
+
+            if (target != null) {
+                val (longitude, latitude) = target.position
+                mapState.flyTo(center = LngLat(longitude, latitude), zoom = 16.0,
+                    padding = jsObject { right = window.innerWidth - window.innerHeight })
+            } else {
+                mapState.padding = jsObject { right = 0 }
+            }
+        }
+
+        MapContent(mapState, onEvent = emit, model.featureCollection)
+    }
+}
 
 @Composable
-@Inject
-fun MapDemo(viewModel: MapViewModel, navigator: Navigator) {
-    val mapState = rememberMapboxState(center = LngLat(-75.7181, 45.3922), zoom = 11.0)
-
-    val data by remember { viewModel.stopData }
-        .onEach { /* This is required to force collection?? */ }
-        .collectAsState(null)
-    val targetStop by viewModel.targetStop.collectAsState(null)
-    val router = Router.current
-
-    LaunchedEffect(targetStop) {
-        targetStop?.let {
-            val position = it.position
-            mapState.flyTo(center = LngLat(position.longitude, position.latitude), zoom = 16.0,
-                padding = jsObject { right = window.innerWidth - window.innerHeight })
-        }
-
-        if (targetStop == null) {
-            mapState.padding = jsObject { right = 0 }
-        }
-    }
-
+private fun MapContent(mapState: MapboxState, onEvent: (MapViewEvent) -> Unit, data: FeatureCollection?) {
     Div {
         MapboxMap(
             accessToken = RerouteConfig.MAPBOX_ACCESS_KEY,
@@ -69,7 +65,7 @@ fun MapDemo(viewModel: MapViewModel, navigator: Navigator) {
                     val target = features.firstOrNull()
                     val code: String = target?.properties.asDynamic()?.code as String
 
-                    navigator.goTo(Stop(code))
+                    onEvent(StopClick(code))
                 }
                 onMouseEnter(layers = listOf("stop-circles")) {
                     it.target.getCanvas().style.cursor = "pointer"
