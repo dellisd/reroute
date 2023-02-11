@@ -21,6 +21,7 @@ class AppNavigator(
         screens.tryEmit(screen)
     }
 
+    @Suppress("UNCHECKED_CAST")
     @Composable
     fun handleNavigation() {
         val screen by screens.collectAsState()
