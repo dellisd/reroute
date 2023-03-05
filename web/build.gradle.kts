@@ -52,7 +52,7 @@ kotlin {
                 implementation(compose.web.core)
                 implementation(compose.runtime)
 
-                implementation(libs.sqldelight.driver.sqljs)
+                implementation(libs.sqldelight.driver.webWorker)
                 implementation(libs.sqldelight.coroutines)
                 implementation(libs.sqldelight.primitiveAdapters)
 
@@ -96,10 +96,12 @@ dependencies {
 }
 
 sqldelight {
-    database("RerouteDatabase") {
-        packageName = "ca.derekellis.reroute.db"
-        generateAsync = true
-        deriveSchemaFromMigrations = true
+    databases {
+        create("RerouteDatabase") {
+            packageName.set("ca.derekellis.reroute.db")
+            generateAsync.set(true)
+            deriveSchemaFromMigrations.set(true)
+        }
     }
 }
 

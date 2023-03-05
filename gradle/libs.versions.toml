@@ -1,7 +1,7 @@
 [versions]
 kotlin = "1.8.10"
 kotlinx-serialization = "1.5.0"
-sqldelight = "2.0.0-alpha04"
+sqldelight = "2.0.0-SNAPSHOT"
 ktor = "2.1.2"
 inject = "0.5.1"
 
@@ -28,7 +28,7 @@ ktor-client-contentNegotiation = { module = "io.ktor:ktor-client-content-negotia
 # Ktor Other
 ktor-serialization-json = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktor" }
 
-sqldelight-driver-sqljs = { module = "app.cash.sqldelight:sqljs-driver", version.ref = "sqldelight" }
+sqldelight-driver-webWorker = { module = "app.cash.sqldelight:web-worker-driver", version.ref = "sqldelight" }
 sqldelight-runtime = { module = "app.cash.sqldelight:runtime", version.ref = "sqldelight" }
 sqldelight-coroutines = { module = "app.cash.sqldelight:coroutines-extensions", version.ref = "sqldelight" }
 sqldelight-primitiveAdapters = { module = "app.cash.sqldelight:primitive-adapters", version.ref = "sqldelight" }

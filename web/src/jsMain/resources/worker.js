@@ -34,18 +34,32 @@ async function run() {
 }
 
 function onModuleReady() {
-    let data;
-    data = this["data"];
-    const config = data["config"] ? data["config"] : {};
+    const data = this["data"];
     switch (data && data["action"]) {
         case "exec":
             if (!data["sql"]) {
-                throw "exec: Missing query string";
+                throw new Error("exec: Missing query string");
             }
+
             return postMessage({
-                id: data["id"],
-                results: db.exec(data["sql"], data["params"], config)
+                id: data.id,
+                results: db.exec(data.sql, data.params)[0] ?? { values: [] }
             });
+        case "begin_transaction":
+            return postMessage({
+                id: data.id,
+                results: db.exec("BEGIN TRANSACTION;")
+            })
+        case "end_transaction":
+            return postMessage({
+                id: data.id,
+                results: db.exec("END TRANSACTION;")
+            })
+        case "rollback_transaction":
+            return postMessage({
+                id: data.id,
+                results: db.exec("ROLLBACK TRANSACTION;")
+            })
         default:
             throw new Error("Invalid action : " + (data && data["action"]));
     }
@@ -53,8 +67,8 @@ function onModuleReady() {
 
 function onError(err) {
     return postMessage({
-        id: this["data"]["id"],
-        error: err["message"]
+        id: this.data.id,
+        error: err
     });
 }
 

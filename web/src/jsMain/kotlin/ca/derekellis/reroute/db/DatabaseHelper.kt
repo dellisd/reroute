@@ -5,7 +5,7 @@ import app.cash.sqldelight.async.coroutines.await
 import app.cash.sqldelight.async.coroutines.awaitCreate
 import app.cash.sqldelight.async.coroutines.awaitMigrate
 import app.cash.sqldelight.async.coroutines.awaitQuery
-import app.cash.sqldelight.driver.sqljs.worker.JsWorkerSqlDriver
+import app.cash.sqldelight.driver.worker.WebWorkerDriver
 import ca.derekellis.reroute.di.AppScope
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
@@ -17,7 +17,7 @@ import org.w3c.dom.Worker
 class DatabaseHelper {
     //language=JavaScript
     private val driver =
-        JsWorkerSqlDriver(js("""new Worker(new URL("./worker.js", import.meta.url))""").unsafeCast<Worker>())
+        WebWorkerDriver(js("""new Worker(new URL("./worker.js", import.meta.url))""").unsafeCast<Worker>())
     private val database: RerouteDatabase = RerouteDatabase(
         driver,
         MetadataAdapter = Metadata.Adapter(DateTimeAdapter),
