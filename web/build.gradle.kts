@@ -33,7 +33,9 @@ kotlin {
     js(IR) {
         browser {
             commonWebpackConfig {
-                cssSupport.enabled = true
+                cssSupport {
+                    enabled.set(true)
+                }
             }
         }
         binaries.executable()
@@ -53,7 +55,7 @@ kotlin {
                 implementation(libs.sqldelight.coroutines)
                 implementation(libs.sqldelight.primitiveAdapters)
 
-                implementation(libs.spatialk.geojson)
+//                implementation(libs.spatialk.geojson)
                 implementation(libs.inject.runtime)
                 implementation(libs.kotlinx.serialization.json)
                 implementation(libs.klock) // TODO: Replace with kotlinx-datetime when formatting is supported
@@ -123,9 +125,10 @@ buildkonfig {
     }
 }
 
-// TODO: Remove this once Kotlin/JS upgrades the webpack-cli version
+// TODO: https://github.com/google/ksp/issues/1318
 afterEvaluate {
-    rootProject.extensions.configure<NodeJsRootExtension> {
-        versions.webpackCli.version = "4.10.0"
-    }
+    configurations.filter { it.name.startsWith("generatedByKspKotlinJs") && it.name.endsWith("DependenciesMetadata") }
+        .forEach {
+            configurations.remove(it)
+        }
 }
