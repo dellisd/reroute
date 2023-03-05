@@ -6,3 +6,5 @@
 .gradle/
 
 local.properties
+
+server/data
