@@ -9,7 +9,6 @@ import ca.derekellis.reroute.di.AppScope
 import ca.derekellis.reroute.models.Route
 import ca.derekellis.reroute.models.Stop
 import com.soywiz.klock.DateTime
-
 import me.tatarka.inject.annotations.Inject
 import ca.derekellis.reroute.db.Route as DbRoute
 import ca.derekellis.reroute.db.Stop as DbStop
@@ -25,16 +24,18 @@ class ResourceLoader(private val withDatabase: DatabaseHelper, private val clien
         val data = client.getDataBundle()
         withDatabase { database ->
             database.transaction {
-                database.metadataQueries.clear()
-
                 data.stops.forEach { database.stopQueries.insert(it.toDb()) }
+            }
+
+            database.transaction {
                 data.routes.forEach { database.routeQueries.insert(it.toDb()) }
                 data.routesAtStops.forEach { database.stopAtRouteQueries.insert(StopAtRoute(it.stopId, it.routeId, it.index)) }
                 data.timetable.forEach { database.stopInTimetableQueries.insert(StopInTimetable(it.stopId, it.routeId, it.index)) }
-
-                val newMetadata = Metadata(DateTime.now())
-                database.metadataQueries.insert(newMetadata)
             }
+
+            database.metadataQueries.clear()
+            val newMetadata = Metadata(DateTime.now())
+            database.metadataQueries.insert(newMetadata)
         }
     }
 
