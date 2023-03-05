@@ -2,7 +2,6 @@ package ca.derekellis.reroute
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
-import app.softwork.routingcompose.HashRouter
 import ca.derekellis.reroute.di.AppComponent
 import ca.derekellis.reroute.di.create
 import ca.derekellis.reroute.map.Map
@@ -24,17 +23,9 @@ fun main() {
     renderComposable(rootElementId = "root") {
         Style(AppStylesheet)
 
-        HashRouter(initPath = "/") {
-            MapSection(component.viewFactory, component.presenterFactory)
-            component.application()
-
-//            route("/stops") {
-//                string { code ->
-//                    component.stops(code)
-//                }
-//            }
-            component.appNavigator.handleNavigation()
-        }
+        MapSection(component.viewFactory, component.presenterFactory)
+        component.application()
+        component.appNavigator.handleNavigation()
     }
 }
 

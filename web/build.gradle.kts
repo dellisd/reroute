@@ -60,7 +60,6 @@ kotlin {
                 implementation(libs.inject.runtime)
                 implementation(libs.kotlinx.serialization.json)
                 implementation(libs.klock) // TODO: Replace with kotlinx-datetime when formatting is supported
-                implementation(libs.compose.routing)
                 implementation(libs.compose.mapbox)
 
                 implementation(libs.ktor.client.core)
