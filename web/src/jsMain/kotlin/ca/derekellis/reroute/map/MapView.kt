@@ -2,12 +2,11 @@ package ca.derekellis.reroute.map
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import ca.derekellis.mapbox.LngLat
+import ca.derekellis.mapbox.MapboxState
+import ca.derekellis.mapbox.rememberMapboxState
+import ca.derekellis.mapbox.style.interpolate
 import ca.derekellis.reroute.RerouteConfig
-import ca.derekellis.reroute.data.LngLat
-import ca.derekellis.reroute.map.compose.MapboxMap
-import ca.derekellis.reroute.map.compose.MapboxState
-import ca.derekellis.reroute.map.compose.interpolate
-import ca.derekellis.reroute.map.compose.rememberMapboxState
 import ca.derekellis.reroute.ui.View
 import ca.derekellis.reroute.utils.jsObject
 import geojson.Feature
@@ -48,7 +47,7 @@ class MapView : View<MapViewModel, MapViewEvent> {
 @Composable
 private fun MapContent(mapState: MapboxState, onEvent: (MapViewEvent) -> Unit, data: FeatureCollection?) {
     Div {
-        MapboxMap(
+        ca.derekellis.mapbox.MapboxMap(
             accessToken = RerouteConfig.MAPBOX_ACCESS_KEY,
             style = "mapbox://styles/mapbox/light-v10",
             state = mapState,

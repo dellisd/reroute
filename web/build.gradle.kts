@@ -27,6 +27,7 @@ repositories {
     mavenCentral()
     maven(url = "https://maven.pkg.jetbrains.space/public/p/compose/dev")
     maven(url = "https://oss.sonatype.org/content/repositories/snapshots")
+    maven(url = "https://s01.oss.sonatype.org/content/repositories/snapshots")
 }
 
 kotlin {
@@ -60,6 +61,7 @@ kotlin {
                 implementation(libs.kotlinx.serialization.json)
                 implementation(libs.klock) // TODO: Replace with kotlinx-datetime when formatting is supported
                 implementation(libs.compose.routing)
+                implementation(libs.compose.mapbox)
 
                 implementation(libs.ktor.client.core)
                 implementation(libs.ktor.client.js)
