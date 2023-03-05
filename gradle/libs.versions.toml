@@ -41,7 +41,7 @@ molecule-runtime = { module = "app.cash.molecule:molecule-runtime", version = "0
 compose-routing = "app.softwork:routing-compose:0.2.11"
 compose-mapbox = { module = "ca.derekellis.mapbox:compose-web-mapbox", version = "0.1.0-SNAPSHOT" }
 spatialk-geojson = "io.github.dellisd.spatialk:geojson:0.3.0-SNAPSHOT"
-kgtfs-gtfs = "ca.derekellis.kgtfs:gtfs:0.1.0-SNAPSHOT"
+kgtfs-gtfs = "ca.derekellis.kgtfs:gtfs:0.2.0-SNAPSHOT"
 logback = "ch.qos.logback:logback-classic:1.2.11"
 klock = "com.soywiz.korlibs.klock:klock:2.2.0"
 clikt = "com.github.ajalt.clikt:clikt:3.5.0"

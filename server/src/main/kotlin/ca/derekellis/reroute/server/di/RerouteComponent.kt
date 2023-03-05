@@ -1,18 +1,20 @@
 package ca.derekellis.reroute.server.di
 
-import ca.derekellis.reroute.server.ServerConfig
-import ca.derekellis.reroute.server.data.DataHandler
+import ca.derekellis.kgtfs.cache.GtfsCache
+import ca.derekellis.reroute.server.config.LoadedServerConfig
 import ca.derekellis.reroute.server.routes.DataRoute
 import me.tatarka.inject.annotations.Component
 import me.tatarka.inject.annotations.Provides
+import kotlin.io.path.div
 
 @Component
 @RerouteScope
-abstract class RerouteComponent(private val config: ServerConfig) {
+abstract class RerouteComponent(private val config: LoadedServerConfig) {
     abstract val dataRoute: DataRoute
 
-    abstract val dataHandler: DataHandler
+    @Provides
+    fun config(): LoadedServerConfig = config
 
     @Provides
-    fun config(): ServerConfig = config
+    fun provideGtfsCache(config: LoadedServerConfig): GtfsCache = GtfsCache.open(config.dataPath / "gtfs.db")
 }

@@ -1,8 +1,8 @@
 package ca.derekellis.reroute.server.data
 
-import ca.derekellis.kgtfs.domain.model.Calendar
-import ca.derekellis.kgtfs.domain.model.StopId
-import ca.derekellis.kgtfs.dsl.Gtfs
+import ca.derekellis.kgtfs.cache.GtfsCache
+import ca.derekellis.kgtfs.csv.Calendar
+import ca.derekellis.kgtfs.csv.StopId
 import ca.derekellis.kgtfs.ext.TripSequence
 import ca.derekellis.kgtfs.ext.lineString
 import ca.derekellis.kgtfs.ext.uniqueTripSequences
@@ -11,70 +11,17 @@ import ca.derekellis.reroute.models.RouteAtStop
 import ca.derekellis.reroute.models.Stop
 import ca.derekellis.reroute.models.StopInTimetable
 import ca.derekellis.reroute.models.TransitDataBundle
-import ca.derekellis.reroute.server.ServerConfig
-import ca.derekellis.reroute.server.di.RerouteScope
 import io.github.dellisd.spatialk.geojson.Position
-import kotlinx.coroutines.sync.Mutex
-import kotlinx.coroutines.sync.withLock
-import kotlinx.serialization.ExperimentalSerializationApi
-import kotlinx.serialization.json.Json
-import kotlinx.serialization.json.encodeToStream
-import me.tatarka.inject.annotations.Inject
 import org.jgrapht.alg.cycle.CycleDetector
 import org.jgrapht.graph.DefaultDirectedGraph
 import org.jgrapht.graph.DefaultEdge
 import org.jgrapht.traverse.TopologicalOrderIterator
-import org.slf4j.LoggerFactory
-import java.nio.file.Files
-import java.nio.file.Path
-import kotlin.io.path.div
-import kotlin.io.path.notExists
-import kotlin.io.path.outputStream
 
-/**
- * TODO: Parameterize the GTFS data source
- */
-@Inject
-@RerouteScope
-class DataHandler(private val config: ServerConfig) {
-    private val logger = LoggerFactory.getLogger(javaClass)
-    private val cacheDir: Path = Files.createTempDirectory("reroute")
-    private val gtfs by lazy {
-        requireNotNull(config.source)
-        Gtfs(
-            source = config.source,
-            dbPath = (cacheDir / "gtfs.db").toString()
-        )
-    }
-    private val cachePrepLock = Mutex()
-
-    val dataFile = cacheDir / "data.json"
-
-    init {
-        logger.debug("Writing data files to $cacheDir")
-    }
-
-    /**
-     * TODO: Handle cache invalidation, somehow
-     */
-    @OptIn(ExperimentalSerializationApi::class)
-    suspend fun getDataFile(): Path {
-        cachePrepLock.withLock {
-            if (dataFile.notExists()) {
-                logger.info("Data file does not exist, generating one")
-                val data = prepData()
-
-                Json.encodeToStream(data, dataFile.outputStream())
-            }
-        }
-
-        return dataFile
-    }
-
-    private suspend fun prepData(): TransitDataBundle = gtfs {
-        val stops = stops.getAll().associateBy { it.id }
-        val trips = trips.getAll().associateBy { it.id }
-        val calendars = calendar.allOnDate().map(Calendar::serviceId).toSet()
+class DataBundler {
+    fun assembleDataBundle(gtfs: GtfsCache): TransitDataBundle = gtfs.read {
+        val stops = stops.all().associateBy { it.id }
+        val trips = trips.all().associateBy { it.id }
+        val calendars = calendars.all().map(Calendar::serviceId).toSet()
         // Get unique sequences
         val sequences = uniqueTripSequences(calendars)
 
@@ -85,11 +32,12 @@ class DataHandler(private val config: ServerConfig) {
         }.toList()
 
         val processedRoutes = grouped.flatMap { (key, value) ->
-            val route = routes.getById(value.first().gtfsId)!!
+            val route = routes.byId(value.first().gtfsId)
             value.mapIndexed { i, sequence ->
                 val trip = trips.getValue(sequence.trips.keys.first())
                 val id = "$key#$i"
                 // TODO: Develop a better way to extract headsign values
+                val shape = shapes.byId(trip.shapeId!!)
                 Route(
                     id,
                     route.id.value,
@@ -97,7 +45,7 @@ class DataHandler(private val config: ServerConfig) {
                     trip.headsign!!,
                     trip.directionId!!,
                     sequence.trips.size,
-                    trip.shape!!.lineString()
+                    shape!!.lineString()
                 ) to sequence.sequence.mapIndexed { index, stopId -> RouteAtStop(stopId.value, id, index) }
             }
         }
