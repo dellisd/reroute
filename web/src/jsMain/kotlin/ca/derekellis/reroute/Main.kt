@@ -35,6 +35,7 @@ fun MapSection(
   presenterFactory: PresenterFactory,
 ) {
   val wrapper = remember {
+    @Suppress("UNCHECKED_CAST")
     ScreenWrapper(
       presenterFactory.createPresenter(Map) as Presenter<Any, Any>,
       viewFactory.createView(Map) as View<Any, Any>,

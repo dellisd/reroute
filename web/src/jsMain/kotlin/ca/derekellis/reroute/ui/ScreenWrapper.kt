@@ -13,7 +13,10 @@ import kotlinx.coroutines.flow.filterNotNull
 import me.tatarka.inject.annotations.Inject
 
 @Inject
-data class ScreenWrapper(private val presenter: Presenter<Any, Any>, private val view: View<Any, Any>) {
+class ScreenWrapper (
+  private val presenter: Presenter<Any, Any>,
+  private val view: View<Any, Any>
+) {
   private val eventsChannel = Channel<Any?>()
   private val events = eventsChannel.consumeAsFlow().filterNotNull()
 
@@ -27,5 +30,21 @@ data class ScreenWrapper(private val presenter: Presenter<Any, Any>, private val
     }
 
     view.Content(model) { eventsChannel.trySend(it) }
+  }
+
+  override fun equals(other: Any?): Boolean {
+    if (this === other) return true
+    if (other == null || this::class.js != other::class.js) return false
+
+    other as ScreenWrapper
+
+    if (presenter != other.presenter) return false
+    return view == other.view
+  }
+
+  override fun hashCode(): Int {
+    var result = presenter.hashCode()
+    result = 31 * result + view.hashCode()
+    return result
   }
 }
