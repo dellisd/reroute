@@ -1,5 +1,6 @@
-package ca.derekellis.reroute.server.routes
+package ca.derekellis.reroute.server.data
 
+import ca.derekellis.reroute.server.RoutingModule
 import ca.derekellis.reroute.server.config.LoadedServerConfig
 import ca.derekellis.reroute.server.di.RerouteScope
 import io.ktor.server.application.ApplicationCall
