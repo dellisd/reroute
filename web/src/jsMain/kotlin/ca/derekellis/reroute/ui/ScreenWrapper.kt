@@ -13,9 +13,9 @@ import kotlinx.coroutines.flow.filterNotNull
 import me.tatarka.inject.annotations.Inject
 
 @Inject
-class ScreenWrapper (
+class ScreenWrapper(
   private val presenter: Presenter<Any, Any>,
-  private val view: View<Any, Any>
+  private val view: View<Any, Any>,
 ) {
   private val eventsChannel = Channel<Any?>()
   private val events = eventsChannel.consumeAsFlow().filterNotNull()

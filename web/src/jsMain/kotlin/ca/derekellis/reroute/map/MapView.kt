@@ -12,7 +12,6 @@ import ca.derekellis.reroute.RerouteConfig
 import ca.derekellis.reroute.ui.View
 import ca.derekellis.reroute.utils.jsObject
 import geojson.Feature
-import geojson.FeatureCollection
 import kotlinx.browser.window
 import me.tatarka.inject.annotations.Inject
 import org.jetbrains.compose.web.css.height
@@ -45,12 +44,12 @@ class MapView : View<MapViewModel, MapViewEvent> {
       }
     }
 
-    MapContent(mapState, onEvent = emit, model.featureCollection)
+    MapContent(mapState, onEvent = emit)
   }
 }
 
 @Composable
-private fun MapContent(mapState: MapboxState, onEvent: (MapViewEvent) -> Unit, data: FeatureCollection?) {
+private fun MapContent(mapState: MapboxState, onEvent: (MapViewEvent) -> Unit) {
   Div {
     ca.derekellis.mapbox.MapboxMap(
       accessToken = RerouteConfig.MAPBOX_ACCESS_KEY,
@@ -79,19 +78,17 @@ private fun MapContent(mapState: MapboxState, onEvent: (MapViewEvent) -> Unit, d
         }
       },
     ) {
-      data?.let { safeData ->
-        GeoJsonSource("stops", data = safeData) {
-          CircleLayer("stop-circles") {
-            circleColor(hsl(4.1, 89.6, 58.4))
-            circleRadius(
-              interpolate(
-                exponential(2.0),
-                expression("zoom"),
-                12 to 2,
-                15.5 to 8,
-              ),
-            )
-          }
+      GeoJsonSource("stops", url = "/api/data/geojson") {
+        CircleLayer("stop-circles") {
+          circleColor(hsl(4.1, 89.6, 58.4))
+          circleRadius(
+            interpolate(
+              exponential(2.0),
+              expression("zoom"),
+              12 to 2,
+              15.5 to 8,
+            ),
+          )
         }
       }
     }

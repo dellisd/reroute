@@ -8,6 +8,8 @@ import com.github.ajalt.clikt.parameters.arguments.argument
 import com.github.ajalt.clikt.parameters.options.default
 import com.github.ajalt.clikt.parameters.options.option
 import com.github.ajalt.clikt.parameters.types.path
+import io.github.dellisd.spatialk.geojson.dsl.featureCollection
+import io.github.dellisd.spatialk.geojson.dsl.point
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.encodeToStream
@@ -46,6 +48,25 @@ class PreprocessCommand : CliktCommand() {
     val bundleFile = output / "$name.json"
     bundleFile.outputStream().use { stream ->
       Json.encodeToStream(bundle, stream)
+    }
+
+    logger.info("Bundling geometry into {}/{}.geojson", output, name)
+    val geojson = featureCollection {
+      bundle.stops.forEach { stop ->
+        feature(
+          geometry = point(stop.position.longitude, stop.position.latitude),
+          id = stop.id,
+          properties = {
+            put("name", stop.name)
+            put("code", stop.code)
+            put("id", stop.id)
+          },
+        )
+      }
+    }
+    val geojsonFile = output / "$name.geojson"
+    geojsonFile.outputStream().use { stream ->
+      Json.encodeToStream(geojson, stream)
     }
   }
 }
