@@ -104,11 +104,20 @@ class DataBundler {
         return iterator.asSequence().map { it.value.removeSuffix("#") }.toList()
     }
 
-    /**
-     * TODO: Handle edge cases
-     * e.g. "Riverside 1A", or "Hillcrest H.S."
-     */
-    private fun String.titleCase() = lowercase()
-        .split(" ")
-        .joinToString(separator = " ") { word -> word.replaceFirstChar(Char::uppercase) }
+    private fun String.titleCase(): String {
+        val array = toCharArray()
+        // Uppercase first letter.
+        array[0] = Character.toUpperCase(array[0])
+
+        // Uppercase all letters that follow a whitespace character, or a number
+        for (i in 1 until array.size) {
+            if (Character.isWhitespace(array[i - 1]) || Character.isDigit(array[i - 1])) {
+                array[i] = Character.toUpperCase(array[i])
+            } else {
+                array[i] = Character.toLowerCase(array[i])
+            }
+        }
+
+        return String(array)
+    }
 }

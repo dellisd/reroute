@@ -43,7 +43,7 @@ function onModuleReady() {
 
             return postMessage({
                 id: data.id,
-                results: db.exec(data.sql, data.params)[0] ?? { values: [] }
+                results: db.exec(data.sql, data.params)[0] ?? {values: []}
             });
         case "begin_transaction":
             return postMessage({
@@ -60,6 +60,26 @@ function onModuleReady() {
                 id: data.id,
                 results: db.exec("ROLLBACK TRANSACTION;")
             })
+        case "load_data":
+            fetch("/api/data/").then(response => response.json()).then(({stops, routes, routesAtStops, timetable}) => {
+                stops.forEach(({id, code, name, position}) => {
+                    db.exec("INSERT INTO Stop VALUES (?, ?, ?, ?, ?)", [id, code, name, position[1], position[0]]);
+                });
+                routes.forEach(({id, gtfsId, name, headsign, directionId, weight, shape}) => {
+                    db.exec("INSERT INTO Route VALUES (?, ?, ?, ?, ?, ?, ?)", [id, gtfsId, name, headsign, directionId, weight, JSON.stringify(shape)]);
+                });
+                routesAtStops.forEach(({stopId, routeId, index}) => {
+                    db.exec("INSERT INTO StopAtRoute VALUES (?, ?, ?)", [stopId, routeId, index]);
+                });
+                timetable.forEach(({stopId, routeId, index}) => {
+                    db.exec("INSERT INTO StopInTimetable VALUES (?, ?, ?)", [stopId, routeId, index]);
+                });
+
+                self.postMessage(({
+                    id: data.id
+                }));
+            });
+            break;
         default:
             throw new Error("Invalid action : " + (data && data["action"]));
     }

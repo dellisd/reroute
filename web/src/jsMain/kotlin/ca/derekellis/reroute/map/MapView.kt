@@ -5,6 +5,8 @@ import androidx.compose.runtime.LaunchedEffect
 import ca.derekellis.mapbox.LngLat
 import ca.derekellis.mapbox.MapboxState
 import ca.derekellis.mapbox.rememberMapboxState
+import ca.derekellis.mapbox.style.InterpolationType.Companion.exponential
+import ca.derekellis.mapbox.style.expression
 import ca.derekellis.mapbox.style.interpolate
 import ca.derekellis.reroute.RerouteConfig
 import ca.derekellis.reroute.ui.View
@@ -80,10 +82,10 @@ private fun MapContent(mapState: MapboxState, onEvent: (MapViewEvent) -> Unit, d
                         circleColor(hsl(4.1, 89.6, 58.4))
                         circleRadius(
                             interpolate(
-                                arrayOf("exponential", 2),
-                                arrayOf("zoom"),
+                                exponential(2.0),
+                                expression("zoom"),
                                 12 to 2,
-                                15.5 to 6
+                                15.5 to 8
                             )
                         )
                     }

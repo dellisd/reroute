@@ -16,6 +16,7 @@ import ca.derekellis.reroute.ui.SearchScreenWrapper
 import ca.derekellis.reroute.ui.View
 import me.tatarka.inject.annotations.Component
 import me.tatarka.inject.annotations.Provides
+import org.w3c.dom.Worker
 
 @AppScope
 @Component
@@ -44,4 +45,10 @@ abstract class AppComponent {
             presenterFactory.createPresenter(Search) as Presenter<Any, Any>,
             viewFactory.createView(Search) as View<Any, Any>
         )
+
+    @Provides
+    @AppScope
+    protected fun provideWorker(): Worker =
+        //language=JavaScript
+        js("""new Worker(new URL("./worker.js", import.meta.url))""").unsafeCast<Worker>()
 }
