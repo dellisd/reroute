@@ -14,9 +14,9 @@ typealias SearchScreenWrapper = ScreenWrapper
 @Inject
 @Composable
 fun Application(searchScreenWrapper: SearchScreenWrapper) {
-    Div(attrs = {
-        classes(AppStylesheet.overlayContainer)
-    }) {
-        searchScreenWrapper.screen()
-    }
+  Div(attrs = {
+    classes(AppStylesheet.overlayContainer)
+  }) {
+    searchScreenWrapper.screen()
+  }
 }

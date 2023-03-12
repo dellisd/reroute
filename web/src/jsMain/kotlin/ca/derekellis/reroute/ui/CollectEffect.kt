@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.Flow
 
 @Composable
 inline fun <T> CollectEffect(flow: Flow<T>, crossinline block: CoroutineScope.(T) -> Unit) {
-    LaunchedEffect(flow) {
-        flow.collect { block(it) }
-    }
+  LaunchedEffect(flow) {
+    flow.collect { block(it) }
+  }
 }

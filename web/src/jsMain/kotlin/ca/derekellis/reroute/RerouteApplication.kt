@@ -10,11 +10,11 @@ import me.tatarka.inject.annotations.Inject
 @AppScope
 @Inject
 class RerouteApplication(private val databaseHelper: DatabaseHelper) {
-    private val appScope = CoroutineScope(Dispatchers.Main)
+  private val appScope = CoroutineScope(Dispatchers.Main)
 
-    fun init() {
-        appScope.launch {
-            databaseHelper.initDatabase()
-        }
+  fun init() {
+    appScope.launch {
+      databaseHelper.initDatabase()
     }
+  }
 }

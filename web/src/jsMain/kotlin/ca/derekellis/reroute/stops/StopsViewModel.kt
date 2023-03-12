@@ -17,25 +17,25 @@ typealias StopModel = Pair<Stop, List<List<Route>>>
 @Inject
 @AppScope
 class StopsViewModel(private val dataSource: DataSource, private val mapInteractionsManager: MapInteractionsManager) {
-    fun stop(code: String): Flow<StopModel?> = flow {
-        val groupedRoutes = dataSource.getRoutesAtStop(code)
-            .map { list ->
-                list.groupBy { "${it.name}-${it.directionId}" }
-                    .values
-                    .sortedBy { it.first().name.filter(Char::isDigit).toInt() }
-            }
+  fun stop(code: String): Flow<StopModel?> = flow {
+    val groupedRoutes = dataSource.getRoutesAtStop(code)
+      .map { list ->
+        list.groupBy { "${it.name}-${it.directionId}" }
+          .values
+          .sortedBy { it.first().name.filter(Char::isDigit).toInt() }
+      }
 
-        val combined = combine(
-            dataSource.getStopByCode(code).map(List<Stop>::firstOrNull),
-            groupedRoutes
-        ) { stop, routes ->
-            stop?.let { it to routes }
-        }
-
-        emitAll(combined)
+    val combined = combine(
+      dataSource.getStopByCode(code).map(List<Stop>::firstOrNull),
+      groupedRoutes,
+    ) { stop, routes ->
+      stop?.let { it to routes }
     }
 
-    suspend fun goTo(stop: Stop?) {
-        mapInteractionsManager.goTo(stop)
-    }
+    emitAll(combined)
+  }
+
+  suspend fun goTo(stop: Stop?) {
+    mapInteractionsManager.goTo(stop)
+  }
 }

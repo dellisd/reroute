@@ -14,13 +14,13 @@ import me.tatarka.inject.annotations.Inject
 
 @Inject
 class ViewFactory {
-    fun createView(screen: Screen): View<*, *> {
-        return when (screen) {
-            is Home -> HomeView()
-            is Stop -> StopView()
-            is Map -> MapView()
-            is Search -> SearchView()
-            else -> throw IllegalArgumentException("Unsupported screen $screen")
-        }
+  fun createView(screen: Screen): View<*, *> {
+    return when (screen) {
+      is Home -> HomeView()
+      is Stop -> StopView()
+      is Map -> MapView()
+      is Search -> SearchView()
+      else -> throw IllegalArgumentException("Unsupported screen $screen")
     }
+  }
 }

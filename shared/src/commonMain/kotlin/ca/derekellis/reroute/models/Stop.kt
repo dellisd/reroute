@@ -5,8 +5,8 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class Stop(
-    val id: String,
-    val code: String?,
-    val name: String,
-    val position: Position
+  val id: String,
+  val code: String?,
+  val name: String,
+  val position: Position,
 )

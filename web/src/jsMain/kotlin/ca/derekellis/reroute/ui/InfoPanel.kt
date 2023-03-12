@@ -23,29 +23,29 @@ import org.jetbrains.compose.web.dom.Div
 import org.jetbrains.compose.web.dom.Text
 
 object InfoPanelStylesheet : StyleSheet() {
-    val infoPanelContainer by style {
-        width(100.vw - 100.vh)
-        height(100.percent)
-        background("#FFFFFF")
-        position(Position.Fixed)
-        right(0.px)
-        top(0.px)
-        padding(0.5.em)
-        overflowY("auto")
-    }
+  val infoPanelContainer by style {
+    width(100.vw - 100.vh)
+    height(100.percent)
+    background("#FFFFFF")
+    position(Position.Fixed)
+    right(0.px)
+    top(0.px)
+    padding(0.5.em)
+    overflowY("auto")
+  }
 }
 
 @Composable
 fun InfoPanel(onClose: () -> Unit, content: @Composable () -> Unit) {
-    Style(InfoPanelStylesheet)
-    Div(attrs = {
-        classes(InfoPanelStylesheet.infoPanelContainer)
+  Style(InfoPanelStylesheet)
+  Div(attrs = {
+    classes(InfoPanelStylesheet.infoPanelContainer)
+  }) {
+    Button(attrs = {
+      onClick { onClose() }
     }) {
-        Button(attrs = {
-            onClick { onClose() }
-        }) {
-            Text("Close")
-        }
-        content()
+      Text("Close")
     }
+    content()
+  }
 }

@@ -16,34 +16,34 @@ import ca.derekellis.reroute.db.Stop as DbStop
 @AppScope
 @Inject
 class ResourceLoader(private val withDatabase: DatabaseHelper, private val client: RerouteClient) {
-    suspend fun loadStopsToDatabase() {
-        val metadata: DateTime? = withDatabase { database -> database.metadataQueries.get().awaitAsOneOrNull() }
-        val shouldUpdate = metadata == null || metadata < client.getDataBundleDate()
-        if (!shouldUpdate) return
+  suspend fun loadStopsToDatabase() {
+    val metadata: DateTime? = withDatabase { database -> database.metadataQueries.get().awaitAsOneOrNull() }
+    val shouldUpdate = metadata == null || metadata < client.getDataBundleDate()
+    if (!shouldUpdate) return
 
-        val data = client.getDataBundle()
-        withDatabase { database ->
-            database.transaction {
-                data.stops.forEach { database.stopQueries.insert(it.toDb()) }
-            }
+    val data = client.getDataBundle()
+    withDatabase { database ->
+      database.transaction {
+        data.stops.forEach { database.stopQueries.insert(it.toDb()) }
+      }
 
-            database.transaction {
-                data.routes.forEach { database.routeQueries.insert(it.toDb()) }
-                data.routesAtStops.forEach { database.stopAtRouteQueries.insert(StopAtRoute(it.stopId, it.routeId, it.index)) }
-                data.timetable.forEach { database.stopInTimetableQueries.insert(StopInTimetable(it.stopId, it.routeId, it.index)) }
-            }
+      database.transaction {
+        data.routes.forEach { database.routeQueries.insert(it.toDb()) }
+        data.routesAtStops.forEach { database.stopAtRouteQueries.insert(StopAtRoute(it.stopId, it.routeId, it.index)) }
+        data.timetable.forEach { database.stopInTimetableQueries.insert(StopInTimetable(it.stopId, it.routeId, it.index)) }
+      }
 
-            database.metadataQueries.clear()
-            val newMetadata = Metadata(DateTime.now())
-            database.metadataQueries.insert(newMetadata)
-        }
+      database.metadataQueries.clear()
+      val newMetadata = Metadata(DateTime.now())
+      database.metadataQueries.insert(newMetadata)
     }
+  }
 
-    private fun Stop.toDb(): DbStop {
-        return DbStop(id, code, name, position.latitude, position.longitude)
-    }
+  private fun Stop.toDb(): DbStop {
+    return DbStop(id, code, name, position.latitude, position.longitude)
+  }
 
-    private fun Route.toDb(): DbRoute {
-        return DbRoute(id, gtfsId, name, headsign, directionId, weight, shape)
-    }
+  private fun Route.toDb(): DbRoute {
+    return DbRoute(id, gtfsId, name, headsign, directionId, weight, shape)
+  }
 }

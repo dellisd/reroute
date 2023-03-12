@@ -21,43 +21,43 @@ import ca.derekellis.reroute.stops.Stop as StopScreen
 
 @Inject
 class MapPresenter(
-    private val dataSource: DataSource,
-    private val interactionsManager: MapInteractionsManager,
-    private val navigator: Navigator,
-    private val args: Map,
+  private val dataSource: DataSource,
+  private val interactionsManager: MapInteractionsManager,
+  private val navigator: Navigator,
+  private val args: Map,
 ) :
-    Presenter<MapViewModel, MapViewEvent> {
-    @Composable
-    override fun produceModel(events: Flow<MapViewEvent>): MapViewModel {
-        CollectEffect(events) { event ->
-            when (event) {
-                is StopClick -> navigator.goTo(StopScreen(event.code))
-            }
-        }
-
-        val targetStop by interactionsManager.targetStop.collectAsState(null)
-
-        val stopsList by dataSource.getStops().collectAsState(emptyList())
-        val features = remember(stopsList) {
-            jsObject<FeatureCollection> {
-                type = "FeatureCollection"
-                this.features = Array(stopsList.size) { index -> stopsList[index].toFeature() }
-            }
-        }
-
-        return MapViewModel(targetStop, features)
+  Presenter<MapViewModel, MapViewEvent> {
+  @Composable
+  override fun produceModel(events: Flow<MapViewEvent>): MapViewModel {
+    CollectEffect(events) { event ->
+      when (event) {
+        is StopClick -> navigator.goTo(StopScreen(event.code))
+      }
     }
 
-    private fun Stop.toFeature(): Feature = jsObject {
-        type = "Feature"
-        geometry = jsObject<Point> {
-            type = "Point"
-            coordinates = position.coordinates.toTypedArray().unsafeCast<Position>()
-            properties = jsObject<dynamic> {
-                this.name = name
-                this.code = code
-                this.id = id
-            }.unsafeCast<Json?>()
-        }
+    val targetStop by interactionsManager.targetStop.collectAsState(null)
+
+    val stopsList by dataSource.getStops().collectAsState(emptyList())
+    val features = remember(stopsList) {
+      jsObject<FeatureCollection> {
+        type = "FeatureCollection"
+        this.features = Array(stopsList.size) { index -> stopsList[index].toFeature() }
+      }
     }
+
+    return MapViewModel(targetStop, features)
+  }
+
+  private fun Stop.toFeature(): Feature = jsObject {
+    type = "Feature"
+    geometry = jsObject<Point> {
+      type = "Point"
+      coordinates = position.coordinates.toTypedArray().unsafeCast<Position>()
+      properties = jsObject<dynamic> {
+        this.name = name
+        this.code = code
+        this.id = id
+      }.unsafeCast<Json?>()
+    }
+  }
 }

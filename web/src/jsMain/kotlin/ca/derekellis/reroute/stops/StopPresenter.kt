@@ -16,39 +16,39 @@ import me.tatarka.inject.annotations.Inject
 
 @Inject
 class StopPresenter(
-    private val dataSource: DataSource,
-    private val navigator: Navigator,
-    private val mapInteractionsManager: MapInteractionsManager,
-    private val args: Stop,
+  private val dataSource: DataSource,
+  private val navigator: Navigator,
+  private val mapInteractionsManager: MapInteractionsManager,
+  private val args: Stop,
 ) : Presenter<StopViewModel, StopViewEvent> {
-    @Composable
-    override fun produceModel(events: Flow<StopViewEvent>): StopViewModel {
-        CollectEffect(events) { event ->
-            when (event) {
-                Close -> {
-                    launch {
-                        mapInteractionsManager.goTo(null)
-                        navigator.goTo(Home)
-                    }
-                }
-            }
+  @Composable
+  override fun produceModel(events: Flow<StopViewEvent>): StopViewModel {
+    CollectEffect(events) { event ->
+      when (event) {
+        Close -> {
+          launch {
+            mapInteractionsManager.goTo(null)
+            navigator.goTo(Home)
+          }
         }
-
-        val routesAtStop by dataSource.getRoutesAtStop(args.code).collectAsState(initial = null)
-        val stopList by dataSource.getStopByCode(args.code).collectAsState(initial = null)
-
-        if (routesAtStop == null || stopList == null) return StopViewModel.Loading
-
-        val stop = stopList!!.firstOrNull() ?: return StopViewModel.NotFound
-
-        LaunchedEffect(stop) {
-            mapInteractionsManager.goTo(stop)
-        }
-
-        val groupedRoutes = routesAtStop!!.groupBy { "${it.name}-${it.directionId}" }
-            .values
-            .sortedBy { it.first().name.filter(Char::isDigit).toInt() }
-
-        return StopViewModel.Loaded(stop, groupedRoutes)
+      }
     }
+
+    val routesAtStop by dataSource.getRoutesAtStop(args.code).collectAsState(initial = null)
+    val stopList by dataSource.getStopByCode(args.code).collectAsState(initial = null)
+
+    if (routesAtStop == null || stopList == null) return StopViewModel.Loading
+
+    val stop = stopList!!.firstOrNull() ?: return StopViewModel.NotFound
+
+    LaunchedEffect(stop) {
+      mapInteractionsManager.goTo(stop)
+    }
+
+    val groupedRoutes = routesAtStop!!.groupBy { "${it.name}-${it.directionId}" }
+      .values
+      .sortedBy { it.first().name.filter(Char::isDigit).toInt() }
+
+    return StopViewModel.Loaded(stop, groupedRoutes)
+  }
 }

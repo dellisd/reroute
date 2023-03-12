@@ -17,18 +17,18 @@ import me.tatarka.inject.annotations.Inject
 @Inject
 @AppScope
 class RerouteClient {
-    private val client = HttpClient(Js) {
-        install(ContentNegotiation) {
-            json()
-        }
+  private val client = HttpClient(Js) {
+    install(ContentNegotiation) {
+      json()
     }
+  }
 
-    suspend fun getDataBundleDate(): DateTime {
-        val headers = client.head("/api/data/").headers
-        val formatter = DateFormat("EEE, dd MMM yyyy HH:mm:ss z")
+  suspend fun getDataBundleDate(): DateTime {
+    val headers = client.head("/api/data/").headers
+    val formatter = DateFormat("EEE, dd MMM yyyy HH:mm:ss z")
 
-        return headers["Last-Modified"]!!.let { formatter.parse(it) }.utc
-    }
+    return headers["Last-Modified"]!!.let { formatter.parse(it) }.utc
+  }
 
-    suspend fun getDataBundle(): TransitDataBundle = client.get("/api/data/").body()
+  suspend fun getDataBundle(): TransitDataBundle = client.get("/api/data/").body()
 }

@@ -11,7 +11,7 @@ import kotlinx.serialization.Serializable
  */
 @Serializable
 data class StopInTimetable(
-    val stopId: String,
-    val routeId: String,
-    val index: Int,
+  val stopId: String,
+  val routeId: String,
+  val index: Int,
 )

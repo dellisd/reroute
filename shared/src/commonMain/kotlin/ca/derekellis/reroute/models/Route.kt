@@ -16,11 +16,11 @@ import kotlinx.serialization.Serializable
  */
 @Serializable
 data class Route(
-    val id: String,
-    val gtfsId: String,
-    val name: String,
-    val headsign: String,
-    val directionId: Int,
-    val weight: Int,
-    val shape: LineString,
+  val id: String,
+  val gtfsId: String,
+  val name: String,
+  val headsign: String,
+  val directionId: Int,
+  val weight: Int,
+  val shape: LineString,
 )

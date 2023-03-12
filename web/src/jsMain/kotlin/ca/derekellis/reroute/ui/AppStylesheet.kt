@@ -13,23 +13,23 @@ import org.jetbrains.compose.web.css.top
 import org.jetbrains.compose.web.css.width
 
 object AppStylesheet : StyleSheet() {
-    init {
-        "html, body, #root" style {
-            width(100.percent)
-            height(100.percent)
-            margin(0.px)
-            fontFamily("Roboto", "sans-serif")
-        }
+  init {
+    "html, body, #root" style {
+      width(100.percent)
+      height(100.percent)
+      margin(0.px)
+      fontFamily("Roboto", "sans-serif")
     }
+  }
 
-    val map by style {
-        width(100.percent)
-        height(100.percent)
-    }
+  val map by style {
+    width(100.percent)
+    height(100.percent)
+  }
 
-    val overlayContainer by style {
-        position(Position.Absolute)
-        top(0.px)
-        left(0.px)
-    }
+  val overlayContainer by style {
+    position(Position.Absolute)
+    top(0.px)
+    left(0.px)
+  }
 }

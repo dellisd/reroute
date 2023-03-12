@@ -21,31 +21,31 @@ import kotlin.io.path.notExists
 import kotlin.io.path.outputStream
 
 class PreprocessCommand : CliktCommand() {
-    private val logger = LoggerFactory.getLogger(javaClass)
+  private val logger = LoggerFactory.getLogger(javaClass)
 
-    private val source: Path by argument().path(canBeDir = false)
-    private val output: Path by option("--output", "-o").path(canBeFile = false).default(Path("data"))
-    private val name: String by option("--name", "-n").default("gtfs")
+  private val source: Path by argument().path(canBeDir = false)
+  private val output: Path by option("--output", "-o").path(canBeFile = false).default(Path("data"))
+  private val name: String by option("--name", "-n").default("gtfs")
 
-    @OptIn(ExperimentalSerializationApi::class)
-    override fun run() {
-        if (output.notExists()) {
-            output.createDirectories()
-        }
-
-        val cachePath = output / "$name.db"
-        cachePath.deleteIfExists()
-
-        logger.info("Reading {} into cache at {}", source, cachePath)
-        val cache = GtfsCache.fromReader(cachePath, GtfsReader(source))
-
-        logger.info("Bundling data into {}/{}.json", output, name)
-        val bundler = DataBundler()
-
-        val bundle = bundler.assembleDataBundle(cache)
-        val bundleFile = output / "$name.json"
-        bundleFile.outputStream().use { stream ->
-            Json.encodeToStream(bundle, stream)
-        }
+  @OptIn(ExperimentalSerializationApi::class)
+  override fun run() {
+    if (output.notExists()) {
+      output.createDirectories()
     }
+
+    val cachePath = output / "$name.db"
+    cachePath.deleteIfExists()
+
+    logger.info("Reading {} into cache at {}", source, cachePath)
+    val cache = GtfsCache.fromReader(cachePath, GtfsReader(source))
+
+    logger.info("Bundling data into {}/{}.json", output, name)
+    val bundler = DataBundler()
+
+    val bundle = bundler.assembleDataBundle(cache)
+    val bundleFile = output / "$name.json"
+    bundleFile.outputStream().use { stream ->
+      Json.encodeToStream(bundle, stream)
+    }
+  }
 }

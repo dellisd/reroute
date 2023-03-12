@@ -6,10 +6,10 @@ import com.github.ajalt.clikt.core.NoOpCliktCommand
 import com.github.ajalt.clikt.core.subcommands
 
 fun main(args: Array<String>) {
-    NoOpCliktCommand(name = "reroute")
-        .subcommands(
-            PreprocessCommand(),
-            ServerCommand()
-        )
-        .main(args)
+  NoOpCliktCommand(name = "reroute")
+    .subcommands(
+      PreprocessCommand(),
+      ServerCommand(),
+    )
+    .main(args)
 }

@@ -10,12 +10,11 @@ import org.jetbrains.compose.web.dom.Text
 
 @Composable
 fun SearchResult(stop: Stop, onClick: (Stop) -> Unit) {
-    Div({
-        classes(SearchStyleSheet.searchResult)
-        onMouseDown { onClick(stop) }
-    }) {
-        Div({ style { fontSize(20.px) } }) { Text(stop.name) }
-        stop.code?.let { code -> Div({ style { fontSize(16.px) } }) { Text(code) } }
-
-    }
+  Div({
+    classes(SearchStyleSheet.searchResult)
+    onMouseDown { onClick(stop) }
+  }) {
+    Div({ style { fontSize(20.px) } }) { Text(stop.name) }
+    stop.code?.let { code -> Div({ style { fontSize(16.px) } }) { Text(code) } }
+  }
 }

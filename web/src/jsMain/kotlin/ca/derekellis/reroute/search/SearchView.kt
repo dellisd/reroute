@@ -37,75 +37,75 @@ import org.jetbrains.compose.web.dom.Div
 import org.jetbrains.compose.web.dom.Input
 
 class SearchView : View<SearchViewModel, SearchViewEvent> {
-    @Composable
-    override fun Content(model: SearchViewModel?, emit: (SearchViewEvent) -> Unit) {
-        model ?: return
+  @Composable
+  override fun Content(model: SearchViewModel?, emit: (SearchViewEvent) -> Unit) {
+    model ?: return
 
-        var isFocused by remember { mutableStateOf(false) }
+    var isFocused by remember { mutableStateOf(false) }
 
-        Style(SearchStyleSheet)
+    Style(SearchStyleSheet)
 
+    Div(attrs = {
+      classes(SearchStyleSheet.searchContainer)
+    }) {
+      SearchBar(
+        onQueryUpdate = { q -> emit(SearchViewEvent.UpdateQuery(q)) },
+        onFocused = { isFocused = it },
+      )
+      if (isFocused) {
         Div(attrs = {
-            classes(SearchStyleSheet.searchContainer)
+          classes(SearchStyleSheet.resultsContainer)
         }) {
-            SearchBar(
-                onQueryUpdate = { q -> emit(SearchViewEvent.UpdateQuery(q)) },
-                onFocused = { isFocused = it }
-            )
-            if (isFocused) {
-                Div(attrs = {
-                    classes(SearchStyleSheet.resultsContainer)
-                }) {
-                    model.results.forEach {
-                        SearchResult(it, onClick = { stop -> emit(SearchViewEvent.SelectStop(stop)) })
-                    }
-                }
-            }
+          model.results.forEach {
+            SearchResult(it, onClick = { stop -> emit(SearchViewEvent.SelectStop(stop)) })
+          }
         }
+      }
     }
+  }
 }
 
 object SearchStyleSheet : StyleSheet() {
-    val searchContainer by style {
-        margin(16.px)
-        width(350.px)
-        height(auto)
-        display(DisplayStyle.Flex)
-        flexDirection(FlexDirection.Column)
-    }
+  val searchContainer by style {
+    margin(16.px)
+    width(350.px)
+    height(auto)
+    display(DisplayStyle.Flex)
+    flexDirection(FlexDirection.Column)
+  }
 
-    val searchInput by style {
-        padding(8.px)
-        border(width = 1.px, style = LineStyle.Solid, color = hsl(0, 0, 93))
-        borderRadius(8.px)
-        property("box-shadow", "0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24)")
-    }
+  val searchInput by style {
+    padding(8.px)
+    border(width = 1.px, style = LineStyle.Solid, color = hsl(0, 0, 93))
+    borderRadius(8.px)
+    property("box-shadow", "0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24)")
+  }
 
-    val resultsContainer by style {
-        display(DisplayStyle.Flex)
-        flexDirection(FlexDirection.Column)
-        width(100.percent)
-        backgroundColor(Color.white)
-        borderRadius(8.px)
-        marginTop(8.px)
-        overflow("hidden")
-        property("user-select", "none")
-    }
+  val resultsContainer by style {
+    display(DisplayStyle.Flex)
+    flexDirection(FlexDirection.Column)
+    width(100.percent)
+    backgroundColor(Color.white)
+    borderRadius(8.px)
+    marginTop(8.px)
+    overflow("hidden")
+    property("user-select", "none")
+  }
 
-    val searchResult by style {
-        display(DisplayStyle.Flex)
-        width(100.percent)
-        height(72.px)
-        flexDirection(FlexDirection.Column)
-        justifyContent(JustifyContent.Center)
-        boxSizing("border-box")
-        padding(9.px)
+  val searchResult by style {
+    display(DisplayStyle.Flex)
+    width(100.percent)
+    height(72.px)
+    flexDirection(FlexDirection.Column)
+    justifyContent(JustifyContent.Center)
+    boxSizing("border-box")
+    padding(9.px)
 
-        hover(self) style {
-            backgroundColor(hsl(0, 0, 93))
-            cursor("pointer")
-        }
+    hover(self) style {
+      backgroundColor(hsl(0, 0, 93))
+      cursor("pointer")
     }
+  }
 }
 
 /**
@@ -114,12 +114,12 @@ object SearchStyleSheet : StyleSheet() {
  */
 @Composable
 fun SearchBar(onQueryUpdate: (String) -> Unit, onFocused: (focused: Boolean) -> Unit = {}) {
-    Input(type = InputType.Search, attrs = {
-        classes(SearchStyleSheet.searchInput)
-        onInput {
-            onQueryUpdate(it.value)
-        }
-        onFocusIn { onFocused(true) }
-        onFocusOut { onFocused(false) }
-    })
+  Input(type = InputType.Search, attrs = {
+    classes(SearchStyleSheet.searchInput)
+    onInput {
+      onQueryUpdate(it.value)
+    }
+    onFocusIn { onFocused(true) }
+    onFocusOut { onFocused(false) }
+  })
 }

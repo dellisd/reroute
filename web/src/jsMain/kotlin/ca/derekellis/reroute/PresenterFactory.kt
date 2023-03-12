@@ -14,16 +14,16 @@ import me.tatarka.inject.annotations.Inject
 
 @Inject
 class PresenterFactory(
-    private val stopPresenterFactory: (Stop) -> StopPresenter,
-    private val homePresenterFactory: (Home) -> HomePresenter,
-    private val mapPresenterFactory: (Map) -> MapPresenter,
-    private val searchPresenterFactory: (Search) -> SearchPresenter,
+  private val stopPresenterFactory: (Stop) -> StopPresenter,
+  private val homePresenterFactory: (Home) -> HomePresenter,
+  private val mapPresenterFactory: (Map) -> MapPresenter,
+  private val searchPresenterFactory: (Search) -> SearchPresenter,
 ) {
-    fun createPresenter(screen: Screen): Presenter<*, *> = when (screen) {
-        is Home -> homePresenterFactory(screen)
-        is Stop -> stopPresenterFactory(screen)
-        is Map -> mapPresenterFactory(screen)
-        is Search -> searchPresenterFactory(screen)
-        else -> throw IllegalArgumentException("Unsupported screen $screen")
-    }
+  fun createPresenter(screen: Screen): Presenter<*, *> = when (screen) {
+    is Home -> homePresenterFactory(screen)
+    is Stop -> stopPresenterFactory(screen)
+    is Map -> mapPresenterFactory(screen)
+    is Search -> searchPresenterFactory(screen)
+    else -> throw IllegalArgumentException("Unsupported screen $screen")
+  }
 }

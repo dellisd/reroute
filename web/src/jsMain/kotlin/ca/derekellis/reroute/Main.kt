@@ -15,31 +15,31 @@ import org.jetbrains.compose.web.renderComposable
 external fun require(module: String): dynamic
 
 fun main() {
-    require("mapbox-gl/dist/mapbox-gl.css")
-    val component = AppComponent::class.create()
+  require("mapbox-gl/dist/mapbox-gl.css")
+  val component = AppComponent::class.create()
 
-    component.rerouteApplication.init()
+  component.rerouteApplication.init()
 
-    renderComposable(rootElementId = "root") {
-        Style(AppStylesheet)
+  renderComposable(rootElementId = "root") {
+    Style(AppStylesheet)
 
-        MapSection(component.viewFactory, component.presenterFactory)
-        component.application()
-        component.appNavigator.handleNavigation()
-    }
+    MapSection(component.viewFactory, component.presenterFactory)
+    component.application()
+    component.appNavigator.handleNavigation()
+  }
 }
 
 @Composable
 fun MapSection(
-    viewFactory: ViewFactory,
-    presenterFactory: PresenterFactory,
+  viewFactory: ViewFactory,
+  presenterFactory: PresenterFactory,
 ) {
-    val wrapper = remember {
-        ScreenWrapper(
-            presenterFactory.createPresenter(Map) as Presenter<Any, Any>,
-            viewFactory.createView(Map) as View<Any, Any>
-        )
-    }
+  val wrapper = remember {
+    ScreenWrapper(
+      presenterFactory.createPresenter(Map) as Presenter<Any, Any>,
+      viewFactory.createView(Map) as View<Any, Any>,
+    )
+  }
 
-    wrapper.screen()
+  wrapper.screen()
 }

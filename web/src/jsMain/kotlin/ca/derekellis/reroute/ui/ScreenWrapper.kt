@@ -14,18 +14,18 @@ import me.tatarka.inject.annotations.Inject
 
 @Inject
 data class ScreenWrapper(private val presenter: Presenter<Any, Any>, private val view: View<Any, Any>) {
-    private val eventsChannel = Channel<Any?>()
-    private val events = eventsChannel.consumeAsFlow().filterNotNull()
+  private val eventsChannel = Channel<Any?>()
+  private val events = eventsChannel.consumeAsFlow().filterNotNull()
 
-    private val models = moleculeFlow(RecompositionClock.ContextClock) { presenter.produceModel(events) }
-    private var model by mutableStateOf<Any?>(null)
+  private val models = moleculeFlow(RecompositionClock.ContextClock) { presenter.produceModel(events) }
+  private var model by mutableStateOf<Any?>(null)
 
-    @Composable
-    fun screen() {
-        LaunchedEffect(presenter) {
-            models.collect { model = it }
-        }
-
-        view.Content(model) { eventsChannel.trySend(it) }
+  @Composable
+  fun screen() {
+    LaunchedEffect(presenter) {
+      models.collect { model = it }
     }
+
+    view.Content(model) { eventsChannel.trySend(it) }
+  }
 }

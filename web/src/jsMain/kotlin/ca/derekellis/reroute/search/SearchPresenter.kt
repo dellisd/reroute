@@ -19,26 +19,26 @@ import ca.derekellis.reroute.stops.Stop as StopScreen
 
 @Inject
 class SearchPresenter(
-    private val dataSource: DataSource,
-    private val navigator: Navigator,
-    private val args: Search,
+  private val dataSource: DataSource,
+  private val navigator: Navigator,
+  private val args: Search,
 ) : Presenter<SearchViewModel, SearchViewEvent> {
-    @Composable
-    override fun produceModel(events: Flow<SearchViewEvent>): SearchViewModel {
-        var results by remember { mutableStateOf(emptyList<Stop>())}
+  @Composable
+  override fun produceModel(events: Flow<SearchViewEvent>): SearchViewModel {
+    var results by remember { mutableStateOf(emptyList<Stop>()) }
 
-        CollectEffect(events) { event ->
-            when (event) {
-                is UpdateQuery -> launch {
-                    results = dataSource.searchStops(event.query).first()
-                }
-
-                is SearchViewEvent.SelectStop -> launch {
-                    navigator.goTo(StopScreen(event.stop.code ?: return@launch))
-                }
-            }
+    CollectEffect(events) { event ->
+      when (event) {
+        is UpdateQuery -> launch {
+          results = dataSource.searchStops(event.query).first()
         }
 
-        return SearchViewModel("", results)
+        is SearchViewEvent.SelectStop -> launch {
+          navigator.goTo(StopScreen(event.stop.code ?: return@launch))
+        }
+      }
     }
+
+    return SearchViewModel("", results)
+  }
 }

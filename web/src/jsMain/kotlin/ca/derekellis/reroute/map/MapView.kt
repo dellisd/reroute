@@ -24,73 +24,76 @@ import org.jetbrains.compose.web.dom.Div
 
 @Inject
 class MapView : View<MapViewModel, MapViewEvent> {
-    @Composable
-    override fun Content(model: MapViewModel?, emit: (MapViewEvent) -> Unit) {
-        model ?: return
+  @Composable
+  override fun Content(model: MapViewModel?, emit: (MapViewEvent) -> Unit) {
+    model ?: return
 
-        val mapState = rememberMapboxState(center = LngLat(-75.7181, 45.3922), zoom = 11.0)
+    val mapState = rememberMapboxState(center = LngLat(-75.7181, 45.3922), zoom = 11.0)
 
-        LaunchedEffect(model.targetStop) {
-            val target = model.targetStop
+    LaunchedEffect(model.targetStop) {
+      val target = model.targetStop
 
-            if (target != null) {
-                val (longitude, latitude) = target.position
-                mapState.flyTo(center = LngLat(longitude, latitude), zoom = 16.0,
-                    padding = jsObject { right = window.innerWidth - window.innerHeight })
-            } else {
-                mapState.padding = jsObject { right = 0 }
-            }
-        }
-
-        MapContent(mapState, onEvent = emit, model.featureCollection)
+      if (target != null) {
+        val (longitude, latitude) = target.position
+        mapState.flyTo(
+          center = LngLat(longitude, latitude),
+          zoom = 16.0,
+          padding = jsObject { right = window.innerWidth - window.innerHeight },
+        )
+      } else {
+        mapState.padding = jsObject { right = 0 }
+      }
     }
+
+    MapContent(mapState, onEvent = emit, model.featureCollection)
+  }
 }
 
 @Composable
 private fun MapContent(mapState: MapboxState, onEvent: (MapViewEvent) -> Unit, data: FeatureCollection?) {
-    Div {
-        ca.derekellis.mapbox.MapboxMap(
-            accessToken = RerouteConfig.MAPBOX_ACCESS_KEY,
-            style = "mapbox://styles/mapbox/light-v10",
-            state = mapState,
-            // hash = true,
-            containerAttrs = {
-                style {
-                    height(100.vh)
-                    width(100.vw)
-                }
-            },
-            events = {
-                onClick(layers = listOf("stop-circles")) {
-                    val features = it.asDynamic().features.unsafeCast<Array<Feature>>()
-                    val target = features.firstOrNull()
-                    val code: String = target?.properties.asDynamic()?.code as String
-
-                    onEvent(StopClick(code))
-                }
-                onMouseEnter(layers = listOf("stop-circles")) {
-                    it.target.getCanvas().style.cursor = "pointer"
-                }
-                onMouseLeave(layers = listOf("stop-circles")) {
-                    it.target.getCanvas().style.cursor = ""
-                }
-            }
-        ) {
-            data?.let { safeData ->
-                GeoJsonSource("stops", data = safeData) {
-                    CircleLayer("stop-circles") {
-                        circleColor(hsl(4.1, 89.6, 58.4))
-                        circleRadius(
-                            interpolate(
-                                exponential(2.0),
-                                expression("zoom"),
-                                12 to 2,
-                                15.5 to 8
-                            )
-                        )
-                    }
-                }
-            }
+  Div {
+    ca.derekellis.mapbox.MapboxMap(
+      accessToken = RerouteConfig.MAPBOX_ACCESS_KEY,
+      style = "mapbox://styles/mapbox/light-v10",
+      state = mapState,
+      // hash = true,
+      containerAttrs = {
+        style {
+          height(100.vh)
+          width(100.vw)
         }
+      },
+      events = {
+        onClick(layers = listOf("stop-circles")) {
+          val features = it.asDynamic().features.unsafeCast<Array<Feature>>()
+          val target = features.firstOrNull()
+          val code: String = target?.properties.asDynamic()?.code as String
+
+          onEvent(StopClick(code))
+        }
+        onMouseEnter(layers = listOf("stop-circles")) {
+          it.target.getCanvas().style.cursor = "pointer"
+        }
+        onMouseLeave(layers = listOf("stop-circles")) {
+          it.target.getCanvas().style.cursor = ""
+        }
+      },
+    ) {
+      data?.let { safeData ->
+        GeoJsonSource("stops", data = safeData) {
+          CircleLayer("stop-circles") {
+            circleColor(hsl(4.1, 89.6, 58.4))
+            circleRadius(
+              interpolate(
+                exponential(2.0),
+                expression("zoom"),
+                12 to 2,
+                15.5 to 8,
+              ),
+            )
+          }
+        }
+      }
     }
+  }
 }

@@ -14,48 +14,47 @@ import org.jetbrains.compose.web.dom.Hr
 import org.jetbrains.compose.web.dom.Text
 
 class StopView : View<StopViewModel, StopViewEvent> {
-    @Composable
-    override fun Content(model: StopViewModel?, emit: (StopViewEvent) -> Unit) {
-        model ?: return
+  @Composable
+  override fun Content(model: StopViewModel?, emit: (StopViewEvent) -> Unit) {
+    model ?: return
 
-        Style(StopsStyleSheet)
-        InfoPanel(onClose = { emit(Close) }) {
-            StopContent(model)
-        }
+    Style(StopsStyleSheet)
+    InfoPanel(onClose = { emit(Close) }) {
+      StopContent(model)
     }
+  }
 }
 
-object StopsStyleSheet : StyleSheet() {
-}
+object StopsStyleSheet : StyleSheet()
 
 @Composable
 private fun StopContent(model: StopViewModel) {
-    when (model) {
-        is StopViewModel.Loaded -> {
-            H1 { Text(model.stop.name) }
-            H2 { Text(model.stop.code ?: "") }
-            Div { Text(model.stop.id) }
-            Hr()
-            model.groupedRoutes.forEach { routes -> RouteInfo(routes) }
-        }
-        StopViewModel.Loading -> Text("Loading...")
-        StopViewModel.NotFound -> Text("Not Found!")
+  when (model) {
+    is StopViewModel.Loaded -> {
+      H1 { Text(model.stop.name) }
+      H2 { Text(model.stop.code ?: "") }
+      Div { Text(model.stop.id) }
+      Hr()
+      model.groupedRoutes.forEach { routes -> RouteInfo(routes) }
     }
+    StopViewModel.Loading -> Text("Loading...")
+    StopViewModel.NotFound -> Text("Not Found!")
+  }
 }
 
 @Composable
 private fun RouteInfo(variants: List<Route>) {
-    val top = variants.first()
-    val rest = variants.drop(1)
+  val top = variants.first()
+  val rest = variants.drop(1)
 
-    Div {
-        H3 {
-            Text("${top.name} ${top.headsign}")
-        }
-        rest.forEach { route ->
-            Div {
-                Text(route.headsign)
-            }
-        }
+  Div {
+    H3 {
+      Text("${top.name} ${top.headsign}")
     }
+    rest.forEach { route ->
+      Div {
+        Text(route.headsign)
+      }
+    }
+  }
 }

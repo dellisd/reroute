@@ -7,6 +7,6 @@ import me.tatarka.inject.annotations.Inject
 
 @Inject
 class HomePresenter(private val args: Home) : Presenter<Unit, Unit> {
-    @Composable
-    override fun produceModel(events: Flow<Unit>) = Unit
+  @Composable
+  override fun produceModel(events: Flow<Unit>) = Unit
 }
