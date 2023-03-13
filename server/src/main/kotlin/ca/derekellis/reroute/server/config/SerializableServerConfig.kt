@@ -4,4 +4,7 @@ import kotlinx.serialization.Serializable
 import java.nio.file.Path
 
 @Serializable
-data class SerializableServerConfig(override val dataPath: Path? = null) : ServerConfig
+data class SerializableServerConfig(
+  override val dataPath: Path? = null,
+  override val ocTranspo: OcTranspoCredentials? = null,
+) : ServerConfig

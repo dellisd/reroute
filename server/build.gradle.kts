@@ -13,12 +13,17 @@ group = "ca.derekellis.reroute"
 version = "1.0-SNAPSHOT"
 
 dependencies {
+  implementation(libs.ktor.client.core)
+  implementation(libs.ktor.client.okhttp)
   implementation(libs.ktor.server.core)
   implementation(libs.ktor.server.contentNegotiation)
   implementation(libs.ktor.server.autoHead)
   implementation(libs.ktor.server.netty)
+  implementation(libs.ktor.server.webSockets)
   implementation(libs.ktor.serialization.json)
   implementation(libs.kotlinx.serialization.yaml)
+  implementation(libs.kotlinx.coroutines)
+  implementation(libs.kotlinx.datetime)
   implementation(libs.logback)
   implementation(libs.inject.runtime)
   implementation(libs.kgtfs.gtfs)

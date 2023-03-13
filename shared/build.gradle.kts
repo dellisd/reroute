@@ -12,6 +12,7 @@ kotlin {
   sourceSets {
     getByName("commonMain") {
       dependencies {
+        implementation(libs.kotlinx.datetime)
         implementation(libs.kotlinx.serialization.core)
         implementation(libs.spatialk.geojson)
       }

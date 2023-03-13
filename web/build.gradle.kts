@@ -49,6 +49,7 @@ kotlin {
 
 //                implementation(libs.spatialk.geojson)
         implementation(libs.inject.runtime)
+        implementation(libs.kotlinx.datetime)
         implementation(libs.kotlinx.serialization.json)
         implementation(libs.klock) // TODO: Replace with kotlinx-datetime when formatting is supported
         implementation(libs.compose.mapbox)
@@ -56,6 +57,7 @@ kotlin {
         implementation(libs.ktor.client.core)
         implementation(libs.ktor.client.js)
         implementation(libs.ktor.client.contentNegotiation)
+        implementation(libs.ktor.client.webSockets)
         implementation(libs.ktor.serialization.json)
 
         implementation(devNpm("copy-webpack-plugin", "9.1.0"))

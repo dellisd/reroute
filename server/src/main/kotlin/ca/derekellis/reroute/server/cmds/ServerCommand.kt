@@ -26,7 +26,8 @@ class ServerCommand : CliktCommand() {
     }
 
     val config = LoadedServerConfig(
-      yamlConfig?.dataPath ?: Path("data"),
+      dataPath = yamlConfig?.dataPath ?: Path("data"),
+      ocTranspo = yamlConfig?.ocTranspo,
     )
 
     val component = RerouteComponent::class.create(config)
@@ -34,5 +35,3 @@ class ServerCommand : CliktCommand() {
     embeddedServer(Netty, port = 8888, module = { component.rerouteServer.ktorModule() }).start(wait = true)
   }
 }
-
-

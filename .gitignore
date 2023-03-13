@@ -6,5 +6,6 @@
 .gradle/
 
 local.properties
+local.config.yaml
 
 server/data

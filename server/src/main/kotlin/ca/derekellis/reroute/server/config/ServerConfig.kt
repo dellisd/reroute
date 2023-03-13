@@ -4,4 +4,6 @@ import java.nio.file.Path
 
 interface ServerConfig {
   val dataPath: Path?
+
+  val ocTranspo: OcTranspoCredentials?
 }
