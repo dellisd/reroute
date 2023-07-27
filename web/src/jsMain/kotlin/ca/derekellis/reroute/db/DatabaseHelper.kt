@@ -52,16 +52,16 @@ class DatabaseHelper(private val worker: Worker, private val client: RerouteClie
   private suspend fun migrateIfNeeded() {
     val oldVersion =
       driver.awaitQuery(null, "PRAGMA $VERSION_PRAGMA", mapper = { cursor ->
-        if (cursor.next()) {
-          cursor.getLong(0)?.toInt()
+        if (cursor.next().value) {
+          cursor.getLong(0)
         } else {
           null
         }
-      }, 0) ?: 0
+      }, 0) ?: 0L
 
     val newVersion = RerouteDatabase.Schema.version
 
-    if (oldVersion == 0) {
+    if (oldVersion == 0L) {
       RerouteDatabase.Schema.awaitCreate(driver)
       driver.await(null, "PRAGMA $VERSION_PRAGMA=$newVersion", 0)
     } else if (oldVersion < newVersion) {

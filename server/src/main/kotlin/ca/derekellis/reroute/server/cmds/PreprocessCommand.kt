@@ -1,6 +1,6 @@
 package ca.derekellis.reroute.server.cmds
 
-import ca.derekellis.kgtfs.cache.GtfsCache
+import ca.derekellis.kgtfs.GtfsDb
 import ca.derekellis.kgtfs.io.GtfsReader
 import ca.derekellis.reroute.server.data.DataBundler
 import com.github.ajalt.clikt.core.CliktCommand
@@ -39,7 +39,7 @@ class PreprocessCommand : CliktCommand() {
     cachePath.deleteIfExists()
 
     logger.info("Reading {} into cache at {}", source, cachePath)
-    val cache = GtfsCache.fromReader(cachePath, GtfsReader(source))
+    val cache = GtfsDb.fromReader(GtfsReader(source), into = cachePath)
 
     logger.info("Bundling data into {}/{}.json", output, name)
     val bundler = DataBundler()

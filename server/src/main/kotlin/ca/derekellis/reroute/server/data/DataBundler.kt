@@ -1,7 +1,8 @@
 package ca.derekellis.reroute.server.data
 
-import ca.derekellis.kgtfs.cache.GtfsCache
-import ca.derekellis.kgtfs.csv.Calendar
+import ca.derekellis.kgtfs.ExperimentalKgtfsApi
+import ca.derekellis.kgtfs.GtfsDb
+import ca.derekellis.kgtfs.csv.ServiceId
 import ca.derekellis.kgtfs.csv.StopId
 import ca.derekellis.kgtfs.ext.TripSequence
 import ca.derekellis.kgtfs.ext.lineString
@@ -12,16 +13,19 @@ import ca.derekellis.reroute.models.Stop
 import ca.derekellis.reroute.models.StopInTimetable
 import ca.derekellis.reroute.models.TransitDataBundle
 import io.github.dellisd.spatialk.geojson.Position
+import org.jetbrains.exposed.sql.select
+import org.jetbrains.exposed.sql.selectAll
 import org.jgrapht.alg.cycle.CycleDetector
 import org.jgrapht.graph.DefaultDirectedGraph
 import org.jgrapht.graph.DefaultEdge
 import org.jgrapht.traverse.TopologicalOrderIterator
 
 class DataBundler {
-  fun assembleDataBundle(gtfs: GtfsCache): TransitDataBundle = gtfs.read {
-    val stops = stops.all().associateBy { it.id }
-    val trips = trips.all().associateBy { it.id }
-    val calendars = calendars.all().map(Calendar::serviceId).toSet()
+  @OptIn(ExperimentalKgtfsApi::class)
+  fun assembleDataBundle(gtfs: GtfsDb): TransitDataBundle = gtfs.query {
+    val stops = Stops.selectAll().map(Stops.Mapper).associateBy { it.id }
+    val trips = Trips.selectAll().map(Trips.Mapper).associateBy { it.id }
+    val calendars = Calendars.selectAll().map { ServiceId(it[Calendars.serviceId]) }.toSet()
     // Get unique sequences
     val sequences = uniqueTripSequences(calendars)
 
@@ -32,12 +36,12 @@ class DataBundler {
     }.toList()
 
     val processedRoutes = grouped.flatMap { (key, value) ->
-      val route = routes.byId(value.first().gtfsId)
+      val route = Routes.select { Routes.id eq value.first().gtfsId.value }.map(Routes.mapper).single()
       value.mapIndexed { i, sequence ->
         val trip = trips.getValue(sequence.trips.keys.first())
         val id = "$key#$i"
         // TODO: Develop a better way to extract headsign values
-        val shape = shapes.byId(trip.shapeId!!)
+        val shape = Shapes.select { Shapes.id eq trip.shapeId!!.value }.map(Shapes.Mapper)
         Route(
           id,
           route.id.value,

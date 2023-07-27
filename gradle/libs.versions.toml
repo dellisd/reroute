@@ -1,7 +1,7 @@
 [versions]
 kotlin = "1.8.10"
 kotlinx-serialization = "1.5.0"
-sqldelight = "2.0.0-SNAPSHOT"
+sqldelight = "2.0.0"
 ktlint = "0.48.2"
 ktor = "2.1.2"
 inject = "0.5.1"
