@@ -15,6 +15,8 @@ import org.jetbrains.compose.web.css.top
 import org.jetbrains.compose.web.css.width
 
 object AppStylesheet : StyleSheet() {
+  val SmallMediaQuery = mediaMaxWidth(600.px)
+
   init {
     "html, body, #root" style {
       width(100.percent)
@@ -40,6 +42,4 @@ object AppStylesheet : StyleSheet() {
       }
     }
   }
-
-  val SmallMediaQuery = mediaMaxWidth(600.px)
 }
