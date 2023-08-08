@@ -6,6 +6,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import ca.derekellis.reroute.search.ui.SearchResult
+import ca.derekellis.reroute.ui.AppStylesheet.SmallMediaQuery
 import ca.derekellis.reroute.ui.View
 import org.jetbrains.compose.web.attributes.InputType
 import org.jetbrains.compose.web.css.Color
@@ -21,13 +22,14 @@ import org.jetbrains.compose.web.css.borderRadius
 import org.jetbrains.compose.web.css.boxSizing
 import org.jetbrains.compose.web.css.cursor
 import org.jetbrains.compose.web.css.display
+import org.jetbrains.compose.web.css.em
 import org.jetbrains.compose.web.css.flexDirection
 import org.jetbrains.compose.web.css.height
 import org.jetbrains.compose.web.css.hsl
 import org.jetbrains.compose.web.css.justifyContent
 import org.jetbrains.compose.web.css.keywords.auto
-import org.jetbrains.compose.web.css.margin
 import org.jetbrains.compose.web.css.marginTop
+import org.jetbrains.compose.web.css.media
 import org.jetbrains.compose.web.css.overflow
 import org.jetbrains.compose.web.css.padding
 import org.jetbrains.compose.web.css.percent
@@ -67,15 +69,22 @@ class SearchView : View<SearchViewModel, SearchViewEvent> {
 
 object SearchStyleSheet : StyleSheet() {
   val searchContainer by style {
-    margin(16.px)
-    width(350.px)
+    padding(16.px)
+    width(32.em)
     height(auto)
     display(DisplayStyle.Flex)
     flexDirection(FlexDirection.Column)
+    boxSizing("border-box")
+
+    media(SmallMediaQuery) {
+      self style {
+        width(100.percent)
+      }
+    }
   }
 
   val searchInput by style {
-    padding(8.px)
+    padding(16.px)
     border(width = 1.px, style = LineStyle.Solid, color = hsl(0, 0, 93))
     borderRadius(8.px)
     property("box-shadow", "0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24)")
