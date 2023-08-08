@@ -24,7 +24,7 @@ import org.jetbrains.compose.web.dom.Text
 
 object InfoPanelStylesheet : StyleSheet() {
   val infoPanelContainer by style {
-    width(32.em)
+    width(512.px)
     height(100.percent)
     background("#FFFFFF")
     position(Position.Fixed)

@@ -12,7 +12,6 @@ import ca.derekellis.reroute.RerouteConfig
 import ca.derekellis.reroute.ui.View
 import ca.derekellis.reroute.utils.jsObject
 import geojson.Feature
-import kotlinx.browser.window
 import me.tatarka.inject.annotations.Inject
 import org.jetbrains.compose.web.css.height
 import org.jetbrains.compose.web.css.hsl
@@ -37,7 +36,7 @@ class MapView : View<MapViewModel, MapViewEvent> {
         mapState.flyTo(
           center = LngLat(longitude, latitude),
           zoom = 16.0,
-          padding = jsObject { right = window.innerWidth - window.innerHeight },
+          padding = jsObject { right = 512 },
         )
       } else {
         mapState.padding = jsObject { right = 0 }

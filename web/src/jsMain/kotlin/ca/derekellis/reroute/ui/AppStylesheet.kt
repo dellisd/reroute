@@ -34,6 +34,7 @@ object AppStylesheet : StyleSheet() {
     left(0.px)
     width(100.percent)
     height(100.percent)
+    property("pointer-events", "none")
   }
 
   val SmallMediaQuery = mediaMaxWidth(600.px)

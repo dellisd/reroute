@@ -22,7 +22,6 @@ import org.jetbrains.compose.web.css.borderRadius
 import org.jetbrains.compose.web.css.boxSizing
 import org.jetbrains.compose.web.css.cursor
 import org.jetbrains.compose.web.css.display
-import org.jetbrains.compose.web.css.em
 import org.jetbrains.compose.web.css.flexDirection
 import org.jetbrains.compose.web.css.height
 import org.jetbrains.compose.web.css.hsl
@@ -70,7 +69,7 @@ class SearchView : View<SearchViewModel, SearchViewEvent> {
 object SearchStyleSheet : StyleSheet() {
   val searchContainer by style {
     padding(16.px)
-    width(32.em)
+    width(512.px)
     height(auto)
     display(DisplayStyle.Flex)
     flexDirection(FlexDirection.Column)
