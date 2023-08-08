@@ -6,6 +6,7 @@ import org.jetbrains.compose.web.css.fontFamily
 import org.jetbrains.compose.web.css.height
 import org.jetbrains.compose.web.css.left
 import org.jetbrains.compose.web.css.margin
+import org.jetbrains.compose.web.css.media
 import org.jetbrains.compose.web.css.mediaMaxWidth
 import org.jetbrains.compose.web.css.percent
 import org.jetbrains.compose.web.css.position
@@ -32,9 +33,12 @@ object AppStylesheet : StyleSheet() {
     position(Position.Absolute)
     top(0.px)
     left(0.px)
-    width(100.percent)
-    height(100.percent)
-    property("pointer-events", "none")
+    width(512.px)
+    media(SmallMediaQuery) {
+      self style {
+        width(100.percent)
+      }
+    }
   }
 
   val SmallMediaQuery = mediaMaxWidth(600.px)
