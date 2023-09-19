@@ -5,11 +5,11 @@ import app.cash.sqldelight.async.coroutines.awaitAsOneOrNull
 import app.cash.sqldelight.coroutines.asFlow
 import app.cash.sqldelight.coroutines.mapToList
 import ca.derekellis.reroute.db.DatabaseHelper
+import ca.derekellis.reroute.db.GetRoutesByStopCode
 import ca.derekellis.reroute.db.RerouteDatabase
 import ca.derekellis.reroute.di.AppScope
 import ca.derekellis.reroute.models.Route
 import ca.derekellis.reroute.models.Stop
-import io.github.dellisd.spatialk.geojson.LineString
 import io.github.dellisd.spatialk.geojson.Position
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -44,9 +44,9 @@ class SqlJsDataSource(private val withDatabase: DatabaseHelper) : DataSource {
       .mapToList(Dispatchers.Main)
   }
 
-  override fun getRoutesAtStop(code: String): Flow<List<Route>> = withDatabaseFlowFlatten { database ->
+  override fun getRoutesAtStop(code: String): Flow<List<GetRoutesByStopCode>> = withDatabaseFlowFlatten { database ->
     database.stopQueries
-      .getRoutesByStopCode(code, RouteMapper)
+      .getRoutesByStopCode(code)
       .asFlow()
       .mapToList(Dispatchers.Main)
   }
@@ -58,13 +58,12 @@ class SqlJsDataSource(private val withDatabase: DatabaseHelper) : DataSource {
     flow { withDatabase { emitAll(block(it)) } }
 
   companion object {
-    private val StopMapper = { id: String, code: String?, name: String, lat: Double, lon: Double ->
-      Stop(id, code, name, Position(lon, lat))
+    private val StopMapper = { id: String, code: String, name: String, lat: Double, lon: Double, parent: String? ->
+      Stop(id, code, name, Position(lon, lat), parent)
     }
 
-    private val RouteMapper =
-      { id: String, gtfsId: String, name: String, headsign: String, directionId: Int, weight: Int, shape: LineString ->
-        Route(id, gtfsId, name, headsign, directionId, weight, shape)
-      }
+    private val RouteMapper = { gtfsId: String, identifier: String, destinations: List<String> ->
+      Route(gtfsId, identifier, destinations)
+    }
   }
 }

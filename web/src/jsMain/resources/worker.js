@@ -19,7 +19,7 @@ async function run() {
     SQL.FS.mkdir('/sql');
     SQL.FS.mount(sqlFS, {}, '/sql');
 
-    const path = '/sql/db.sqlite';
+    const path = '/sql/reroute.db';
     if (typeof SharedArrayBuffer === 'undefined') {
         let stream = SQL.FS.open(path, 'a+');
         await stream.node.contents.readIfFallback();
@@ -61,18 +61,22 @@ function onModuleReady() {
                 results: db.exec("ROLLBACK TRANSACTION;")
             })
         case "load_data":
-            fetch("/api/data/").then(response => response.json()).then(({stops, routes, routesAtStops, timetable}) => {
-                stops.forEach(({id, code, name, position}) => {
-                    db.exec("INSERT INTO Stop VALUES (?, ?, ?, ?, ?)", [id, code, name, position[1], position[0]]);
+            fetch("/api/data/")
+            .then(response => response.json())
+            .then(content => { console.dir(content); return content })
+            .then(({stops, routes, routeVariants, routesAtStops}) => {
+                stops.forEach(({id, code, name, position, parent}) => {
+                    db.exec("INSERT INTO Stop VALUES (?, ?, ?, ?, ?, ?)", [id, code, name, position[1], position[0], parent || null]);
                 });
-                routes.forEach(({id, gtfsId, name, headsign, directionId, weight, shape}) => {
-                    db.exec("INSERT INTO Route VALUES (?, ?, ?, ?, ?, ?, ?)", [id, gtfsId, name, headsign, directionId, weight, JSON.stringify(shape)]);
+                routes.forEach(({gtfsId, identifier, destinations}) => {
+                    db.exec("INSERT INTO Route VALUES (?, ?, ?)", [gtfsId, identifier, JSON.stringify(destinations)]);
                 });
-                routesAtStops.forEach(({stopId, routeId, index}) => {
-                    db.exec("INSERT INTO StopAtRoute VALUES (?, ?, ?)", [stopId, routeId, index]);
+                routeVariants.forEach(({id, gtfsId, directionId, headsign, weight, shape}) => {
+                  db.exec("INSERT INTO RouteVariant VALUES (?, ?, ?, ?, ?, ?)", [id, gtfsId, directionId, headsign, weight, JSON.stringify(shape)])
                 });
-                timetable.forEach(({stopId, routeId, index}) => {
-                    db.exec("INSERT INTO StopInTimetable VALUES (?, ?, ?)", [stopId, routeId, index]);
+
+                routesAtStops.forEach(({stopId, routeVariantId, index}) => {
+                  db.exec("INSERT INTO RouteVariantAtStop VALUES (?, ?, ?)", [stopId, routeVariantId, index]);
                 });
 
                 self.postMessage(({

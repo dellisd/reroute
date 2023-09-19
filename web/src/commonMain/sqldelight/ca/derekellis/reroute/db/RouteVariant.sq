@@ -1,0 +1,15 @@
+import kotlin.Int;
+import io.github.dellisd.spatialk.geojson.LineString;
+
+CREATE TABLE RouteVariant (
+  id TEXT PRIMARY KEY,
+  gtfsId TEXT NOT NULL,
+  directionId INTEGER AS Int NOT NULL,
+  headsign TEXT NOT NULL,
+  weight INTEGER AS Int NOT NULL,
+  shape TEXT AS LineString NOT NULL,
+  FOREIGN KEY (gtfsId) REFERENCES Route(gtfsId)
+);
+
+getAll:
+SELECT * FROM RouteVariant;

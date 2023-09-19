@@ -1,7 +1,6 @@
 package ca.derekellis.reroute.stops
 
 import androidx.compose.runtime.Composable
-import ca.derekellis.reroute.models.Route
 import ca.derekellis.reroute.ui.InfoPanel
 import ca.derekellis.reroute.ui.View
 import org.jetbrains.compose.web.css.Style
@@ -43,18 +42,10 @@ private fun StopContent(model: StopViewModel) {
 }
 
 @Composable
-private fun RouteInfo(variants: List<Route>) {
-  val top = variants.first()
-  val rest = variants.drop(1)
-
+private fun RouteInfo(route: StopViewModel.Loaded.RouteSection) {
   Div {
     H3 {
-      Text("${top.name} ${top.headsign}")
-    }
-    rest.forEach { route ->
-      Div {
-        Text(route.headsign)
-      }
+      Text("${route.identifier} ${route.name}")
     }
   }
 }

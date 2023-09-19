@@ -34,7 +34,7 @@ class SearchPresenter(
         }
 
         is SearchViewEvent.SelectStop -> launch {
-          navigator.goTo(StopScreen(event.stop.code ?: return@launch))
+          navigator.goTo(StopScreen(event.stop.code))
         }
       }
     }

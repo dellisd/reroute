@@ -1,26 +1,18 @@
 package ca.derekellis.reroute.models
 
-import io.github.dellisd.spatialk.geojson.LineString
 import kotlinx.serialization.Serializable
 
 /**
- * A (simplified) representation of a transit route and its variants/branches.
- * A unique combination of [gtfsId] + [headsign] + [directionId] is considered a unique route variant.
+ * A transit route in a given direction. A route can have multiple [variants][RouteVariant].
  *
- * @param id A unique identifier for this route variation
  * @param gtfsId The id used to reference this route in GTFS data
- * @param name The display name of the route
- * @param headsign The destination of this variant of the route
- * @param directionId The GTFS direction ID associated with this route+headsign combo
- * @param weight The number of scheduled trips for this particular variant
+ * @param identifier The identifier of the route shown to users, typically a route number
+ * @param destinations The destinations of the different directions for this route. The index in the list corresponds
+ * to the directionId property in GTFS trips.
  */
 @Serializable
 data class Route(
-  val id: String,
   val gtfsId: String,
-  val name: String,
-  val headsign: String,
-  val directionId: Int,
-  val weight: Int,
-  val shape: LineString,
+  val identifier: String,
+  val destinations: List<String>,
 )

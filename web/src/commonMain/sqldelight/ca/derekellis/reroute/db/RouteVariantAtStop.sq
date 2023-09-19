@@ -1,0 +1,9 @@
+import kotlin.Int;
+
+CREATE TABLE RouteVariantAtStop (
+  stopId TEXT NOT NULL,
+  routeVariantId TEXT NOT NULL,
+  `index` INTEGER AS Int NOT NULL,
+  FOREIGN KEY (stopId) REFERENCES Stop(id),
+  FOREIGN KEY (routeVariantId) REFERENCES RouteVariant(id)
+);

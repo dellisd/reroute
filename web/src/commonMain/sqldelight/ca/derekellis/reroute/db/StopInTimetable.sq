@@ -1,8 +1,0 @@
-insert:
-INSERT INTO StopInTimetable VALUES ?;
-
-getTimetableForRoute:
-SELECT "index", Stop.* FROM StopInTimetable
-JOIN Stop ON Stop.id = StopInTimetable.stopId
-WHERE routeId = ?
-ORDER BY "index";

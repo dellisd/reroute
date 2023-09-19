@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import ca.derekellis.reroute.data.DataSource
 import ca.derekellis.reroute.home.Home
 import ca.derekellis.reroute.map.MapInteractionsManager
@@ -39,16 +40,23 @@ class StopPresenter(
 
     if (routesAtStop == null || stopList == null) return StopViewModel.Loading
 
+    val routeSections = remember(routesAtStop) {
+      (routesAtStop ?: emptyList()).map {
+        StopViewModel.Loaded.RouteSection(
+          it.gtfsId,
+          it.identifier,
+          it.destinations[it.directionId],
+          it.directionId,
+        )
+      }.sortedWith(compareBy<StopViewModel.Loaded.RouteSection> { it.identifier.length }.thenBy(naturalOrder()) { it.identifier })
+    }
+
     val stop = stopList!!.firstOrNull() ?: return StopViewModel.NotFound
 
     LaunchedEffect(stop) {
       mapInteractionsManager.goTo(stop)
     }
 
-    val groupedRoutes = routesAtStop!!.groupBy { "${it.name}-${it.directionId}" }
-      .values
-      .sortedBy { it.first().name.filter(Char::isDigit).toInt() }
-
-    return StopViewModel.Loaded(stop, groupedRoutes)
+    return StopViewModel.Loaded(stop, routeSections)
   }
 }

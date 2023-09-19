@@ -1,3 +1,14 @@
+CREATE TABLE Stop (
+    id TEXT NOT NULL PRIMARY KEY,
+    code TEXT NOT NULL,
+    name TEXT NOT NULL,
+    lat REAL NOT NULL,
+    lon REAL NOT NULL,
+    parent TEXT
+);
+
+CREATE INDEX idx_stop_code ON Stop(code);
+
 getById:
 SELECT * FROM Stop WHERE id = ?;
 
@@ -10,13 +21,11 @@ SELECT * FROM Stop;
 insert:
 INSERT OR IGNORE INTO Stop VALUES ?;
 
-getRoutesByStopId:
-SELECT Route.* FROM StopAtRoute
-    JOIN Route ON StopAtRoute.routeId = Route.id
-WHERE stopId = ?;
-
 getRoutesByStopCode:
-SELECT Route.* FROM StopAtRoute
-    JOIN Route ON StopAtRoute.routeId = Route.id
-WHERE stopId IN (SELECT id FROM Stop WHERE code = ?)
-ORDER BY Route.id, Route.weight;
+SELECT DISTINCT Route.gtfsId, Route.identifier, Route.destinations, RouteVariant.directionId FROM Route
+  JOIN RouteVariant ON Route.gtfsId = RouteVariant.gtfsId
+  JOIN RouteVariantAtStop ON RouteVariantAtStop.routeVariantId = RouteVariant.id
+  WHERE stopId = (
+    SELECT id FROM Stop WHERE code = ?
+  )
+  ORDER BY RouteVariant.id, RouteVariant.weight;

@@ -1,3 +1,11 @@
+import kotlin.String;
+import kotlin.collections.List;
+
+CREATE TABLE Route (
+  gtfsId TEXT PRIMARY KEY,
+  identifier TEXT NOT NULL,
+  destinations TEXT AS List<String> NOT NULL
+);
 
 insert:
 INSERT OR IGNORE INTO Route VALUES ?;

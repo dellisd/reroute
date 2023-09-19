@@ -93,7 +93,6 @@ sqldelight {
     create("RerouteDatabase") {
       packageName.set("ca.derekellis.reroute.db")
       generateAsync.set(true)
-      deriveSchemaFromMigrations.set(true)
     }
   }
 }

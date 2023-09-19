@@ -3,15 +3,15 @@ package ca.derekellis.reroute.models
 import kotlinx.serialization.Serializable
 
 /**
- * The ordering of a stop in a specified route's timetable
+ * The ordering of a stop in a specified route variant's timetable
  *
  * @param stopId Refers to the ID of a [Stop]
- * @param routeId Refers to the GTFS ID of a [Route]
+ * @param routeVariantId Refers to the GTFS ID of a [Route]
  * @param index The ordering in which this stop appears in the route's timetable
  */
 @Serializable
 data class StopInTimetable(
   val stopId: String,
-  val routeId: String,
+  val routeVariantId: String,
   val index: Int,
 )

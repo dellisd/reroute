@@ -6,12 +6,12 @@ import kotlinx.serialization.Serializable
  * A mapping between a stop and a route variant that serves that stop.
  *
  * @param stopId Refers to the ID of a [Stop]
- * @param routeId Refers to the ID of a [Route], not to be confused with the route's [gtfsId][Route.gtfsId]
+ * @param routeVariantId Refers to the ID of a [RouteVariant].
  * @param index The ordering in which this stop appears in this particular route variation
  */
 @Serializable
-data class RouteAtStop(
+data class RouteVariantsAtStop(
   val stopId: String,
-  val routeId: String,
+  val routeVariantId: String,
   val index: Int,
 )

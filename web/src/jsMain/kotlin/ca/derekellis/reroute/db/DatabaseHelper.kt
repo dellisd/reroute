@@ -14,6 +14,7 @@ import kotlinx.atomicfu.atomic
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
+import kotlinx.serialization.json.Json
 import me.tatarka.inject.annotations.Inject
 import org.w3c.dom.Worker
 import org.w3c.dom.events.Event
@@ -28,9 +29,8 @@ class DatabaseHelper(private val worker: Worker, private val client: RerouteClie
   private val database: RerouteDatabase = RerouteDatabase(
     driver,
     MetadataAdapter = Metadata.Adapter(DateTimeAdapter),
-    RouteAdapter = Route.Adapter(IntColumnAdapter, IntColumnAdapter, LineStringAdapter),
-    StopAtRouteAdapter = StopAtRoute.Adapter(IntColumnAdapter),
-    StopInTimetableAdapter = StopInTimetable.Adapter(IntColumnAdapter),
+    RouteAdapter = Route.Adapter(StringListAdapter(Json)),
+    RouteVariantAdapter = RouteVariant.Adapter(IntColumnAdapter, IntColumnAdapter, LineStringAdapter),
   )
 
   private var initialized by atomic(false)

@@ -1,3 +1,9 @@
+import com.soywiz.klock.DateTime;
+
+CREATE TABLE Metadata (
+    updated TEXT AS DateTime NOT NULL
+);
+
 insert:
 INSERT INTO Metadata VALUES ?;
 
@@ -8,8 +14,8 @@ update:
 UPDATE Metadata SET updated = ?;
 
 clear {
-    DELETE FROM StopInTimetable;
-    DELETE FROM StopAtRoute;
+    DELETE FROM RouteVariant;
+    DELETE FROM RouteVariantAtStop;
     DELETE FROM Stop;
     DELETE FROM Route;
 }

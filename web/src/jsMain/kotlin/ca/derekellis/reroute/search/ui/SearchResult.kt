@@ -15,6 +15,6 @@ fun SearchResult(stop: Stop, onClick: (Stop) -> Unit) {
     onMouseDown { onClick(stop) }
   }) {
     Div({ style { fontSize(20.px) } }) { Text(stop.name) }
-    stop.code?.let { code -> Div({ style { fontSize(16.px) } }) { Text(code) } }
+    stop.code.let { code -> Div({ style { fontSize(16.px) } }) { Text(code) } }
   }
 }

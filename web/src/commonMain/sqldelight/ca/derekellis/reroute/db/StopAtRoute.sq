@@ -1,2 +1,0 @@
-insert:
-INSERT INTO StopAtRoute VALUES ?;

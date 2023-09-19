@@ -6,6 +6,6 @@ import kotlinx.serialization.Serializable
 data class TransitDataBundle(
   val stops: List<Stop>,
   val routes: List<Route>,
-  val routesAtStops: List<RouteAtStop>,
-  val timetable: List<StopInTimetable>,
+  val routeVariants: List<RouteVariant>,
+  val routesAtStops: List<RouteVariantsAtStop>,
 )

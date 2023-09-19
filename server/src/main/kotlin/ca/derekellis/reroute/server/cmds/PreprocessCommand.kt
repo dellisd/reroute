@@ -25,7 +25,7 @@ import kotlin.io.path.outputStream
 class PreprocessCommand : CliktCommand() {
   private val logger = LoggerFactory.getLogger(javaClass)
 
-  private val source: Path by argument().path(canBeDir = false)
+  private val source: Path by argument().path(canBeDir = false, mustExist = true)
   private val output: Path by option("--output", "-o").path(canBeFile = false).default(Path("data"))
   private val name: String by option("--name", "-n").default("gtfs")
 
@@ -42,9 +42,9 @@ class PreprocessCommand : CliktCommand() {
     val cache = GtfsDb.fromReader(GtfsReader(source), into = cachePath)
 
     logger.info("Bundling data into {}/{}.json", output, name)
-    val bundler = DataBundler()
+    val bundler = DataBundler(cache)
 
-    val bundle = bundler.assembleDataBundle(cache)
+    val bundle = bundler.assembleDataBundle()
     val bundleFile = output / "$name.json"
     bundleFile.outputStream().use { stream ->
       Json.encodeToStream(bundle, stream)

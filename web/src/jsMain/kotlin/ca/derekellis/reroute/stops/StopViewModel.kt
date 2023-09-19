@@ -1,6 +1,5 @@
 package ca.derekellis.reroute.stops
 
-import ca.derekellis.reroute.models.Route
 import ca.derekellis.reroute.models.Stop
 
 sealed interface StopViewModel {
@@ -8,8 +7,10 @@ sealed interface StopViewModel {
 
   data class Loaded(
     val stop: Stop,
-    val groupedRoutes: List<List<Route>>,
-  ) : StopViewModel
+    val groupedRoutes: List<RouteSection>,
+  ) : StopViewModel {
+    data class RouteSection(val gtfsId: String, val identifier: String, val name: String, val directionId: Int)
+  }
 
   object NotFound : StopViewModel
 }
