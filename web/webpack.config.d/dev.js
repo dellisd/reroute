@@ -8,6 +8,11 @@ config.devServer = {
         "/api": {
             target: "http://localhost:8888/",
             pathRewrite: {"^/api": ""}
+        },
+        "/api/realtime": {
+            target: "ws://localhost:8888/realtime/",
+            pathRewrite: { '^/api/realtime': '' },
+            ws: true,
         }
     },
     open: false

@@ -8,9 +8,7 @@ sealed interface StopViewModel {
   data class Loaded(
     val stop: Stop,
     val groupedRoutes: List<RouteSection>,
-  ) : StopViewModel {
-    data class RouteSection(val gtfsId: String, val identifier: String, val name: String, val directionId: Int)
-  }
+  ) : StopViewModel
 
   object NotFound : StopViewModel
 }

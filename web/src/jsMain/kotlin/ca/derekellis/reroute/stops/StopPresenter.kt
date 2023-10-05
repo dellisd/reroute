@@ -6,8 +6,10 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import ca.derekellis.reroute.data.DataSource
+import ca.derekellis.reroute.data.RerouteClient
 import ca.derekellis.reroute.home.Home
 import ca.derekellis.reroute.map.MapInteractionsManager
+import ca.derekellis.reroute.realtime.RealtimeMessage
 import ca.derekellis.reroute.ui.CollectEffect
 import ca.derekellis.reroute.ui.Navigator
 import ca.derekellis.reroute.ui.Presenter
@@ -17,6 +19,7 @@ import me.tatarka.inject.annotations.Inject
 
 @Inject
 class StopPresenter(
+  private val client: RerouteClient,
   private val dataSource: DataSource,
   private val navigator: Navigator,
   private val mapInteractionsManager: MapInteractionsManager,
@@ -40,15 +43,18 @@ class StopPresenter(
 
     if (routesAtStop == null || stopList == null) return StopViewModel.Loading
 
+    val realtimeData by remember { client.nextTrips(args.code) }.collectAsState(null)
+
     val routeSections = remember(routesAtStop) {
       (routesAtStop ?: emptyList()).map {
-        StopViewModel.Loaded.RouteSection(
+        RouteSection(
           it.gtfsId,
           it.identifier,
           it.destinations[it.directionId],
           it.directionId,
+          null,
         )
-      }.sortedWith(compareBy<StopViewModel.Loaded.RouteSection> { it.identifier.length }.thenBy(naturalOrder()) { it.identifier })
+      }.sortedWith(compareBy<RouteSection> { it.identifier.length }.thenBy(naturalOrder()) { it.identifier })
     }
 
     val stop = stopList!!.firstOrNull() ?: return StopViewModel.NotFound
@@ -57,6 +63,16 @@ class StopPresenter(
       mapInteractionsManager.goTo(stop)
     }
 
-    return StopViewModel.Loaded(stop, routeSections)
+    return StopViewModel.Loaded(stop, realtimeData?.let { zipRealtimeData(it, routeSections) } ?: routeSections)
+  }
+
+  private fun zipRealtimeData(realtime: RealtimeMessage, routeSections: List<RouteSection>): List<RouteSection> {
+    val incoming = realtime.routes.associateBy { "${it.number}-${it.directionId}" }
+
+    return routeSections.map { section ->
+      val nextTrips = incoming["${section.identifier}-${section.directionId}"]
+
+      section.copy(nextTrips = nextTrips?.trips)
+    }
   }
 }

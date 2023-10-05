@@ -14,6 +14,13 @@ import ca.derekellis.reroute.ui.Presenter
 import ca.derekellis.reroute.ui.ScreenWrapper
 import ca.derekellis.reroute.ui.SearchScreenWrapper
 import ca.derekellis.reroute.ui.View
+import io.ktor.client.HttpClient
+import io.ktor.client.engine.js.Js
+import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
+import io.ktor.client.plugins.websocket.WebSockets
+import io.ktor.serialization.kotlinx.KotlinxWebsocketSerializationConverter
+import io.ktor.serialization.kotlinx.json.json
+import kotlinx.serialization.json.Json
 import me.tatarka.inject.annotations.Component
 import me.tatarka.inject.annotations.Provides
 import org.w3c.dom.Worker
@@ -51,4 +58,15 @@ abstract class AppComponent {
   protected fun provideWorker(): Worker =
     //language=JavaScript
     js("""new Worker(new URL("./worker.js", import.meta.url))""").unsafeCast<Worker>()
+
+  @Provides
+  @AppScope
+  protected fun provideHttpClient(): HttpClient = HttpClient(Js) {
+    install(ContentNegotiation) {
+      json()
+    }
+    install(WebSockets) {
+      contentConverter = KotlinxWebsocketSerializationConverter(Json)
+    }
+  }
 }

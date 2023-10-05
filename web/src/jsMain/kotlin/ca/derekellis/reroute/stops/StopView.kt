@@ -42,10 +42,11 @@ private fun StopContent(model: StopViewModel) {
 }
 
 @Composable
-private fun RouteInfo(route: StopViewModel.Loaded.RouteSection) {
+private fun RouteInfo(route: RouteSection) {
   Div {
     H3 {
       Text("${route.identifier} ${route.name}")
     }
+    Text(route.nextTrips.toString())
   }
 }
