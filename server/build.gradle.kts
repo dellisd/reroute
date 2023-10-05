@@ -32,6 +32,11 @@ dependencies {
   implementation(project(":shared"))
 
   ksp(libs.inject.compiler)
+
+  testImplementation(libs.assertk)
+  testImplementation(libs.junit)
+  testImplementation(libs.kotlinx.coroutines.test)
+  testImplementation(libs.ktor.client.mock)
 }
 
 kotlin {

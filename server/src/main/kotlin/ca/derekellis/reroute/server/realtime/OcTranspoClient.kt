@@ -7,8 +7,10 @@ import ca.derekellis.reroute.server.config.LoadedServerConfig
 import ca.derekellis.reroute.server.di.RerouteScope
 import io.github.dellisd.spatialk.geojson.dsl.lngLat
 import io.ktor.client.HttpClient
+import io.ktor.client.plugins.ServerResponseException
 import io.ktor.client.request.get
 import io.ktor.client.statement.readBytes
+import io.ktor.http.isSuccess
 import kotlinx.datetime.toKotlinLocalTime
 import me.tatarka.inject.annotations.Inject
 import org.w3c.dom.Element
@@ -37,6 +39,10 @@ class OcTranspoClient(
     val response =
       httpClient.get("https://api.octranspo1.com/v2.0/GetNextTripsForStopAllRoutes?appID=${credentials.appId}&apiKey=${credentials.apiKey}&stopNo=$code&format=xml")
     val responseTime = LocalTime.now(ZoneId.of("America/Montreal"))
+
+    if (!response.status.isSuccess()) {
+      throw ServerResponseException(response, response.readBytes().toString(Charsets.UTF_8))
+    }
 
     return buildResultFromResponse(code, response.readBytes(), responseTime)
   }
