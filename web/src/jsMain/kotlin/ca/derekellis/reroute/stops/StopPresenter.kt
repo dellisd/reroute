@@ -1,10 +1,12 @@
 package ca.derekellis.reroute.stops
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import ca.derekellis.reroute.data.DataSource
 import ca.derekellis.reroute.data.RerouteClient
 import ca.derekellis.reroute.home.Home
@@ -14,6 +16,7 @@ import ca.derekellis.reroute.ui.CollectEffect
 import ca.derekellis.reroute.ui.Navigator
 import ca.derekellis.reroute.ui.Presenter
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import me.tatarka.inject.annotations.Inject
 
@@ -27,6 +30,7 @@ class StopPresenter(
 ) : Presenter<StopViewModel, StopViewEvent> {
   @Composable
   override fun produceModel(events: Flow<StopViewEvent>): StopViewModel {
+    val scope = rememberCoroutineScope()
     CollectEffect(events) { event ->
       when (event) {
         Close -> {
@@ -61,6 +65,17 @@ class StopPresenter(
 
     LaunchedEffect(stop) {
       mapInteractionsManager.goTo(stop)
+    }
+
+    DisposableEffect(stop) {
+      scope.launch {
+        val ids = dataSource.getRouteVariantsAtStop(stop.code).first().map { it.routeVariantId }
+        mapInteractionsManager.showRouteVariant(*ids.toTypedArray())
+      }
+
+      onDispose {
+        mapInteractionsManager.clearRoutes()
+      }
     }
 
     return StopViewModel.Loaded(stop, realtimeData?.let { zipRealtimeData(it, routeSections) } ?: routeSections)

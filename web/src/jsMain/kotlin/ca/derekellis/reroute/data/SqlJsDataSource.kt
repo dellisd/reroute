@@ -7,6 +7,7 @@ import app.cash.sqldelight.coroutines.mapToList
 import ca.derekellis.reroute.db.DatabaseHelper
 import ca.derekellis.reroute.db.GetRoutesByStopCode
 import ca.derekellis.reroute.db.RerouteDatabase
+import ca.derekellis.reroute.db.RouteVariantAtStop
 import ca.derekellis.reroute.di.AppScope
 import ca.derekellis.reroute.models.Route
 import ca.derekellis.reroute.models.Stop
@@ -47,6 +48,13 @@ class SqlJsDataSource(private val withDatabase: DatabaseHelper) : DataSource {
   override fun getRoutesAtStop(code: String): Flow<List<GetRoutesByStopCode>> = withDatabaseFlowFlatten { database ->
     database.stopQueries
       .getRoutesByStopCode(code)
+      .asFlow()
+      .mapToList(Dispatchers.Main)
+  }
+
+  override fun getRouteVariantsAtStop(code: String): Flow<List<RouteVariantAtStop>> = withDatabaseFlowFlatten { database ->
+    database.routeVariantAtStopQueries
+      .getVariantsByStopCode(code)
       .asFlow()
       .mapToList(Dispatchers.Main)
   }

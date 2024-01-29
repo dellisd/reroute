@@ -13,3 +13,6 @@ CREATE TABLE RouteVariant (
 
 getAll:
 SELECT * FROM RouteVariant;
+
+getByIds:
+SELECT * FROM RouteVariant WHERE id IN ?;

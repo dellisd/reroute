@@ -7,3 +7,10 @@ CREATE TABLE RouteVariantAtStop (
   FOREIGN KEY (stopId) REFERENCES Stop(id),
   FOREIGN KEY (routeVariantId) REFERENCES RouteVariant(id)
 );
+
+getVariantsByStopCode:
+SELECT RouteVariantAtStop.* FROM Stop
+  JOIN RouteVariantAtStop
+  ON Stop.id = RouteVariantAtStop.stopId
+  WHERE Stop.code = ?
+  ORDER BY RouteVariantAtStop.routeVariantId;

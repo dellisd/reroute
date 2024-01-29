@@ -24,7 +24,7 @@ import kotlin.time.Duration.Companion.minutes
 class OcTranspoClientTest {
   private val config = LoadedServerConfig(
     dataPath = Path(""),
-    ocTranspo = OcTranspoCredentials("", "")
+    ocTranspo = OcTranspoCredentials("", ""),
   )
 
   private fun makeClient(engine: MockEngine): OcTranspoClient = OcTranspoClient(config, HttpClient(engine))
@@ -35,7 +35,7 @@ class OcTranspoClientTest {
       respond(
         DEFAULT,
         status = HttpStatusCode.OK,
-        headers = headersOf(HttpHeaders.ContentType, "text/html")
+        headers = headersOf(HttpHeaders.ContentType, "text/html"),
       )
     }
 

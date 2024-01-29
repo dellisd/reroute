@@ -2,16 +2,20 @@ package ca.derekellis.reroute.map
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import ca.derekellis.mapbox.LngLat
 import ca.derekellis.mapbox.MapboxState
 import ca.derekellis.mapbox.rememberMapboxState
 import ca.derekellis.mapbox.style.InterpolationType.Companion.exponential
 import ca.derekellis.mapbox.style.expression
+import ca.derekellis.mapbox.style.get
 import ca.derekellis.mapbox.style.interpolate
 import ca.derekellis.reroute.RerouteConfig
 import ca.derekellis.reroute.ui.View
 import ca.derekellis.reroute.utils.jsObject
 import geojson.Feature
+import geojson.GeoJsonObject
+import io.github.dellisd.spatialk.geojson.FeatureCollection
 import me.tatarka.inject.annotations.Inject
 import org.jetbrains.compose.web.css.height
 import org.jetbrains.compose.web.css.hsl
@@ -43,12 +47,16 @@ class MapView : View<MapViewModel, MapViewEvent> {
       }
     }
 
-    MapContent(mapState, onEvent = emit)
+    MapContent(mapState, onEvent = emit, model.routeFeatures)
   }
 }
 
 @Composable
-private fun MapContent(mapState: MapboxState, onEvent: (MapViewEvent) -> Unit) {
+private fun MapContent(
+  mapState: MapboxState,
+  onEvent: (MapViewEvent) -> Unit,
+  routeFeatures: Set<io.github.dellisd.spatialk.geojson.Feature>,
+) {
   Div {
     ca.derekellis.mapbox.MapboxMap(
       accessToken = RerouteConfig.MAPBOX_ACCESS_KEY,
@@ -88,6 +96,16 @@ private fun MapContent(mapState: MapboxState, onEvent: (MapViewEvent) -> Unit) {
               15.5 to 8,
             ),
           )
+        }
+      }
+
+      val routeGeojson = remember(routeFeatures) {
+        JSON.parse<GeoJsonObject>(FeatureCollection(routeFeatures.toList()).json())
+      }
+      GeoJsonSource("routes", routeGeojson) {
+        LineLayer("route-lines") {
+          lineWidth(5.0)
+          lineColor(get("color"))
         }
       }
     }

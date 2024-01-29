@@ -31,6 +31,7 @@ class DatabaseHelper(private val worker: Worker, private val client: RerouteClie
     MetadataAdapter = Metadata.Adapter(DateTimeAdapter),
     RouteAdapter = Route.Adapter(StringListAdapter(Json)),
     RouteVariantAdapter = RouteVariant.Adapter(IntColumnAdapter, IntColumnAdapter, LineStringAdapter),
+    RouteVariantAtStopAdapter = RouteVariantAtStop.Adapter(IntColumnAdapter),
   )
 
   private var initialized by atomic(false)
