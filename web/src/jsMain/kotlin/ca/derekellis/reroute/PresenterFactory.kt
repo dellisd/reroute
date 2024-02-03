@@ -8,22 +8,23 @@ import ca.derekellis.reroute.search.Search
 import ca.derekellis.reroute.search.SearchPresenter
 import ca.derekellis.reroute.stops.Stop
 import ca.derekellis.reroute.stops.StopPresenter
+import ca.derekellis.reroute.ui.Navigator
 import ca.derekellis.reroute.ui.Presenter
 import ca.derekellis.reroute.ui.Screen
 import me.tatarka.inject.annotations.Inject
 
 @Inject
 class PresenterFactory(
-  private val stopPresenterFactory: (Stop) -> StopPresenter,
-  private val homePresenterFactory: (Home) -> HomePresenter,
-  private val mapPresenterFactory: (Map) -> MapPresenter,
-  private val searchPresenterFactory: (Search) -> SearchPresenter,
+  private val stopPresenterFactory: StopPresenter.Factory,
+  private val homePresenterFactory: HomePresenter.Factory,
+  private val mapPresenterFactory: MapPresenter.Factory,
+  private val searchPresenterFactory: SearchPresenter.Factory,
 ) {
-  fun createPresenter(screen: Screen): Presenter<*, *> = when (screen) {
-    is Home -> homePresenterFactory(screen)
-    is Stop -> stopPresenterFactory(screen)
-    is Map -> mapPresenterFactory(screen)
-    is Search -> searchPresenterFactory(screen)
+  fun createPresenter(navigator: Navigator, screen: Screen): Presenter<*, *> = when (screen) {
+    is Home -> homePresenterFactory.create(screen)
+    is Stop -> stopPresenterFactory.create(navigator, screen)
+    is Map -> mapPresenterFactory.create(navigator, screen)
+    is Search -> searchPresenterFactory.create(navigator, screen)
     else -> throw IllegalArgumentException("Unsupported screen $screen")
   }
 }

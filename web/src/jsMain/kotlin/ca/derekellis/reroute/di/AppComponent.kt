@@ -49,7 +49,7 @@ abstract class AppComponent {
   @AppScope
   protected fun searchScreenWrapper(viewFactory: ViewFactory, presenterFactory: PresenterFactory): SearchScreenWrapper =
     ScreenWrapper(
-      presenterFactory.createPresenter(Search) as Presenter<Any, Any>,
+      presenterFactory.createPresenter(appNavigator, Search) as Presenter<Any, Any>,
       viewFactory.createView(Search) as View<Any, Any>,
     )
 

@@ -14,14 +14,15 @@ import ca.derekellis.reroute.ui.Presenter
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import me.tatarka.inject.annotations.Assisted
 import me.tatarka.inject.annotations.Inject
 import ca.derekellis.reroute.stops.Stop as StopScreen
 
 @Inject
 class SearchPresenter(
   private val dataSource: DataSource,
-  private val navigator: Navigator,
-  private val args: Search,
+  @Assisted private val navigator: Navigator,
+  @Assisted private val args: Search,
 ) : Presenter<SearchViewModel, SearchViewEvent> {
   @Composable
   override fun produceModel(events: Flow<SearchViewEvent>): SearchViewModel {
@@ -41,4 +42,8 @@ class SearchPresenter(
 
     return SearchViewModel("", results)
   }
+
+  // TODO: Replace with fun interface
+  @Inject
+  class Factory(val create: (Navigator, Search) -> SearchPresenter)
 }

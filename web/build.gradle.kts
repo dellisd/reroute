@@ -47,7 +47,7 @@ kotlin {
         implementation(libs.sqldelight.coroutines)
         implementation(libs.sqldelight.primitiveAdapters)
 
-//                implementation(libs.spatialk.geojson)
+        implementation(libs.spatialk.geojson)
         implementation(libs.inject.runtime)
         implementation(libs.kotlinx.datetime)
         implementation(libs.kotlinx.serialization.json)

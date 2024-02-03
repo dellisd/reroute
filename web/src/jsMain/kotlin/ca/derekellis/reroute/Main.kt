@@ -5,6 +5,7 @@ import androidx.compose.runtime.remember
 import ca.derekellis.reroute.di.AppComponent
 import ca.derekellis.reroute.di.create
 import ca.derekellis.reroute.map.Map
+import ca.derekellis.reroute.ui.AppNavigator
 import ca.derekellis.reroute.ui.AppStylesheet
 import ca.derekellis.reroute.ui.Presenter
 import ca.derekellis.reroute.ui.ScreenWrapper
@@ -23,7 +24,7 @@ fun main() {
   renderComposable(rootElementId = "root") {
     Style(AppStylesheet)
 
-    MapSection(component.viewFactory, component.presenterFactory)
+    MapSection(component.appNavigator, component.viewFactory, component.presenterFactory)
     component.application()
     component.appNavigator.handleNavigation()
   }
@@ -31,13 +32,14 @@ fun main() {
 
 @Composable
 fun MapSection(
+  appNavigator: AppNavigator,
   viewFactory: ViewFactory,
   presenterFactory: PresenterFactory,
 ) {
   val wrapper = remember {
     @Suppress("UNCHECKED_CAST")
     ScreenWrapper(
-      presenterFactory.createPresenter(Map) as Presenter<Any, Any>,
+      presenterFactory.createPresenter(appNavigator, Map) as Presenter<Any, Any>,
       viewFactory.createView(Map) as View<Any, Any>,
     )
   }

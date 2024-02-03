@@ -18,15 +18,16 @@ import ca.derekellis.reroute.ui.Presenter
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import me.tatarka.inject.annotations.Assisted
 import me.tatarka.inject.annotations.Inject
 
 @Inject
 class StopPresenter(
   private val client: RerouteClient,
   private val dataSource: DataSource,
-  private val navigator: Navigator,
   private val mapInteractionsManager: MapInteractionsManager,
-  private val args: Stop,
+  @Assisted private val navigator: Navigator,
+  @Assisted private val args: Stop,
 ) : Presenter<StopViewModel, StopViewEvent> {
   @Composable
   override fun produceModel(events: Flow<StopViewEvent>): StopViewModel {
@@ -90,4 +91,8 @@ class StopPresenter(
       section.copy(nextTrips = nextTrips?.trips)
     }
   }
+
+  // TODO: Replace with fun interface
+  @Inject
+  class Factory(val create: (Navigator, Stop) -> StopPresenter)
 }

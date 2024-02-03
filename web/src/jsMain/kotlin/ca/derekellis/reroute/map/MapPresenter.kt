@@ -17,6 +17,7 @@ import ca.derekellis.reroute.ui.Presenter
 import io.github.dellisd.spatialk.geojson.Feature
 import io.github.dellisd.spatialk.geojson.dsl.feature
 import kotlinx.coroutines.flow.Flow
+import me.tatarka.inject.annotations.Assisted
 import me.tatarka.inject.annotations.Inject
 import ca.derekellis.reroute.stops.Stop as StopScreen
 
@@ -24,9 +25,9 @@ import ca.derekellis.reroute.stops.Stop as StopScreen
 class MapPresenter(
   private val dataSource: DataSource,
   private val interactionsManager: MapInteractionsManager,
-  private val navigator: Navigator,
   private val withDatabase: DatabaseHelper,
-  private val args: Map,
+  @Assisted private val navigator: Navigator,
+  @Assisted private val args: Map,
 ) : Presenter<MapViewModel, MapViewEvent> {
   @Composable
   override fun produceModel(events: Flow<MapViewEvent>): MapViewModel {
@@ -45,7 +46,7 @@ class MapPresenter(
         } else {
           database.routeVariantQueries.getByIds(displayedRoutes).asFlow().mapToList(coroutineContext)
             .collect { routes ->
-              routeFeatures = routes.mapIndexedTo(mutableSetOf()) { index, route ->
+              routeFeatures = routes.mapIndexedTo(mutableSetOf()) { _, route ->
                 feature(route.shape) {
                   put("id", route.id)
                   put("gtfsId", route.gtfsId)
@@ -80,4 +81,8 @@ class MapPresenter(
     private const val COLOR_CONFEDERATION = "#d62e3b"
     private const val COLOR_TRILLIUM = "#76bf43"
   }
+
+  // TODO: Replace with fun interface
+  @Inject
+  class Factory(val create: (Navigator, Map) -> MapPresenter)
 }

@@ -67,7 +67,7 @@ class AppNavigator(
     screen?.let {
       val wrapper = remember(it) {
         ScreenWrapper(
-          presenterFactory.createPresenter(it) as Presenter<Any, Any>,
+          presenterFactory.createPresenter(this, it) as Presenter<Any, Any>,
           viewFactory.createView(it) as View<Any, Any>,
         )
       }
