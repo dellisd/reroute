@@ -27,9 +27,7 @@ import org.jetbrains.compose.web.dom.Div
 @Inject
 class MapView : View<MapViewModel, MapViewEvent> {
   @Composable
-  override fun Content(model: MapViewModel?, emit: (MapViewEvent) -> Unit) {
-    model ?: return
-
+  override fun Content(model: MapViewModel, emit: (MapViewEvent) -> Unit) {
     val mapState = rememberMapboxState(center = LngLat(-75.7181, 45.3922), zoom = 11.0)
 
     LaunchedEffect(model.targetStop) {

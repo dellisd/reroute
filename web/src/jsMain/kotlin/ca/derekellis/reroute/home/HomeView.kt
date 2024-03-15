@@ -5,7 +5,7 @@ import ca.derekellis.reroute.ui.View
 
 class HomeView : View<Unit, Unit> {
   @Composable
-  override fun Content(model: Unit?, emit: (Unit) -> Unit) {
+  override fun Content(model: Unit, emit: (Unit) -> Unit) {
     /* No-op */
   }
 }

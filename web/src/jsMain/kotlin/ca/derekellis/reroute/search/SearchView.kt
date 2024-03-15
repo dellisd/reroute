@@ -39,9 +39,7 @@ import org.jetbrains.compose.web.dom.Input
 
 class SearchView : View<SearchViewModel, SearchViewEvent> {
   @Composable
-  override fun Content(model: SearchViewModel?, emit: (SearchViewEvent) -> Unit) {
-    model ?: return
-
+  override fun Content(model: SearchViewModel, emit: (SearchViewEvent) -> Unit) {
     var isFocused by remember { mutableStateOf(false) }
 
     Style(SearchStyleSheet)

@@ -14,9 +14,7 @@ import org.jetbrains.compose.web.dom.Text
 
 class StopView : View<StopViewModel, StopViewEvent> {
   @Composable
-  override fun Content(model: StopViewModel?, emit: (StopViewEvent) -> Unit) {
-    model ?: return
-
+  override fun Content(model: StopViewModel, emit: (StopViewEvent) -> Unit) {
     Style(StopsStyleSheet)
     InfoPanel(onClose = { emit(Close) }) {
       StopContent(model)
@@ -31,7 +29,7 @@ private fun StopContent(model: StopViewModel) {
   when (model) {
     is StopViewModel.Loaded -> {
       H1 { Text(model.stop.name) }
-      H2 { Text(model.stop.code ?: "") }
+      H2 { Text(model.stop.code) }
       Div { Text(model.stop.id) }
       Hr()
       model.groupedRoutes.forEach { routes -> RouteInfo(routes) }

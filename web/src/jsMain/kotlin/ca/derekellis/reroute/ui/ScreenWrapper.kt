@@ -1,15 +1,9 @@
 package ca.derekellis.reroute.ui
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
-import app.cash.molecule.RecompositionClock
-import app.cash.molecule.moleculeFlow
-import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.consumeAsFlow
-import kotlinx.coroutines.flow.filterNotNull
+import androidx.compose.runtime.remember
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import me.tatarka.inject.annotations.Inject
 
 @Inject
@@ -17,19 +11,14 @@ class ScreenWrapper(
   private val presenter: Presenter<Any, Any>,
   private val view: View<Any, Any>,
 ) {
-  private val eventsChannel = Channel<Any?>()
-  private val events = eventsChannel.consumeAsFlow().filterNotNull()
-
-  private val models = moleculeFlow(RecompositionClock.ContextClock) { presenter.produceModel(events) }
-  private var model by mutableStateOf<Any?>(null)
-
   @Composable
   fun screen() {
-    LaunchedEffect(presenter) {
-      models.collect { model = it }
-    }
+    val triggerFlow = remember { MutableSharedFlow<Any>(replay = 1) }
+    val listenerFlow = remember { triggerFlow.asSharedFlow() }
 
-    view.Content(model) { eventsChannel.trySend(it) }
+    val model = presenter.produceModel(listenerFlow)
+
+    view.Content(model) { triggerFlow.tryEmit(it) }
   }
 
   override fun equals(other: Any?): Boolean {
