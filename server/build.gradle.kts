@@ -18,6 +18,7 @@ dependencies {
   implementation(libs.ktor.server.core)
   implementation(libs.ktor.server.contentNegotiation)
   implementation(libs.ktor.server.autoHead)
+  implementation(libs.ktor.server.logging)
   implementation(libs.ktor.server.netty)
   implementation(libs.ktor.server.webSockets)
   implementation(libs.ktor.serialization.json)

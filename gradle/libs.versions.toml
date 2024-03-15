@@ -4,7 +4,7 @@ kotlin = "1.9.21"
 kotlinx-serialization = "1.5.0"
 sqldelight = "2.0.1"
 ktlint = "0.48.2"
-ktor = "2.3.4"
+ktor = "2.3.9"
 inject = "0.6.3"
 
 copyWebpackPlugin = "9.1.0"
@@ -15,7 +15,7 @@ absurdSql = "0.0.53"
 [libraries]
 kotlinx-coroutines = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines"}
 kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "coroutines" }
-kotlinx-serialization-yaml = "com.charleskorn.kaml:kaml:0.49.0"
+kotlinx-serialization-yaml = "com.charleskorn.kaml:kaml:0.57.0"
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinx-serialization" }
 kotlinx-serialization-core = { module = "org.jetbrains.kotlinx:kotlinx-serialization-core", version.ref = "kotlinx-serialization" }
 kotlinx-datetime = "org.jetbrains.kotlinx:kotlinx-datetime:0.4.0"
@@ -26,6 +26,7 @@ ktor-server-netty = { module = "io.ktor:ktor-server-netty", version.ref = "ktor"
 ktor-server-contentNegotiation = { module = "io.ktor:ktor-server-content-negotiation", version.ref = "ktor" }
 ktor-server-autoHead = { module = "io.ktor:ktor-server-auto-head-response", version.ref = "ktor" }
 ktor-server-webSockets = { module = "io.ktor:ktor-server-websockets", version.ref = "ktor" }
+ktor-server-logging = { module = "io.ktor:ktor-server-call-logging", version.ref = "ktor" }
 # Ktor Client
 ktor-client-core = { module = "io.ktor:ktor-client-core", version.ref = "ktor" }
 ktor-client-js = { module = "io.ktor:ktor-client-js", version.ref = "ktor" }
@@ -50,7 +51,7 @@ assertk = { module = "com.willowtreeapps.assertk:assertk", version = "0.27.0" }
 compose-mapbox = { module = "ca.derekellis.mapbox:compose-web-mapbox", version = "0.2.0-SNAPSHOT" }
 spatialk-geojson = "io.github.dellisd.spatialk:geojson:0.3.0-SNAPSHOT"
 kgtfs-gtfs = "ca.derekellis.kgtfs:gtfs:0.2.0-SNAPSHOT"
-logback = "ch.qos.logback:logback-classic:1.2.11"
+logback = "ch.qos.logback:logback-classic:1.4.14"
 klock = "com.soywiz.korlibs.klock:klock:2.2.0"
 clikt = "com.github.ajalt.clikt:clikt:3.5.0"
 jgrapht = "org.jgrapht:jgrapht-core:1.5.1"
