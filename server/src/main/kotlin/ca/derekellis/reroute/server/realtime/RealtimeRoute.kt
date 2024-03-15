@@ -8,11 +8,6 @@ import io.ktor.server.routing.Route
 import io.ktor.server.routing.Routing
 import io.ktor.server.routing.get
 import io.ktor.server.routing.route
-import io.ktor.server.websocket.sendSerialized
-import io.ktor.server.websocket.webSocket
-import io.ktor.websocket.CloseReason
-import io.ktor.websocket.close
-import kotlinx.coroutines.channels.ClosedReceiveChannelException
 import me.tatarka.inject.annotations.Inject
 import org.slf4j.LoggerFactory
 
