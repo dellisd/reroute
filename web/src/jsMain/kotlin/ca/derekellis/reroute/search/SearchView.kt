@@ -9,6 +9,7 @@ import ca.derekellis.reroute.search.ui.SearchResult
 import ca.derekellis.reroute.ui.AppStylesheet.SmallMediaQuery
 import ca.derekellis.reroute.ui.View
 import org.jetbrains.compose.web.attributes.InputType
+import org.jetbrains.compose.web.attributes.placeholder
 import org.jetbrains.compose.web.css.Color
 import org.jetbrains.compose.web.css.DisplayStyle
 import org.jetbrains.compose.web.css.FlexDirection
@@ -48,6 +49,7 @@ class SearchView : View<SearchViewModel, SearchViewEvent> {
       classes(SearchStyleSheet.searchContainer)
     }) {
       SearchBar(
+        placeholder = "Search for stops",
         onQueryUpdate = { q -> emit(SearchViewEvent.UpdateQuery(q)) },
         onFocused = { isFocused = it },
       )
@@ -119,7 +121,7 @@ object SearchStyleSheet : StyleSheet() {
  * TODO: Think about how to best expose input events to parent composable. A flow?
  */
 @Composable
-fun SearchBar(onQueryUpdate: (String) -> Unit, onFocused: (focused: Boolean) -> Unit = {}) {
+fun SearchBar(placeholder: String? = null, onQueryUpdate: (String) -> Unit, onFocused: (focused: Boolean) -> Unit = {}) {
   Input(type = InputType.Search, attrs = {
     classes(SearchStyleSheet.searchInput)
     onInput {
@@ -127,5 +129,6 @@ fun SearchBar(onQueryUpdate: (String) -> Unit, onFocused: (focused: Boolean) -> 
     }
     onFocusIn { onFocused(true) }
     onFocusOut { onFocused(false) }
+    placeholder?.let { placeholder(it) }
   })
 }
