@@ -18,6 +18,7 @@ suspend fun whenWindowFocused(block: suspend () -> Unit): Nothing = coroutineSco
   }
 
   try {
+    job = launch { block() }
     window.addEventListener("focus", focusListener)
     window.addEventListener("blur", blurListener)
 

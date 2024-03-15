@@ -52,7 +52,7 @@ class StopPresenter(
 
     if (routesAtStop == null || stopList == null) return StopViewModel.Loading
 
-    val realtimeData by produceState<RealtimeMessage?>(initialValue = null) {
+    val realtimeData by produceState<RealtimeMessage?>(initialValue = null, args) {
       whenWindowFocused {
         while (true) {
           value = client.nextTripsSingle(args.code)

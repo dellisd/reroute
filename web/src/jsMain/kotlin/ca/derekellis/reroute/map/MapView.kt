@@ -37,7 +37,7 @@ class MapView : View<MapViewModel, MapViewEvent> {
         val (longitude, latitude) = target.position
         mapState.flyTo(
           center = LngLat(longitude, latitude),
-          zoom = 16.0,
+          zoom = 14.0,
           padding = jsObject { right = 512 },
         )
       } else {
