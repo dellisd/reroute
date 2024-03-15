@@ -29,6 +29,7 @@ class RerouteClient(private val client: HttpClient) {
 
   suspend fun getDataBundle(): TransitDataBundle = client.get("/api/data/").body()
 
+  @Deprecated("Websocket support is being dropped")
   fun nextTrips(code: String): Flow<RealtimeMessage> = flow {
     client.webSocket("/api/realtime/$code") {
       while (true) {
@@ -36,4 +37,6 @@ class RerouteClient(private val client: HttpClient) {
       }
     }
   }
+
+  suspend fun nextTripsSingle(code: String): RealtimeMessage = client.get("/api/realtime/$code").body()
 }

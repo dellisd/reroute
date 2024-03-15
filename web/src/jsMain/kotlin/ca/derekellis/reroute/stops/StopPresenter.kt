@@ -5,6 +5,7 @@ import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import ca.derekellis.reroute.data.DataSource
@@ -15,11 +16,14 @@ import ca.derekellis.reroute.realtime.RealtimeMessage
 import ca.derekellis.reroute.ui.CollectEffect
 import ca.derekellis.reroute.ui.Navigator
 import ca.derekellis.reroute.ui.Presenter
+import ca.derekellis.reroute.utils.whenWindowFocused
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import me.tatarka.inject.annotations.Assisted
 import me.tatarka.inject.annotations.Inject
+import kotlin.time.Duration.Companion.seconds
 
 @Inject
 class StopPresenter(
@@ -48,7 +52,14 @@ class StopPresenter(
 
     if (routesAtStop == null || stopList == null) return StopViewModel.Loading
 
-    val realtimeData by remember { client.nextTrips(args.code) }.collectAsState(null)
+    val realtimeData by produceState<RealtimeMessage?>(initialValue = null) {
+      whenWindowFocused {
+        while (true) {
+          value = client.nextTripsSingle(args.code)
+          delay(30.seconds)
+        }
+      }
+    }
 
     val routeSections = remember(routesAtStop) {
       (routesAtStop ?: emptyList()).map {
