@@ -7,6 +7,6 @@ RUN gradle :web:jsBrowserDistribution
 
 FROM nginx:1.23.0
 
-COPY --from=builder /home/gradle/src/web/build/distributions /usr/share/nginx/html
+COPY --from=builder /home/gradle/src/web/build/dist/js/productionExecutable /usr/share/nginx/html
 
 LABEL org.opencontainers.image.source=https://github.com/dellisd/reroute
