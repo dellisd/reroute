@@ -1,3 +1,7 @@
+import org.jetbrains.kotlin.gradle.targets.js.yarn.YarnLockMismatchReport
+import org.jetbrains.kotlin.gradle.targets.js.yarn.YarnPlugin
+import org.jetbrains.kotlin.gradle.targets.js.yarn.YarnRootExtension
+
 plugins {
   alias(libs.plugins.kotlin.multiplatform) apply false
   alias(libs.plugins.kotlin.jvm) apply false
@@ -22,4 +26,8 @@ spotless {
     trimTrailingWhitespace()
     endWithNewline()
   }
+}
+
+plugins.withType(YarnPlugin::class.java) {
+  the<YarnRootExtension>().yarnLockMismatchReport = YarnLockMismatchReport.WARNING
 }

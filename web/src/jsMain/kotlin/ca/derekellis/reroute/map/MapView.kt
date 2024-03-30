@@ -83,6 +83,16 @@ private fun MapContent(
         }
       },
     ) {
+      val routeGeojson = remember(routeFeatures) {
+        JSON.parse<GeoJsonObject>(FeatureCollection(routeFeatures.toList()).json())
+      }
+      GeoJsonSource("routes", routeGeojson) {
+        LineLayer("route-lines") {
+          lineWidth(5.0)
+          lineColor(get("color"))
+        }
+      }
+
       GeoJsonSource("stops", url = "/api/data/geojson") {
         CircleLayer("stop-circles") {
           circleColor(hsl(4.1, 89.6, 58.4))
@@ -94,16 +104,6 @@ private fun MapContent(
               15.5 to 8,
             ),
           )
-        }
-      }
-
-      val routeGeojson = remember(routeFeatures) {
-        JSON.parse<GeoJsonObject>(FeatureCollection(routeFeatures.toList()).json())
-      }
-      GeoJsonSource("routes", routeGeojson) {
-        LineLayer("route-lines") {
-          lineWidth(5.0)
-          lineColor(get("color"))
         }
       }
     }

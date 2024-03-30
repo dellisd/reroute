@@ -3,7 +3,7 @@ FROM gradle:jdk17 AS builder
 COPY . /home/gradle/src
 WORKDIR /home/gradle/src
 
-RUN gradle :web:jsBrowserWebpack
+RUN gradle :web:jsBrowserDistribution
 
 FROM nginx:1.23.0
 
