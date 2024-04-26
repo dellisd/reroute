@@ -2,6 +2,7 @@ package ca.derekellis.reroute.server.realtime
 
 import ca.derekellis.reroute.server.RoutingModule
 import ca.derekellis.reroute.server.di.RerouteScope
+import io.github.dellisd.spatialk.geojson.FeatureCollection
 import io.ktor.server.application.call
 import io.ktor.server.response.respond
 import io.ktor.server.routing.Route
@@ -10,14 +11,21 @@ import io.ktor.server.routing.get
 import io.ktor.server.routing.route
 import me.tatarka.inject.annotations.Inject
 import org.slf4j.LoggerFactory
+import java.time.Instant
+import kotlin.time.Duration.Companion.seconds
+import kotlin.time.toJavaDuration
 
 @Inject
 @RerouteScope
 class RealtimeRoute(
   private val worker: OcTranspoWorker,
   private val client: OcTranspoClient,
+  private val gtfsRealtimeClient: GtfsRealtimeClient,
 ) : RoutingModule {
   private val logger = LoggerFactory.getLogger(javaClass)
+
+  private var vehiclesCollection: FeatureCollection? = null
+  private var vehiclesTimestamp: Instant = Instant.MIN
 
   context(Routing)
   override fun route(): Route = route("/realtime") {
@@ -42,6 +50,15 @@ class RealtimeRoute(
       val result = client.get(code)
 
       call.respond(result)
+    }
+
+    get("/vehicles") {
+      if (vehiclesTimestamp + 25.seconds.toJavaDuration() <= Instant.now()) {
+        vehiclesTimestamp = Instant.now()
+        vehiclesCollection = gtfsRealtimeClient.vehicles()
+      }
+
+      call.respond(vehiclesCollection!!)
     }
   }
 }

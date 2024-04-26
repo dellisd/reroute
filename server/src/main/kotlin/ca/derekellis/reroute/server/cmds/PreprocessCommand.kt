@@ -39,7 +39,7 @@ class PreprocessCommand : CliktCommand() {
     cachePath.deleteIfExists()
 
     logger.info("Reading {} into cache at {}", source, cachePath)
-    val cache = GtfsDb.fromReader(GtfsReader(source), into = cachePath)
+    val cache = GtfsDb.fromReader(GtfsReader.newZipReader(source), cachePath)
 
     logger.info("Bundling data into {}/{}.json", output, name)
     val bundler = DataBundler(cache)

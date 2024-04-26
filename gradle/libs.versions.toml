@@ -3,6 +3,7 @@ coroutines = "1.6.4"
 kotlin = "1.9.21"
 kotlinx-serialization = "1.5.0"
 sqldelight = "2.0.1"
+kgtfs = "0.3.0-SNAPSHOT"
 ktlint = "0.48.2"
 ktor = "2.3.9"
 inject = "0.6.3"
@@ -50,7 +51,8 @@ molecule-runtime = { module = "app.cash.molecule:molecule-runtime", version = "0
 assertk = { module = "com.willowtreeapps.assertk:assertk", version = "0.27.0" }
 compose-mapbox = { module = "ca.derekellis.mapbox:compose-web-mapbox", version = "0.2.0-SNAPSHOT" }
 spatialk-geojson = "io.github.dellisd.spatialk:geojson:0.3.0-SNAPSHOT"
-kgtfs-gtfs = "ca.derekellis.kgtfs:gtfs:0.2.0-SNAPSHOT"
+kgtfs-gtfs = { module = "ca.derekellis.kgtfs:gtfs", version.ref = "kgtfs" }
+kgtfs-gtfsRealtime = { module = "ca.derekellis.kgtfs:gtfs-realtime", version.ref = "kgtfs" }
 logback = "ch.qos.logback:logback-classic:1.4.14"
 klock = "com.soywiz.korlibs.klock:klock:2.2.0"
 clikt = "com.github.ajalt.clikt:clikt:3.5.0"

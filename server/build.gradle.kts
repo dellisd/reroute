@@ -28,6 +28,7 @@ dependencies {
   implementation(libs.logback)
   implementation(libs.inject.runtime)
   implementation(libs.kgtfs.gtfs)
+  implementation(libs.kgtfs.gtfsRealtime)
   implementation(libs.clikt)
   implementation(libs.jgrapht)
   implementation(project(":shared"))

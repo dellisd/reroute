@@ -76,7 +76,7 @@ class DataBundler(private val gtfs: GtfsDb) {
     grouped: List<Pair<String, List<TripSequence>>>,
     trips: Map<TripId, Trip>,
   ) = grouped.map { (key, value) ->
-    val route = Routes.select { Routes.id eq value.first().gtfsId.value }.map(Routes.mapper).single()
+    val route = Routes.select { Routes.id eq value.first().gtfsId.value }.map(Routes.Mapper).single()
     val variants = mutableListOf<RouteVariant>()
     val sequences = mutableListOf<RouteVariantsAtStop>()
 
