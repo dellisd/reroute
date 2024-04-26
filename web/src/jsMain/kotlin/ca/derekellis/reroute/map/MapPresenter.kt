@@ -10,15 +10,19 @@ import androidx.compose.runtime.setValue
 import app.cash.sqldelight.coroutines.asFlow
 import app.cash.sqldelight.coroutines.mapToList
 import ca.derekellis.reroute.data.DataSource
+import ca.derekellis.reroute.data.RerouteClient
 import ca.derekellis.reroute.db.DatabaseHelper
 import ca.derekellis.reroute.ui.CollectEffect
 import ca.derekellis.reroute.ui.Navigator
 import ca.derekellis.reroute.ui.Presenter
 import io.github.dellisd.spatialk.geojson.Feature
+import io.github.dellisd.spatialk.geojson.FeatureCollection
 import io.github.dellisd.spatialk.geojson.dsl.feature
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import me.tatarka.inject.annotations.Assisted
 import me.tatarka.inject.annotations.Inject
+import kotlin.time.Duration.Companion.seconds
 import ca.derekellis.reroute.stops.Stop as StopScreen
 
 @Inject
@@ -26,6 +30,7 @@ class MapPresenter(
   private val dataSource: DataSource,
   private val interactionsManager: MapInteractionsManager,
   private val withDatabase: DatabaseHelper,
+  private val client: RerouteClient,
   @Assisted private val navigator: Navigator,
   @Assisted private val args: Map,
 ) : Presenter<MapViewModel, MapViewEvent> {
@@ -60,7 +65,15 @@ class MapPresenter(
 
     val targetStop by interactionsManager.targetStop.collectAsState(null)
 
-    return MapViewModel(targetStop, routeFeatures)
+    var vehiclePositions by remember { mutableStateOf(FeatureCollection(emptyList())) }
+    LaunchedEffect(Unit) {
+      while (true) {
+        vehiclePositions = client.vehicles()
+        delay(25.seconds)
+      }
+    }
+
+    return MapViewModel(targetStop, routeFeatures, vehiclePositions)
   }
 
   // TODO: Extract route colours into dataset

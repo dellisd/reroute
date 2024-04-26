@@ -45,7 +45,7 @@ class MapView : View<MapViewModel, MapViewEvent> {
       }
     }
 
-    MapContent(mapState, onEvent = emit, model.routeFeatures)
+    MapContent(mapState, onEvent = emit, model.routeFeatures, model.vehicles)
   }
 }
 
@@ -54,6 +54,7 @@ private fun MapContent(
   mapState: MapboxState,
   onEvent: (MapViewEvent) -> Unit,
   routeFeatures: Set<io.github.dellisd.spatialk.geojson.Feature>,
+  vehicles: FeatureCollection,
 ) {
   Div {
     ca.derekellis.mapbox.MapboxMap(
@@ -102,6 +103,47 @@ private fun MapContent(
               expression("zoom"),
               12 to 2,
               15.5 to 8,
+            ),
+          )
+        }
+      }
+
+      val vehiclesGeojson = remember(vehicles) {
+        JSON.parse<GeoJsonObject>(vehicles.json())
+      }
+      GeoJsonSource("vehicles", vehiclesGeojson) {
+        CircleLayer("vehicles-circles") {
+          circleColor("#212121")
+          circleRadius(
+            interpolate(
+              exponential(2.0),
+              expression("zoom"),
+              12 to 3,
+              15.5 to 10,
+            ),
+          )
+          circleOpacity(
+            interpolate(
+              exponential(2.0),
+              expression("zoom"),
+              12 to 1,
+              15.5 to 0,
+            ),
+          )
+        }
+        SymbolLayer("vehicles-labels") {
+          textField(get("id"))
+          textHaloWidth(50.0)
+          textColor("#FFFFFF")
+          textHaloColor("#212121")
+          textAllowOverlap(true)
+
+          textOpacity(
+            interpolate(
+              exponential(2.0),
+              expression("zoom"),
+              12 to 0,
+              15.5 to 1,
             ),
           )
         }
