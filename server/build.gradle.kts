@@ -1,5 +1,4 @@
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
   alias(libs.plugins.kotlin.jvm)
@@ -47,10 +46,10 @@ kotlin {
       kotlin.srcDir("$buildDir/generated/ksp/main/kotlin")
     }
   }
-}
 
-tasks.withType<KotlinCompile> {
-  kotlinOptions.freeCompilerArgs += "-Xcontext-receivers"
+  compilerOptions {
+    freeCompilerArgs.add("-Xcontext-parameters")
+  }
 }
 
 application {

@@ -15,13 +15,18 @@ import ca.derekellis.reroute.db.DatabaseHelper
 import ca.derekellis.reroute.ui.CollectEffect
 import ca.derekellis.reroute.ui.Navigator
 import ca.derekellis.reroute.ui.Presenter
-import io.github.dellisd.spatialk.geojson.Feature
-import io.github.dellisd.spatialk.geojson.FeatureCollection
-import io.github.dellisd.spatialk.geojson.dsl.feature
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
+import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.buildJsonObject
+import kotlinx.serialization.json.put
 import me.tatarka.inject.annotations.Assisted
 import me.tatarka.inject.annotations.Inject
+import org.maplibre.spatialk.geojson.Feature
+import org.maplibre.spatialk.geojson.FeatureCollection
+import org.maplibre.spatialk.geojson.LineString
+import org.maplibre.spatialk.geojson.Point
+import org.maplibre.spatialk.geojson.dsl.buildFeature
 import kotlin.time.Duration.Companion.seconds
 import ca.derekellis.reroute.stops.Stop as StopScreen
 
@@ -42,7 +47,7 @@ class MapPresenter(
       }
     }
 
-    var routeFeatures by remember { mutableStateOf<Set<Feature>>(emptySet()) }
+    var routeFeatures by remember { mutableStateOf<Set<Feature<LineString, JsonObject>>>(emptySet()) }
     val displayedRoutes by interactionsManager.routeVariants.collectAsState()
     LaunchedEffect(displayedRoutes) {
       withDatabase { database ->
@@ -52,11 +57,14 @@ class MapPresenter(
           database.routeVariantQueries.getByIds(displayedRoutes).asFlow().mapToList(coroutineContext)
             .collect { routes ->
               routeFeatures = routes.mapIndexedTo(mutableSetOf()) { _, route ->
-                feature(route.shape) {
-                  put("id", route.id)
-                  put("gtfsId", route.gtfsId)
-                  put("color", routeColor(route.gtfsId.split("-").first()))
-                }
+                buildFeature(
+                  route.shape,
+                  buildJsonObject {
+                    put("id", route.id)
+                    put("gtfsId", route.gtfsId)
+                    put("color", routeColor(route.gtfsId.split("-").first()))
+                  },
+                )
               }
             }
         }
@@ -65,7 +73,7 @@ class MapPresenter(
 
     val targetStop by interactionsManager.targetStop.collectAsState(null)
 
-    var vehiclePositions by remember { mutableStateOf(FeatureCollection(emptyList())) }
+    var vehiclePositions by remember { mutableStateOf(FeatureCollection<Point, JsonObject>(emptyList())) }
     LaunchedEffect(Unit) {
       while (true) {
         vehiclePositions = client.vehicles()

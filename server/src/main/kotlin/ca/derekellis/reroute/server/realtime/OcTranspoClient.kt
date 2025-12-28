@@ -5,7 +5,6 @@ import ca.derekellis.reroute.realtime.NextTrip
 import ca.derekellis.reroute.realtime.RealtimeMessage
 import ca.derekellis.reroute.server.config.LoadedServerConfig
 import ca.derekellis.reroute.server.di.RerouteScope
-import io.github.dellisd.spatialk.geojson.dsl.lngLat
 import io.ktor.client.HttpClient
 import io.ktor.client.plugins.ServerResponseException
 import io.ktor.client.request.get
@@ -13,6 +12,7 @@ import io.ktor.client.statement.readBytes
 import io.ktor.http.isSuccess
 import kotlinx.datetime.toKotlinLocalTime
 import me.tatarka.inject.annotations.Inject
+import org.maplibre.spatialk.geojson.Position
 import org.w3c.dom.Element
 import org.w3c.dom.NodeList
 import java.io.ByteArrayInputStream
@@ -111,7 +111,7 @@ class OcTranspoClient(
       (xPath.evaluate("./AdjustedScheduleTime", element, XPathConstants.STRING) as String).toLong()
     val adjustmentAge = (xPath.evaluate("./AdjustmentAge", element, XPathConstants.STRING) as String).toFloat()
     val lastTripOfSchedule =
-      (xPath.evaluate("./LastTripOfSchedule", element, XPathConstants.STRING) as String).toLowerCase() == "1"
+      (xPath.evaluate("./LastTripOfSchedule", element, XPathConstants.STRING) as String).lowercase() == "1"
     val busTypeText = xPath.evaluate("./BusType", element, XPathConstants.STRING) as String
     val latitudeText = xPath.evaluate("./Latitude", element, XPathConstants.STRING) as String
     val longitudeText = xPath.evaluate("./Longitude", element, XPathConstants.STRING) as String
@@ -119,7 +119,7 @@ class OcTranspoClient(
 
     val latitude = latitudeText.toDoubleOrNull()
     val longitude = longitudeText.toDoubleOrNull()
-    val position = if (latitude != null && longitude != null) lngLat(longitude, latitude) else null
+    val position = if (latitude != null && longitude != null) Position(longitude, latitude) else null
 
     val computedStartTime = tripStartTime.takeIf(String::isNotEmpty)?.let { LocalTime.parse(it, timeFormat) }
     val computedScheduleTime = time + Duration.ofMinutes(adjustedScheduleTime)
@@ -162,15 +162,13 @@ class OcTranspoClient(
    * @param typeString The "BusType" string from the OC Transpo API.
    * @return The readable letter code for that bus type. Either "S", "L", "H", or "DD".
    */
-  private fun getBusTypeFromString(typeString: String): String {
-    return when {
-      typeString.contains("ON") -> "N"
-      typeString.contains("H") && !typeString.contains("DD") -> "H"
-      typeString.contains("6") -> "L"
-      typeString.contains("4") -> "S"
-      typeString.contains("DD") && !typeString.contains("DEH") -> "DD"
-      else -> ""
-    }
+  private fun getBusTypeFromString(typeString: String): String = when {
+    typeString.contains("ON") -> "N"
+    typeString.contains("H") && !typeString.contains("DD") -> "H"
+    typeString.contains("6") -> "L"
+    typeString.contains("4") -> "S"
+    typeString.contains("DD") && !typeString.contains("DEH") -> "DD"
+    else -> ""
   }
 
   /**

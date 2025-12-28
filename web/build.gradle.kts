@@ -1,18 +1,11 @@
 import com.codingfeline.buildkonfig.compiler.FieldSpec.Type.STRING
 import java.util.Properties
 
-buildscript {
-  configurations.all {
-    resolutionStrategy {
-      force("org.jetbrains.kotlin:kotlin-gradle-plugin:${libs.versions.kotlin.get()}")
-    }
-  }
-}
-
 plugins {
   alias(libs.plugins.kotlin.multiplatform)
   alias(libs.plugins.kotlin.serialization)
-  alias(libs.plugins.compose)
+  alias(libs.plugins.kotlin.compose)
+  alias(libs.plugins.compose.multiplatform)
   alias(libs.plugins.sqldelight)
   alias(libs.plugins.ksp)
   alias(libs.plugins.buildkonfig)
@@ -22,7 +15,7 @@ group = "ca.derekellis.reroute"
 version = "1.0-SNAPSHOT"
 
 kotlin {
-  js(IR) {
+  js {
     browser {
       commonWebpackConfig {
         cssSupport {

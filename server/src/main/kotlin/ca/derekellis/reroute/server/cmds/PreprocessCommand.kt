@@ -8,11 +8,14 @@ import com.github.ajalt.clikt.parameters.arguments.argument
 import com.github.ajalt.clikt.parameters.options.default
 import com.github.ajalt.clikt.parameters.options.option
 import com.github.ajalt.clikt.parameters.types.path
-import io.github.dellisd.spatialk.geojson.dsl.featureCollection
-import io.github.dellisd.spatialk.geojson.dsl.point
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.encodeToStream
+import kotlinx.serialization.json.put
+import org.maplibre.spatialk.geojson.Point
+import org.maplibre.spatialk.geojson.dsl.buildFeature
+import org.maplibre.spatialk.geojson.dsl.buildFeatureCollection
 import org.slf4j.LoggerFactory
 import java.nio.file.Path
 import kotlin.io.path.Path
@@ -51,16 +54,17 @@ class PreprocessCommand : CliktCommand() {
     }
 
     logger.info("Bundling geometry into {}/{}.geojson", output, name)
-    val geojson = featureCollection {
+    val geojson = buildFeatureCollection {
       bundle.stops.forEach { stop ->
-        feature(
-          geometry = point(stop.position.longitude, stop.position.latitude),
-          id = stop.id,
-          properties = {
-            put("name", stop.name)
-            put("code", stop.code)
-            put("id", stop.id)
-          },
+        add(
+          buildFeature(
+            geometry = Point(stop.position.longitude, stop.position.latitude),
+            properties = buildJsonObject {
+              put("name", stop.name)
+              put("code", stop.code)
+              put("id", stop.id)
+            },
+          ) { setId(stop.id) },
         )
       }
     }

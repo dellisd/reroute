@@ -46,7 +46,9 @@ private fun StopContent(model: StopViewModel) {
       Hr()
       model.groupedRoutes.forEach { routes -> RouteInfo(routes) }
     }
+
     StopViewModel.Loading -> Text("Loading...")
+
     StopViewModel.NotFound -> Text("Not Found!")
   }
 }

@@ -31,18 +31,16 @@ class OcTranspoWorker(private val client: OcTranspoClient) {
     }
   }
 
-  private fun takeFlow(code: String): Flow<RealtimeMessage> {
-    return when (val existing = streams[code]) {
-      null -> {
-        logger.info("Creating new container for {}.", code)
-        streams[code] = StreamContainer(makeRequestFlow(code), AtomicInteger(0))
-        streams.getValue(code).flow
-      }
+  private fun takeFlow(code: String): Flow<RealtimeMessage> = when (val existing = streams[code]) {
+    null -> {
+      logger.info("Creating new container for {}.", code)
+      streams[code] = StreamContainer(makeRequestFlow(code), AtomicInteger(0))
+      streams.getValue(code).flow
+    }
 
-      else -> {
-        existing.refCount.incrementAndGet()
-        existing.flow
-      }
+    else -> {
+      existing.refCount.incrementAndGet()
+      existing.flow
     }
   }
 

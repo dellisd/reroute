@@ -1,5 +1,5 @@
 import kotlin.Int;
-import io.github.dellisd.spatialk.geojson.LineString;
+import org.maplibre.spatialk.geojson.LineString;
 
 CREATE TABLE RouteVariant (
   id TEXT PRIMARY KEY,

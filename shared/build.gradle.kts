@@ -4,7 +4,7 @@ plugins {
 }
 
 kotlin {
-  js(IR) {
+  js {
     browser()
   }
   jvm()
@@ -12,9 +12,10 @@ kotlin {
   sourceSets {
     getByName("commonMain") {
       dependencies {
+        api(libs.spatialk.geojson)
+
         implementation(libs.kotlinx.datetime)
         implementation(libs.kotlinx.serialization.core)
-        implementation(libs.spatialk.geojson)
       }
     }
   }

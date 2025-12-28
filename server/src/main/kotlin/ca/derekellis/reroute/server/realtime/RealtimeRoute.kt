@@ -2,14 +2,16 @@ package ca.derekellis.reroute.server.realtime
 
 import ca.derekellis.reroute.server.RoutingModule
 import ca.derekellis.reroute.server.di.RerouteScope
-import io.github.dellisd.spatialk.geojson.FeatureCollection
 import io.ktor.server.application.call
 import io.ktor.server.response.respond
 import io.ktor.server.routing.Route
 import io.ktor.server.routing.Routing
 import io.ktor.server.routing.get
 import io.ktor.server.routing.route
+import kotlinx.serialization.json.JsonObject
 import me.tatarka.inject.annotations.Inject
+import org.maplibre.spatialk.geojson.FeatureCollection
+import org.maplibre.spatialk.geojson.Point
 import org.slf4j.LoggerFactory
 import java.time.Instant
 import kotlin.time.Duration.Companion.seconds
@@ -24,11 +26,11 @@ class RealtimeRoute(
 ) : RoutingModule {
   private val logger = LoggerFactory.getLogger(javaClass)
 
-  private var vehiclesCollection: FeatureCollection? = null
+  private var vehiclesCollection: FeatureCollection<Point, JsonObject>? = null
   private var vehiclesTimestamp: Instant = Instant.MIN
 
-  context(Routing)
-  override fun route(): Route = route("/realtime") {
+  context(routing: Routing)
+  override fun route(): Route = routing.route("/realtime") {
     /*webSocket("/{code}") {
       val code = call.parameters["code"]!!
       logger.info("WebSocket opened for: {}", code)

@@ -11,12 +11,12 @@ import ca.derekellis.reroute.db.RouteVariantAtStop
 import ca.derekellis.reroute.di.AppScope
 import ca.derekellis.reroute.models.Route
 import ca.derekellis.reroute.models.Stop
-import io.github.dellisd.spatialk.geojson.Position
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.flow
 import me.tatarka.inject.annotations.Inject
+import org.maplibre.spatialk.geojson.Position
 
 @Inject
 @AppScope
@@ -59,11 +59,9 @@ class SqlJsDataSource(private val withDatabase: DatabaseHelper) : DataSource {
       .mapToList(Dispatchers.Main)
   }
 
-  private fun <T> withDatabaseFlow(block: suspend (database: RerouteDatabase) -> T): Flow<T> =
-    flow { withDatabase { emit(block(it)) } }
+  private fun <T> withDatabaseFlow(block: suspend (database: RerouteDatabase) -> T): Flow<T> = flow { withDatabase { emit(block(it)) } }
 
-  private fun <T> withDatabaseFlowFlatten(block: suspend (database: RerouteDatabase) -> Flow<T>): Flow<T> =
-    flow { withDatabase { emitAll(block(it)) } }
+  private fun <T> withDatabaseFlowFlatten(block: suspend (database: RerouteDatabase) -> Flow<T>): Flow<T> = flow { withDatabase { emitAll(block(it)) } }
 
   companion object {
     private val StopMapper = { id: String, code: String, name: String, lat: Double, lon: Double, parent: String? ->

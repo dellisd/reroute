@@ -15,7 +15,7 @@ import ca.derekellis.reroute.ui.View
 import ca.derekellis.reroute.utils.jsObject
 import geojson.Feature
 import geojson.GeoJsonObject
-import io.github.dellisd.spatialk.geojson.FeatureCollection
+import kotlinx.serialization.json.JsonObject
 import me.tatarka.inject.annotations.Inject
 import org.jetbrains.compose.web.css.height
 import org.jetbrains.compose.web.css.hsl
@@ -23,6 +23,10 @@ import org.jetbrains.compose.web.css.vh
 import org.jetbrains.compose.web.css.vw
 import org.jetbrains.compose.web.css.width
 import org.jetbrains.compose.web.dom.Div
+import org.maplibre.spatialk.geojson.FeatureCollection
+import org.maplibre.spatialk.geojson.LineString
+import org.maplibre.spatialk.geojson.Point
+import org.maplibre.spatialk.geojson.toJson
 
 @Inject
 class MapView : View<MapViewModel, MapViewEvent> {
@@ -53,8 +57,8 @@ class MapView : View<MapViewModel, MapViewEvent> {
 private fun MapContent(
   mapState: MapboxState,
   onEvent: (MapViewEvent) -> Unit,
-  routeFeatures: Set<io.github.dellisd.spatialk.geojson.Feature>,
-  vehicles: FeatureCollection,
+  routeFeatures: Set<org.maplibre.spatialk.geojson.Feature<LineString, JsonObject>>,
+  vehicles: FeatureCollection<Point, JsonObject>,
 ) {
   Div {
     ca.derekellis.mapbox.MapboxMap(
@@ -85,7 +89,7 @@ private fun MapContent(
       },
     ) {
       val routeGeojson = remember(routeFeatures) {
-        JSON.parse<GeoJsonObject>(FeatureCollection(routeFeatures.toList()).json())
+        JSON.parse<GeoJsonObject>(FeatureCollection(routeFeatures.toList()).toJson())
       }
       GeoJsonSource("routes", routeGeojson) {
         LineLayer("route-lines") {
@@ -109,7 +113,7 @@ private fun MapContent(
       }
 
       val vehiclesGeojson = remember(vehicles) {
-        JSON.parse<GeoJsonObject>(vehicles.json())
+        JSON.parse<GeoJsonObject>(vehicles.toJson())
       }
       GeoJsonSource("vehicles", vehiclesGeojson) {
         CircleLayer("vehicles-circles") {

@@ -47,16 +47,14 @@ abstract class AppComponent {
 
   @Provides
   @AppScope
-  protected fun searchScreenWrapper(viewFactory: ViewFactory, presenterFactory: PresenterFactory): SearchScreenWrapper =
-    ScreenWrapper(
-      presenterFactory.createPresenter(appNavigator, Search) as Presenter<Any, Any>,
-      viewFactory.createView(Search) as View<Any, Any>,
-    )
+  protected fun searchScreenWrapper(viewFactory: ViewFactory, presenterFactory: PresenterFactory): SearchScreenWrapper = ScreenWrapper(
+    presenterFactory.createPresenter(appNavigator, Search) as Presenter<Any, Any>,
+    viewFactory.createView(Search) as View<Any, Any>,
+  )
 
   @Provides
   @AppScope
-  protected fun provideWorker(): Worker =
-    //language=JavaScript
+  protected fun provideWorker(): Worker = //language=JavaScript
     js("""new Worker(new URL("./worker.js", import.meta.url))""").unsafeCast<Worker>()
 
   @Provides

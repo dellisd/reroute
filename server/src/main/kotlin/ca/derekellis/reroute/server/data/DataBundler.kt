@@ -7,6 +7,7 @@ import ca.derekellis.kgtfs.csv.ServiceId
 import ca.derekellis.kgtfs.csv.StopId
 import ca.derekellis.kgtfs.csv.Trip
 import ca.derekellis.kgtfs.csv.TripId
+import ca.derekellis.kgtfs.db.Routes
 import ca.derekellis.kgtfs.ext.TripSequence
 import ca.derekellis.kgtfs.ext.lineString
 import ca.derekellis.kgtfs.ext.uniqueTripSequences
@@ -15,13 +16,13 @@ import ca.derekellis.reroute.models.RouteVariant
 import ca.derekellis.reroute.models.RouteVariantsAtStop
 import ca.derekellis.reroute.models.Stop
 import ca.derekellis.reroute.models.TransitDataBundle
-import io.github.dellisd.spatialk.geojson.Position
 import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.selectAll
 import org.jgrapht.alg.cycle.CycleDetector
 import org.jgrapht.graph.DefaultDirectedGraph
 import org.jgrapht.graph.DefaultEdge
 import org.jgrapht.traverse.TopologicalOrderIterator
+import org.maplibre.spatialk.geojson.Position
 
 @OptIn(ExperimentalKgtfsApi::class)
 class DataBundler(private val gtfs: GtfsDb) {
@@ -71,12 +72,12 @@ class DataBundler(private val gtfs: GtfsDb) {
     )
   }
 
-  context(GtfsDbScope)
+  context(db: GtfsDbScope)
   private fun processRoutes(
     grouped: List<Pair<String, List<TripSequence>>>,
     trips: Map<TripId, Trip>,
   ) = grouped.map { (key, value) ->
-    val route = Routes.select { Routes.id eq value.first().gtfsId.value }.map(Routes.Mapper).single()
+    val route = db.Routes.select { Routes.id eq value.first().gtfsId.value }.map(Routes.Mapper).single()
     val variants = mutableListOf<RouteVariant>()
     val sequences = mutableListOf<RouteVariantsAtStop>()
 
@@ -84,7 +85,7 @@ class DataBundler(private val gtfs: GtfsDb) {
       val trip = trips.getValue(sequence.trips.keys.first())
       val id = "$key#$i"
       // TODO: Develop a better way to extract headsign values
-      val shape = Shapes.select { Shapes.id eq trip.shapeId!!.value }.map(Shapes.Mapper)
+      val shape = db.Shapes.select { db.Shapes.id eq trip.shapeId!!.value }.map(db.Shapes.Mapper)
 
       sequences += sequence.sequence.mapIndexed { index, stopId ->
         RouteVariantsAtStop(stopId.value, id, index)
@@ -95,7 +96,7 @@ class DataBundler(private val gtfs: GtfsDb) {
         trip.directionId!!,
         trip.headsign!!,
         sequence.trips.size,
-        shape.lineString(),
+        if (shape.size >= 2) shape.lineString() else null,
       )
     }
 

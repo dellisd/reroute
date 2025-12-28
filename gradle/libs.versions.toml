@@ -1,12 +1,14 @@
 [versions]
 coroutines = "1.6.4"
-kotlin = "1.9.21"
-kotlinx-serialization = "1.5.0"
-sqldelight = "2.0.1"
-kgtfs = "0.3.0-SNAPSHOT"
-ktlint = "0.48.2"
-ktor = "2.3.9"
-inject = "0.6.3"
+kotlin = "2.3.0"
+kotlinx-serialization = "1.9.0"
+sqldelight = "2.2.1"
+kgtfs = "0.4.0-SNAPSHOT"
+ktlint = "1.8.0"
+ktor = "3.3.3"
+inject = "0.8.0"
+spatialk = "0.6.1"
+composeMultiplatform = "1.9.1"
 
 copyWebpackPlugin = "9.1.0"
 mapboxGl = "2.10.0"
@@ -50,7 +52,7 @@ molecule-runtime = { module = "app.cash.molecule:molecule-runtime", version = "0
 
 assertk = { module = "com.willowtreeapps.assertk:assertk", version = "0.27.0" }
 compose-mapbox = { module = "ca.derekellis.mapbox:compose-web-mapbox", version = "0.2.0-SNAPSHOT" }
-spatialk-geojson = "io.github.dellisd.spatialk:geojson:0.3.0-SNAPSHOT"
+spatialk-geojson = { module = "org.maplibre.spatialk:geojson", version.ref = "spatialk" }
 kgtfs-gtfs = { module = "ca.derekellis.kgtfs:gtfs", version.ref = "kgtfs" }
 kgtfs-gtfsRealtime = { module = "ca.derekellis.kgtfs:gtfs-realtime", version.ref = "kgtfs" }
 logback = "ch.qos.logback:logback-classic:1.4.14"
@@ -60,12 +62,13 @@ jgrapht = "org.jgrapht:jgrapht-core:1.5.1"
 junit = "junit:junit:4.13.2"
 
 [plugins]
+compose-multiplatform = { id = "org.jetbrains.compose", version.ref = "composeMultiplatform" }
 kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
-compose = { id = "org.jetbrains.compose", version = "1.5.11" }
+kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 sqldelight = { id = "app.cash.sqldelight", version.ref = "sqldelight" }
-ksp = { id = "com.google.devtools.ksp", version = "1.9.21-1.0.15" }
+ksp = { id = "com.google.devtools.ksp", version = "2.3.4" }
 buildkonfig = { id = "com.codingfeline.buildkonfig", version = "0.12.0" }
 shadow = { id = "com.github.johnrengelman.shadow", version = "7.1.2" }
-spotless = { id = "com.diffplug.spotless", version = "6.16.0" }
+spotless = { id = "com.diffplug.spotless", version = "8.1.0" }

@@ -1,7 +1,7 @@
 package ca.derekellis.reroute.models
 
-import io.github.dellisd.spatialk.geojson.Position
 import kotlinx.serialization.Serializable
+import org.maplibre.spatialk.geojson.Position
 
 /**
  * A stop or station in a transit system.

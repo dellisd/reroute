@@ -4,15 +4,13 @@ import ca.derekellis.reroute.server.RoutingModule
 import ca.derekellis.reroute.server.config.LoadedServerConfig
 import ca.derekellis.reroute.server.di.RerouteScope
 import io.ktor.http.HttpStatusCode
-import io.ktor.server.application.ApplicationCall
-import io.ktor.server.application.call
 import io.ktor.server.response.lastModified
 import io.ktor.server.response.respond
 import io.ktor.server.response.respondFile
 import io.ktor.server.routing.Routing
+import io.ktor.server.routing.RoutingContext
 import io.ktor.server.routing.get
 import io.ktor.server.routing.route
-import io.ktor.util.pipeline.PipelineContext
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import me.tatarka.inject.annotations.Inject
@@ -35,8 +33,8 @@ class DataRoute(private val config: LoadedServerConfig) : RoutingModule {
   private val filePath = config.dataPath / "gtfs.json"
   private val geojsonPath = config.dataPath / "gtfs.geojson"
 
-  context(Routing)
-  override fun route() = route("data") {
+  context(routing: Routing)
+  override fun route() = routing.route("data") {
     get("/") {
       if (filePath.notExists()) {
         logger.warn("Data file not found! Searched at {}", filePath.pathString)
@@ -58,7 +56,7 @@ class DataRoute(private val config: LoadedServerConfig) : RoutingModule {
     }
   }
 
-  private suspend fun PipelineContext<Unit, ApplicationCall>.lastModifiedOf(path: Path) {
+  private suspend fun RoutingContext.lastModifiedOf(path: Path) {
     val attrs = withContext(Dispatchers.IO) {
       Files.readAttributes(
         path,

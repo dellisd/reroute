@@ -21,6 +21,7 @@ spotless {
       mapOf(
         "indent_size" to "2",
         "ktlint_package-name" to "disabled",
+        "ktlint_standard_function-naming" to "disabled",
       ),
     )
     trimTrailingWhitespace()

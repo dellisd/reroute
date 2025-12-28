@@ -1,7 +1,7 @@
 package ca.derekellis.reroute.models
 
-import io.github.dellisd.spatialk.geojson.LineString
 import kotlinx.serialization.Serializable
+import org.maplibre.spatialk.geojson.LineString
 
 /**
  * A variant/branch of a [Route].
@@ -20,5 +20,5 @@ data class RouteVariant(
   val directionId: Int,
   val headsign: String,
   val weight: Int,
-  val shape: LineString,
+  val shape: LineString?,
 )

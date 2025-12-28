@@ -42,6 +42,7 @@ class AppNavigator(
         null, "" -> Home
         else -> Stop(second)
       }
+
       else -> Home
     }
   }

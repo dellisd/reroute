@@ -1,8 +1,8 @@
 package ca.derekellis.reroute.realtime
 
-import io.github.dellisd.spatialk.geojson.Position
 import kotlinx.datetime.LocalTime
 import kotlinx.serialization.Serializable
+import org.maplibre.spatialk.geojson.Position
 import kotlin.time.Duration
 
 @Serializable

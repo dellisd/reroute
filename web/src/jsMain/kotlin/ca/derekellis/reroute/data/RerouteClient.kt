@@ -6,7 +6,6 @@ import ca.derekellis.reroute.realtime.RealtimeMessage
 import com.soywiz.klock.DateFormat
 import com.soywiz.klock.DateTime
 import com.soywiz.klock.parse
-import io.github.dellisd.spatialk.geojson.FeatureCollection
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.plugins.websocket.receiveDeserialized
@@ -15,7 +14,10 @@ import io.ktor.client.request.get
 import io.ktor.client.request.head
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import kotlinx.serialization.json.JsonObject
 import me.tatarka.inject.annotations.Inject
+import org.maplibre.spatialk.geojson.FeatureCollection
+import org.maplibre.spatialk.geojson.Point
 
 @Inject
 @AppScope
@@ -41,7 +43,5 @@ class RerouteClient(private val client: HttpClient) {
 
   suspend fun nextTripsSingle(code: String): RealtimeMessage = client.get("/api/realtime/$code").body()
 
-  suspend fun vehicles(): FeatureCollection {
-    return client.get("/api/realtime/vehicles").body()
-  }
+  suspend fun vehicles(): FeatureCollection<Point, JsonObject> = client.get("/api/realtime/vehicles").body()
 }
